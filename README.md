@@ -37,20 +37,25 @@ by a **sourced, testable strategy library** with a lifecycle, and a hard
   tweakable, A/B-testable parameter, which is exactly what the optimization loop
   needs.
 
-## What's in v0.1.0
+## What's built (through v0.2.0)
 
-The foundation — and a working first department.
+The foundation plus the first three departments — a channel can go from "what's it
+about" to a locked, packaged video slate.
 
 - **Strategy library**: schema + lifecycle + 9 source-cited MrBeast-memo seeds, with
   a CI gate that rejects any unsourced or malformed strategy.
-- **Integrity + state libs** (zero-dep, 46 tests): `strategy-registry`, `guards`
+- **Integrity + state libs** (zero-dep, 62 tests): `strategy-registry`, `guards`
   (hard constraints incl. no-fake-human + the promotion gate), `niche-score`,
-  `state`.
-- **niche-select** department (`/viewforge`): brainstorm → ground → score → rank →
-  commit a channel project, via a transparent weighted engine.
+  `brand-brief`, `video-idea`, `state`.
+- **Three L2 departments** (`/viewforge`):
+  - **niche-select** — brainstorm → ground → score → rank → commit a channel project.
+  - **brand-suite** — derive a brand brief from the niche, generate the suite via
+    `brand-studio`, validate all seven deliverables, persist it.
+  - **video-research** — brainstorm + ground ideas, lock the packaged promise, score
+    on packaging/demand/novelty, hard-block unpaid-off clickbait, lock the slate.
 
 Run `npm run check` (validates the strategy library, runs the tests, validates the
-manifest). The roadmap to a full channel is in `ROADMAP.md`.
+manifest). The roadmap to a full produced video is in `ROADMAP.md`.
 
 ## Layout
 

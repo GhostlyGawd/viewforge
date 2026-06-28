@@ -13,12 +13,16 @@ the last, produced end-to-end with no fake humans, optimized by evidence not opi
 - [x] First department end-to-end: **niche-select** (L2) with `/viewforge`.
 - [x] Architecture, anti-reward-hacking doctrine, department registry, improvement log.
 
-## v0.2.0 — brand + research departments (first real channel)
-- [ ] **brand** department: wrap the existing `brand-studio` plugin to produce the
-      full brand suite + guide for the chosen niche; persist into channel state.
-- [ ] **research** department: idea generation + demand validation; lock the
-      packaged promise (title/thumb) before production (`package-before-you-produce`).
-- [ ] Stand up one real channel project end-to-end through `research`.
+## v0.2.0 — brand + research departments
+- [x] **brand** department (L2): `lib/brand-brief.mjs` (niche→brief + brand-record
+      validation) + `brand-suite` skill wrapping `brand-studio`; persists + validates
+      `channel.brand` before advancing.
+- [x] **research** department (L2): `lib/video-idea.mjs` (packaging-extremity +
+      format-novelty + demand scoring, encodes the strategies, hard-blocks unpaid-off
+      clickbait) + `video-research` skill; locks packaged videos into channel state.
+- [x] State helpers `setBrand` / `addVideo`; command router handles niche→brand→research.
+- [ ] Stand up one real channel project end-to-end through `research` *(needs the
+      operator's topic — run `/viewforge start <interest>`)*.
 - [ ] Mine source corpus #2 (Paddy Galloway / retention teardowns / Creator Insider)
       → 10+ new `documented` strategies.
 

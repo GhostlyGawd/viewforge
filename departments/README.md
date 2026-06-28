@@ -21,8 +21,8 @@ come.
 | # | Department | Does | Engine | Maturity |
 |---|------------|------|--------|----------|
 | 1 | **niche** | Pick a niche well: score candidates on demand/growth/monetization/saturation/differentiability/production-fit/repeatability/cost/durability | `lib/niche-score.mjs` | **L2** (skill: `niche-select`) |
-| 2 | **brand** | Brainstorm + build the full brand suite & guide for the chosen niche | (delegates to `brand-studio` plugin) | L0 |
-| 3 | **research** | Find video ideas, validate demand, lock the packaged promise (title/thumb first) | — | L0 |
+| 2 | **brand** | Brainstorm + build the full brand suite & guide for the chosen niche; validate completeness before advancing | `lib/brand-brief.mjs` (+ `brand-studio` plugin) | **L2** (skill: `brand-suite`) |
+| 3 | **research** | Find video ideas, validate demand, lock the packaged promise (title/thumb first); reject unpaid-off clickbait | `lib/video-idea.mjs` | **L2** (skill: `video-research`) |
 | 4 | **script** | Write the script applying validated retention/story strategies (first-minute, crazy-progression, re-engagement beats) | — | L0 |
 | 5 | **voice** | Generate/choose narration (synthetic allowed + disclosed; never a fake human on screen) | — | L0 |
 | 6 | **motion** | Produce the visuals — Remotion-first programmatic motion graphics | (Remotion) | L0 |
@@ -42,4 +42,6 @@ come.
 
 The order of expansion is in `ROADMAP.md`. The first end-to-end vertical slice
 prioritizes niche → brand → research → script → motion → edit → package so a single
-video can be produced before every department is L4.
+video can be produced before every department is L4. As of v0.2.0 the first three
+departments (niche, brand, research) are at L2 — a channel can be taken from "what's
+it about" to a locked, packaged video slate.

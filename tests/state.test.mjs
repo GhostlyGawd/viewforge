@@ -12,6 +12,8 @@ import {
   appendEvent,
   advanceStage,
   listChannels,
+  setBrand,
+  addVideo,
   CHANNEL_STAGES,
 } from '../lib/state.mjs'
 
@@ -107,6 +109,27 @@ test('listChannels returns sorted slugs and ignores _example/hidden dirs', () =>
   createChannel(root, { name: 'Alpha' }, now)
   fs.mkdirSync(path.join(root, 'channels', '_example'), { recursive: true })
   assert.deepEqual(listChannels(root), ['alpha', 'zeta'])
+})
+
+test('setBrand stores the brand and logs it', () => {
+  const root = tmpRoot()
+  createChannel(root, { name: 'Branded' }, now)
+  const c = setBrand(root, 'branded', { name: 'Orbit', palette: 'cyan' }, now)
+  assert.equal(c.brand.name, 'Orbit')
+  assert.equal(c.log.at(-1).event, 'brand.set')
+})
+
+test('addVideo assigns ids, appends immutably, and rejects untitled/dupes', () => {
+  const root = tmpRoot()
+  createChannel(root, { name: 'Vids' }, now)
+  const c1 = addVideo(root, 'vids', { title: 'First' }, now)
+  assert.equal(c1.videos[0].id, 'vid-1')
+  assert.equal(c1.videos[0].stage, 'idea')
+  const c2 = addVideo(root, 'vids', { title: 'Second' }, now)
+  assert.equal(c2.videos.length, 2)
+  assert.equal(c2.videos[1].id, 'vid-2')
+  assert.throws(() => addVideo(root, 'vids', {}, now), /title/)
+  assert.throws(() => addVideo(root, 'vids', { id: 'vid-1', title: 'dupe' }, now), /duplicate/)
 })
 
 test('CHANNEL_STAGES is ordered and frozen', () => {

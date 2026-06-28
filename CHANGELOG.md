@@ -3,6 +3,26 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.2.0] — 2026-06-28
+
+The brand and research departments — a channel can now go from a chosen niche to a
+locked, packaged video slate.
+
+### Added
+- **brand department (L2)**: `lib/brand-brief.mjs` derives a structured brand brief
+  from the niche (motion-graphics, no-fake-human) and validates the returned brand
+  record against all seven required deliverables before the channel may advance;
+  `skills/brand-suite/` wraps the `brand-studio` plugin for the creative generation.
+- **research department (L2)**: `lib/video-idea.mjs` scores video ideas on packaging
+  extremity, demand, motion-graphics fit, and format novelty — encoding the
+  `thumbnail-title-extremity`, `package-before-you-produce`, and `format-novelty`
+  strategies as code — and **hard-blocks** any idea whose claim the content won't pay
+  off (`no-deceptive-clickbait`). `skills/video-research/` brainstorms, grounds, ranks,
+  cuts, and locks the slate into channel state.
+- **State helpers** `setBrand` and `addVideo` (immutable, validated, logged).
+- Command router now walks niche → brand → research; department registry + roadmap
+  updated; 62 tests (was 46).
+
 ## [0.1.0] — 2026-06-28
 
 Foundation release — the self-improving harness and its first working department.

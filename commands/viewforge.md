@@ -22,9 +22,13 @@ The user's input is in `$ARGUMENTS`. Route on it:
 
 2. **An existing channel slug, or "next" / a stage name** → load the channel from
    `state/channels/<slug>/channel.json` (via `lib/state.mjs`), report its current
-   `stage`, and run the next department. The department order and maturity are in
-   `departments/README.md`. Only `niche` is built to L2 in v0.1.0; for later stages,
-   say what's planned (`ROADMAP.md`) rather than faking output.
+   `stage`, and run the next department:
+   - `niche` done → run **brand-suite** (`skills/brand-suite/SKILL.md`).
+   - `brand` done → run **video-research** (`skills/video-research/SKILL.md`).
+   - `research` done → **script** and beyond are planned (`ROADMAP.md`) — say what's
+     coming rather than faking output.
+   The department order and maturity are in `departments/README.md`. As of v0.2.0,
+   niche → brand → research are L2 (real engines); later stages are L0.
 
 3. **"strategies" / "what works"** → load the strategy library
    (`lib/strategy-registry.mjs` + `strategy-library/strategies/`) and report the
