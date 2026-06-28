@@ -3,6 +3,11 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.6.0] — 2026-06-28
+
+### Changed
+- **Much more dynamic motion** in the render template: a living drifting-glow background (no more dead-flat black), kinetic word-by-word headlines that spring in, a **money counter** that ticks to the figure, a **bar chart** of comparable cases, plus the existing timeline sweep / wax-seal. Includes an example bespoke set-piece (the comma-split mechanism) — the reusable primitives (LivingBg, Kinetic, MoneyCounter, CaseBars) are generic; the killer per-video "wow" scenes are meant to be authored per story. Verified the rendered clip carries loud, synced narration (the earlier "no sound" was a muted preview, not a missing track).
+
 ## [0.5.2] — 2026-06-28
 
 ### Added
