@@ -1,0 +1,14 @@
+{
+  "name": "viewforge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ViewForge — a self-improving YouTube channel factory (Claude Code plugin)",
+  "homepage": "https://github.com/GhostlyGawd/viewforge#readme",
+  "repository": { "type": "git", "url": "https://github.com/GhostlyGawd/viewforge.git" },
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test",
+    "check": "node tools/check-strategies.mjs && node --test && node -e \"JSON.parse(require('fs').readFileSync('.claude-plugin/plugin.json','utf8')); console.log('plugin.json OK')\""
+  }
+}

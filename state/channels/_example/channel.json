@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "slug": "example-channel",
+  "name": "Example Channel",
+  "stage": "niche",
+  "createdUtc": "2026-06-28T00:00:00.000Z",
+  "updatedUtc": "2026-06-28T00:00:00.000Z",
+  "niche": {
+    "name": "Deep-space explainers (motion-graphics)",
+    "score": 71.2,
+    "factors": {
+      "demand": 8,
+      "growth": 7,
+      "monetization": 6,
+      "saturation": 5,
+      "differentiability": 7,
+      "productionFit": 9,
+      "repeatability": 8,
+      "productionCost": 4,
+      "passionDurability": 7
+    },
+    "sources": {
+      "demand": "example: search-volume note",
+      "saturation": "example: top-10 channel scan"
+    }
+  },
+  "brand": null,
+  "videos": [],
+  "experiments": [],
+  "log": [
+    {
+      "ts": "2026-06-28T00:00:00.000Z",
+      "event": "channel.created",
+      "detail": {
+        "name": "Example Channel"
+      }
+    }
+  ]
+}

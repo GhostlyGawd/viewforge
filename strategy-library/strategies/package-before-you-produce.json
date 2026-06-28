@@ -1,0 +1,22 @@
+{
+  "id": "package-before-you-produce",
+  "title": "Know the title and thumbnail before you make the video",
+  "category": "packaging",
+  "principle": "The packaging is the product's promise. Designing the title/thumbnail first forces the whole video to be built to deliver one clear, clickable idea.",
+  "rule": "Lock a working title + thumbnail concept at the research/script stage and make the video pay it off. If a segment doesn't serve the packaged promise, cut it.",
+  "targetMetric": "CTR",
+  "guardMetrics": ["AVP"],
+  "appliesTo": ["research", "script", "thumbnail", "title"],
+  "source": {
+    "kind": "external",
+    "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",
+    "url": "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/",
+    "quote": "YOU MUST KNOW THE TITLE AND THUMBNAILS OF THE VIDEOS YOU ARE MAKING",
+    "date": "2024-09"
+  },
+  "status": "documented",
+  "confidence": 0.55,
+  "evidence": [],
+  "createdUtc": "2026-06-28",
+  "lastReviewedUtc": "2026-06-28"
+}

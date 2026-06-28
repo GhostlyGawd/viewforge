@@ -1,0 +1,23 @@
+{
+  "id": "first-minute-retention",
+  "title": "Win or lose the video in the first minute",
+  "category": "retention",
+  "principle": "The first minute is the single most important part of the video — retention is won or lost there. Over-invest in it relative to every other segment.",
+  "rule": "Open by immediately paying off the thumbnail/title promise with maximum visuals, motion, music and quick scene changes; no slow throat-clearing intro. Treat any first-minute drop-off as a top-priority defect.",
+  "targetMetric": "retention_30s",
+  "guardMetrics": ["AVP", "likeRatio"],
+  "appliesTo": ["script", "motion", "edit"],
+  "source": {
+    "kind": "external",
+    "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",
+    "url": "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/",
+    "quote": "we freak out so much about the first minute and go so above and beyond to make it the best we freakin can",
+    "date": "2024-09"
+  },
+  "status": "documented",
+  "confidence": 0.55,
+  "evidence": [],
+  "constraints": ["no-deceptive-clickbait"],
+  "createdUtc": "2026-06-28",
+  "lastReviewedUtc": "2026-06-28"
+}

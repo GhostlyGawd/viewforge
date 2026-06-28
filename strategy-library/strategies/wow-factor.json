@@ -1,0 +1,22 @@
+{
+  "id": "wow-factor",
+  "title": "Engineer a 'wow factor' no competitor can match",
+  "category": "format",
+  "principle": "A single spectacle that no other channel in the niche could pull off creates a lasting impression and differentiates the channel, even when it isn't strictly necessary to the story.",
+  "rule": "Each video should aim for one 'how did they do that' moment scaled to the channel's means (in a motion-graphics channel: an impossible camera move, a data viz at absurd scale, a visual no one else attempts). Differentiation, not just retention, is the goal.",
+  "targetMetric": "returnViewerRate",
+  "guardMetrics": ["AVP"],
+  "appliesTo": ["research", "motion", "edit"],
+  "source": {
+    "kind": "external",
+    "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",
+    "url": "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/",
+    "quote": "a wow factor ... something no other youtuber can do",
+    "date": "2024-09"
+  },
+  "status": "documented",
+  "confidence": 0.45,
+  "evidence": [],
+  "createdUtc": "2026-06-28",
+  "lastReviewedUtc": "2026-06-28"
+}

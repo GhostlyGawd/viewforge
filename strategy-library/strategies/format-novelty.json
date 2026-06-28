@@ -1,0 +1,22 @@
+{
+  "id": "format-novelty",
+  "title": "Don't repeat a format back-to-back",
+  "category": "format",
+  "principle": "Audiences reward novelty and tire of repetition. Running the same video format consecutively depresses click-through and return rate even when each one is good.",
+  "rule": "Rotate formats across the upload schedule (e.g. last-to-leave, stair-stepping escalation, chase). Track format used per video so the planner never ships the same structure twice in a row.",
+  "targetMetric": "returnViewerRate",
+  "guardMetrics": ["CTR"],
+  "appliesTo": ["research", "script"],
+  "source": {
+    "kind": "external",
+    "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",
+    "url": "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/",
+    "quote": "avoid repeating formats consecutively",
+    "date": "2024-09"
+  },
+  "status": "documented",
+  "confidence": 0.45,
+  "evidence": [],
+  "createdUtc": "2026-06-28",
+  "lastReviewedUtc": "2026-06-28"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "brand-deals-are-content",
+  "title": "Sponsor segments are content, not interruptions",
+  "category": "monetization",
+  "principle": "A sponsor read treated as an ad tanks retention; treated as genuinely entertaining content, it can hold or even boost it. The integration must earn its place.",
+  "rule": "Build sponsor integrations as their own mini-bit (a stunt, demo, or joke that uses the product) rather than a flat read. Place it after a re-engagement beat, never in the fragile first minute.",
+  "targetMetric": "AVP",
+  "guardMetrics": ["likeRatio", "retention_50pct"],
+  "appliesTo": ["script", "edit"],
+  "source": {
+    "kind": "external",
+    "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",
+    "url": "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/",
+    "quote": "BRAND DEALS ARE CONTENT! And when treated as such boosts retention",
+    "date": "2024-09"
+  },
+  "status": "documented",
+  "confidence": 0.45,
+  "evidence": [],
+  "createdUtc": "2026-06-28",
+  "lastReviewedUtc": "2026-06-28"
+}

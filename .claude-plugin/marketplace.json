@@ -1,0 +1,41 @@
+{
+  "name": "viewforge",
+  "owner": {
+    "name": "rhen mcleod",
+    "email": "saintwraith.biz@gmail.com"
+  },
+  "metadata": {
+    "description": "A self-improving YouTube channel factory delivered as a reusable plugin — niche → brand → research → script → voice → motion → edit → distribute, optimized by a source-cited, test-over-time strategy library."
+  },
+  "plugins": [
+    {
+      "name": "viewforge",
+      "source": "./",
+      "description": "Brainstorm a niche and brand, then research → plan → write → produce → edit → distribute fully-engaging motion-graphics videos end to end (no fake-human avatars). Optimization is driven by a research-backed, source-cited strategy library seeded from the MrBeast production memos, with anti-reward-hacking and anti-overfitting guards, organized as departments that measurably improve over time.",
+      "version": "0.1.0",
+      "author": {
+        "name": "rhen mcleod",
+        "email": "saintwraith.biz@gmail.com"
+      },
+      "homepage": "https://github.com/GhostlyGawd/viewforge",
+      "repository": "https://github.com/GhostlyGawd/viewforge",
+      "license": "MIT",
+      "keywords": [
+        "youtube",
+        "content-creation",
+        "video-production",
+        "retention-optimization",
+        "motion-graphics"
+      ],
+      "category": "content",
+      "tags": [
+        "youtube",
+        "video-production",
+        "retention-optimization",
+        "motion-graphics",
+        "channel-strategy"
+      ],
+      "strict": false
+    }
+  ]
+}

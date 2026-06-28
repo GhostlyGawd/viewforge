@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Per-channel runtime project state (regenerable; can grow large with rendered assets)
+# Schema + a checked-in example live in state/ — but live channel work is local-only.
+# Note: ignore the *contents* (channels/*) rather than the dir, so the negations below
+# can re-include the example (you can't re-include a file under a fully-ignored dir).
+state/channels/*
+!state/channels/.gitkeep
+!state/channels/_example/
+
+# Rendered media + scratch
+out/
+renders/
+*.mp4
+*.wav
+*.mov
+
+# OS / editor noise
+.DS_Store
+Thumbs.db

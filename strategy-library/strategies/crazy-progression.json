@@ -1,0 +1,22 @@
+{
+  "id": "crazy-progression",
+  "title": "Crazy progression — show, don't narrate",
+  "category": "story",
+  "principle": "Stop telling viewers what they will watch and start showing them. Compress time aggressively so the story keeps escalating instead of dwelling on any one beat.",
+  "rule": "In minutes 1-3, transition from setup to payoff fast: cover multiple days/events rapidly rather than spending three minutes on day one. Every cut should advance the stakes.",
+  "targetMetric": "AVP",
+  "guardMetrics": ["likeRatio", "retention_50pct"],
+  "appliesTo": ["script", "edit"],
+  "source": {
+    "kind": "external",
+    "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",
+    "url": "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/",
+    "quote": "stop telling people what they will be watching and start showing them",
+    "date": "2024-09"
+  },
+  "status": "documented",
+  "confidence": 0.5,
+  "evidence": [],
+  "createdUtc": "2026-06-28",
+  "lastReviewedUtc": "2026-06-28"
+}

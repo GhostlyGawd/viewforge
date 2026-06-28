@@ -1,0 +1,23 @@
+{
+  "id": "thumbnail-title-extremity",
+  "title": "Package with the most extreme honest framing",
+  "category": "packaging",
+  "principle": "Click-through is driven by intrigue and extremity. The more extreme the framing — as long as the video pays it off — the higher the CTR.",
+  "rule": "Prefer high-intrigue verbs and superlatives ('I Survived' over 'I Spent'; 'Bananas Are The Worst Food On Earth' over 'I Don't Like Bananas'). The claim MUST be delivered in the video, or the packaging is blocked.",
+  "targetMetric": "CTR",
+  "guardMetrics": ["AVP", "likeRatio"],
+  "appliesTo": ["thumbnail", "title"],
+  "source": {
+    "kind": "external",
+    "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",
+    "url": "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/",
+    "quote": "the more extreme the better",
+    "date": "2024-09"
+  },
+  "status": "documented",
+  "confidence": 0.5,
+  "evidence": [],
+  "constraints": ["no-deceptive-clickbait"],
+  "createdUtc": "2026-06-28",
+  "lastReviewedUtc": "2026-06-28"
+}

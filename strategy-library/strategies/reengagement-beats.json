@@ -1,0 +1,22 @@
+{
+  "id": "reengagement-beats",
+  "title": "Scheduled re-engagement beats at 3 and 6 minutes",
+  "category": "retention",
+  "principle": "Retention sags at predictable points. Plant a planned re-engagement spike — highly interesting content that still fits the story — right where viewers tend to leave.",
+  "rule": "Place a 're-engagement' beat around 3:00 and again around 6:00 (a reveal, escalation, or surprise). The goal: if they watch the first half, they almost certainly finish.",
+  "targetMetric": "retention_50pct",
+  "guardMetrics": ["AVP"],
+  "appliesTo": ["script", "edit"],
+  "source": {
+    "kind": "external",
+    "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",
+    "url": "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/",
+    "quote": "get them to watch the first half of the video there's a very high chance they'll watch to the end",
+    "date": "2024-09"
+  },
+  "status": "documented",
+  "confidence": 0.5,
+  "evidence": [],
+  "createdUtc": "2026-06-28",
+  "lastReviewedUtc": "2026-06-28"
+}

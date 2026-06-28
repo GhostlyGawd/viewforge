@@ -1,0 +1,22 @@
+{
+  "id": "no-dull-moments",
+  "title": "No dull moments",
+  "category": "retention",
+  "principle": "Every second competes with the 'leave' button. Any stretch with no forward motion, stimulation, or stakes is a retention leak.",
+  "rule": "Audit the edit for dead air: trim pauses, cut filler, keep visual/audio stimulation continuous. If a beat isn't advancing story or delivering value, remove it.",
+  "targetMetric": "AVP",
+  "guardMetrics": ["likeRatio"],
+  "appliesTo": ["edit", "script"],
+  "source": {
+    "kind": "external",
+    "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",
+    "url": "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/",
+    "quote": "No dull moments in videos",
+    "date": "2024-09"
+  },
+  "status": "documented",
+  "confidence": 0.5,
+  "evidence": [],
+  "createdUtc": "2026-06-28",
+  "lastReviewedUtc": "2026-06-28"
+}
