@@ -40,12 +40,18 @@ the last, produced end-to-end with no fake humans, optimized by evidence not opi
       Remotion project; edit-QA **passed** (0 blocking). Actual MP4 render = local
       `npm run render` (env-dependent).
 
-## v0.4.0 — the optimization loop closes
-- [ ] **analytics** department: ingest real metrics, attribute to experiments, run
-      `evaluatePromotion`. Strategies start moving `documented → testing → validated`.
-- [ ] Experiment harness: A/B variants of a single strategy across videos, holdout
-      cohort tracking.
-- [ ] First strategy validated (or retired) on ViewForge's own evidence.
+## v0.4.0 — the optimization loop closes ✅ (machinery)
+- [x] **distribute** department (L2): `lib/distribution.mjs` (description/chapters/tags/
+      end-screen + synthetic-voice disclosure + validator) + `distribution-publish` skill.
+- [x] **analytics** department (L2): `lib/analytics.mjs` — ingest metrics → observations
+      → attribute → `evaluatePromotion` → advance lifecycle (documented/hypothesis →
+      testing → validated → retired). Refuses to learn from simulated data (verified).
+- [x] First **internally-generated** strategy: `ground-quantified-claims` (hypothesis),
+      born from the IMPROVEMENT-LOG — the recursion working. Grounding guard wired into
+      `lib/video-idea.mjs`.
+- [ ] First strategy validated on ViewForge's own REAL evidence — **blocked on a
+      published video with real analytics** (needs the operator to publish; the loop
+      will not promote on simulated data, by design).
 
 ## v0.5.0 — recursion + self-improvement
 - [ ] Internal strategy generation (`source.kind:"internal"`) → hypothesis → test.

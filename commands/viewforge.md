@@ -27,10 +27,12 @@ The user's input is in `$ARGUMENTS`. Route on it:
    - `brand` done → run **video-research** (`skills/video-research/SKILL.md`).
    - `research` done → run the production departments per video: **script-write** →
      **voice-over** → **motion-graphics** → **edit-assemble** (each in `skills/`).
-   - `edit-approved` → **distribution** is planned (`ROADMAP.md`) — say what's coming
-     rather than faking output.
-   The department order and maturity are in `departments/README.md`. As of v0.3.0,
-   niche → brand → research → script → voice → motion → edit are all L2 (real engines).
+   - `edit-approved` → **distribution-publish** (build + validate the publish package;
+     don't auto-publish — uploading is outward-facing and needs the operator).
+   - `published` → **analytics-optimize** — ingest the video's REAL metrics, run the
+     promotion gate, advance the strategy lifecycle. This closes the loop.
+   The department order and maturity are in `departments/README.md`. As of v0.4.0, the
+   full niche→…→analytics chain is L2 (real engines).
 
 3. **"strategies" / "what works"** → load the strategy library
    (`lib/strategy-registry.mjs` + `strategy-library/strategies/`) and report the

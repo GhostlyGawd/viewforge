@@ -37,10 +37,11 @@ by a **sourced, testable strategy library** with a lifecycle, and a hard
   tweakable, A/B-testable parameter, which is exactly what the optimization loop
   needs.
 
-## What's built (through v0.3.0)
+## What's built (through v0.4.0)
 
-The foundation plus **seven L2 departments** — a channel can go from "what's it about"
-all the way to an edit-approved, render-ready video.
+The foundation plus **the full nine-department chain at L2** — a channel can go from
+"what's it about" all the way to a published video whose real metrics feed back and
+improve the next one. The analytics department **closes the optimization loop**.
 
 - **Strategy library**: schema + lifecycle + 9 source-cited MrBeast-memo seeds, with
   a CI gate that rejects any unsourced or malformed strategy.
@@ -62,9 +63,17 @@ all the way to an edit-approved, render-ready video.
   6. **motion-graphics** — parameterized scene timeline (the A/B substrate) →
      Remotion-first render; blocks fake-human brands in code.
   7. **edit-assemble** — final ship/block QA: no dull moments + the hard constraints.
+  8. **distribution-publish** — description/chapters/tags/end-screen + synthetic-voice
+     disclosure, validated (doesn't auto-publish — uploading needs the operator).
+  9. **analytics-optimize** — ingest a published video's REAL metrics, run the
+     promotion gate, advance strategies along the lifecycle. **Refuses to learn from
+     simulated data.** This is what makes the system self-improving.
 
-A worked example (Marginalia EP.01) takes all seven from a cold-start niche to a
-plan-driven Remotion project + brand comps. Run `npm run check`. Roadmap in `ROADMAP.md`.
+ViewForge also generates its own strategies: the first internal one,
+`ground-quantified-claims`, was born from a logged mistake and enters as a `hypothesis`
+that must earn validation like any other. A worked example (Marginalia EP.01) runs the
+whole chain from a cold-start niche to a plan-driven Remotion project + brand comps.
+Run `npm run check`. Roadmap in `ROADMAP.md`.
 
 ## Layout
 

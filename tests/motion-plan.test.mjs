@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { buildMotionPlan, tweakableParameters, VISUAL_MODE } from '../lib/motion-plan.mjs'
+import { buildMotionPlan, tweakableParameters, extractCssColor, extractFontFamily, VISUAL_MODE } from '../lib/motion-plan.mjs'
 import { buildBeatSheet } from '../lib/script-model.mjs'
 
 const brand = {
@@ -43,6 +43,26 @@ test('tweakableParameters lists the knobs the optimizer may vary', () => {
   const knobs = tweakableParameters(plan)
   assert.ok(knobs.includes('transitionIn'))
   assert.ok(knobs.includes('cutsPerScene'))
+})
+
+test('extractCssColor pulls a valid color out of a labeled brand token (render-bug fix)', () => {
+  assert.equal(extractCssColor('#14110E (warm near-black)'), '#14110E')
+  assert.equal(extractCssColor('#EDE6D6 (parchment)'), '#EDE6D6')
+  assert.equal(extractCssColor('rgba(20,17,14,1) ground'), 'rgba(20,17,14,1)')
+  assert.equal(extractCssColor(undefined, '#123'), '#123')
+})
+
+test('extractFontFamily pulls the family name and adds a generic fallback', () => {
+  assert.equal(extractFontFamily('Fraunces (high-contrast serif) for titles', 'serif'), "'Fraunces', serif")
+  assert.equal(extractFontFamily('Inter', 'sans-serif'), "'Inter', sans-serif")
+  assert.equal(extractFontFamily('', 'serif'), 'serif')
+})
+
+test('buildMotionPlan sanitizes labeled palette values into valid CSS', () => {
+  const messyBrand = { ...brand, palette: { bg: '#14110E (warm near-black)', ink: '#EDE6D6 (parchment)', accent: '#C8462C (vermillion)' } }
+  const plan = buildMotionPlan(buildBeatSheet({ targetSeconds: 60 }), messyBrand)
+  assert.equal(plan.scenes[0].tokens.bg, '#14110E')
+  assert.equal(plan.scenes[0].tokens.accent, '#C8462C')
 })
 
 test('buildMotionPlan validates inputs', () => {

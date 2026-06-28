@@ -28,8 +28,8 @@ come.
 | 6 | **motion** | Produce the visuals — parameterized scene timeline → Remotion-first programmatic motion graphics | `lib/motion-plan.mjs` (+ Remotion) | **L2** (skill: `motion-graphics`) |
 | 7 | **edit** | Assemble + tighten ("no dull moments"), final ship/block QA against hard constraints | `lib/edit-qa.mjs` | **L2** (skill: `edit-assemble`) |
 | 8 | **package** | Title + thumbnail at the extremity the content can honestly pay off | — | L0 |
-| 9 | **distribute** | Publish, schedule, description/tags/end-screens, cross-post | — | L0 |
-| 10 | **analytics** | Pull real metrics, attribute to experiments, run the promotion gate | `lib/guards.mjs` | L1 |
+| 9 | **distribute** | Publish package: description/chapters/tags/end-screens + synthetic-voice disclosure, validated | `lib/distribution.mjs` | **L2** (skill: `distribution-publish`) |
+| 10 | **analytics** | Ingest real metrics → observations → attribute → promotion gate → advance strategy lifecycle (the loop-closer) | `lib/analytics.mjs` (+ `guards.mjs`) | **L2** (skill: `analytics-optimize`) |
 
 ## Building a new department
 
@@ -40,8 +40,9 @@ come.
 4. Make its creative choices register `experiments` on the channel state. → L3.
 5. Once it has validated strategies, let it re-weight itself. → L4.
 
-The order of expansion is in `ROADMAP.md`. As of **v0.3.0**, departments 1–7
-(niche → brand → research → script → voice → motion → edit) are all at **L2** — a
-channel can be taken from "what's it about" all the way to an edit-approved, render-
-ready video. Departments 8–10 (distribute, analytics) are next; analytics closing the
-loop is what unlocks L3 (measured) → L4 (self-optimizing) for the rest.
+The order of expansion is in `ROADMAP.md`. As of **v0.4.0**, the full chain is at
+**L2**: niche → brand → research → script → voice → motion → edit → distribute →
+analytics. The analytics department closes the optimization loop (ingest real metrics →
+promotion gate → advance strategy lifecycle), which is the mechanism that lifts the
+other departments from L2 to L3 (measured) and ultimately L4 (self-optimizing) as real
+channel data accumulates. (Packaging, row 8, currently lives inside `video-research`.)

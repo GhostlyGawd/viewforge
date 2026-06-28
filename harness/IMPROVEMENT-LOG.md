@@ -34,6 +34,32 @@ vague note. This log records each such change with its reproduction and the
 - **Guard against gaming:** the grounding must be a real source link (like the strategy
   `source` field), not a self-asserted boolean — expensive to fake, cheap to satisfy
   honestly. Tracked for v0.4.0.
+- **RESOLVED (v0.4.0):** `lib/video-idea.checkClaimGrounding` now flags any title with a
+  quantified/superlative claim and no `claimSource` (tests in `tests/grounding.test.mjs`),
+  and the fix was generalized into a real, testable strategy `ground-quantified-claims`
+  (internal-source, `hypothesis`) — so it must earn validation on real evidence like any
+  other, rather than being trusted because we wrote it. This is the dogfood-the-mistake-
+  into-the-harness loop working end to end: incident → reproducing test → generalized
+  rule → subject to the same guards.
+
+## 2026-06-28 — the render caught a brand-token bug 110 unit tests missed
+- **Incident:** the first still-render of vid-1 came out white-on-black instead of the
+  Marginalia parchment-on-near-black. Cause: the brand record stored palette values as
+  `"#14110E (warm near-black)"` — the human label makes it an invalid CSS color, so the
+  browser silently fell back to defaults. The motion engine passed the token through
+  verbatim. Unit tests never caught it because their fixtures used clean hex.
+- **Reproduction:** `tests/motion-plan.test.mjs` now has `extractCssColor` /
+  `extractFontFamily` cases + a "sanitizes labeled palette values" test using the exact
+  messy string from the brand record.
+- **Generalization:** the failure class is *trusting that an upstream human-authored
+  field is machine-clean*. Fix = the motion engine sanitizes every brand color/font
+  token to valid CSS at plan-build time (`extractCssColor`), so any labeled value
+  renders. (Defensive at the consumer, not just hoping the brand record is tidy.)
+- **Guard against gaming:** the sanitizer is covered by tests asserting real CSS output;
+  it can't be satisfied by a token that merely "looks" like a color.
+- **Meta-lesson:** this is why the pipeline renders real artifacts, not just asserts on
+  data — a render exposes integration bugs a green unit suite hides. Worth a future
+  golden-frame check in CI.
 
 ## 2026-06-28 — bootstrap
 - **Incident:** none yet — initial release.

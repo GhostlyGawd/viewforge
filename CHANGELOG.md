@@ -3,6 +3,28 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.4.0] — 2026-06-28
+
+The optimization loop closes. The full niche→…→analytics chain is L2, and ViewForge can
+now learn from a published video — without ever learning from fabricated data.
+
+### Added
+- **distribution department (L2)**: `lib/distribution.mjs` — SEO description with
+  chapters (first at 00:00) + cited sources, deduped tag set within budget, end-screen
+  plan, and the synthetic-voice disclosure; with a validator. `skills/distribution-publish/`
+  (does not auto-publish — uploading is left to the operator).
+- **analytics department (L2) — the loop-closer**: `lib/analytics.mjs` — ingest real
+  metrics → observations (signed deltas vs baseline) → attribute to strategies → run the
+  promotion gate → advance the lifecycle (documented/hypothesis → testing → validated →
+  retired). Verified: identical numbers promote when real and are refused when
+  `simulated`. `skills/analytics-optimize/`.
+- **Recursive strategy generation**: the first internally-generated strategy,
+  `ground-quantified-claims` (internal-source, `hypothesis`), created from the
+  IMPROVEMENT-LOG — it must earn validation like any other.
+- **Dogfooded grounding guard**: `lib/video-idea.checkClaimGrounding` flags any
+  quantified/superlative title claim lacking a `claimSource`.
+- 110 tests (was 91); 10 strategies (9 documented + 1 hypothesis).
+
 ## [0.3.0] — 2026-06-28
 
 The production vertical slice — a channel can now go all the way to an edit-approved,
