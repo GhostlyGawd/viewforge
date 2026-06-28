@@ -90,6 +90,13 @@ tests/               node --test suites (46)
 ARCHITECTURE.md · ANTI-REWARD-HACKING.md · ROADMAP.md · harness/IMPROVEMENT-LOG.md
 ```
 
+## Review channel plans (mobile)
+
+`node tools/export-plans.mjs` renders every channel's plan — niche, brand (with palette
+swatches), and the locked video slate — into a single responsive `docs/index.html` you
+can read from a phone. Served via GitHub Pages so it's just a URL. The live channel
+state stays local; the page is a small derived snapshot, safe to commit.
+
 ## The non-negotiables
 
 1. No fake-human visuals — ever.

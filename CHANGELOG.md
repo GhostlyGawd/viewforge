@@ -3,6 +3,11 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.5.2] — 2026-06-28
+
+### Added
+- **Mobile channel-plan viewer**: `tools/export-plans.mjs` renders every channel (niche, brand + palette swatches, locked video slate) into a single responsive `docs/index.html`, served via GitHub Pages so the operator can review plans from a phone. Live state stays local; the page is a small derived snapshot.
+
 ## [0.5.1] — 2026-06-28
 
 ### Fixed
