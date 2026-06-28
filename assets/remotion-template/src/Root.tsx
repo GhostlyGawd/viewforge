@@ -15,6 +15,6 @@ export const RemotionRoot: React.FC = () => (
     fps={motionPlan.fps}
     width={1920}
     height={1080}
-    defaultProps={{ motionPlan: motionPlan as any, script: script as any }}
+    defaultProps={{ motionPlan: motionPlan as any, script: script as any, audioFile: (motionPlan as any).audioFile ?? null }}
   />
 )

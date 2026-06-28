@@ -42,10 +42,32 @@ disclosure** when required. Tags are deduped and within budget.
 
 ## 2. Publish (human-in-the-loop)
 
-Uploading to YouTube is an outward-facing action — **don't auto-publish.** Hand the
-validated package + the final MP4 to the operator (or the YouTube API once
-credentials + consent exist). Schedule for the channel's best slot; set the
-end-screen per the plan; apply the disclosure toggle in Studio.
+Uploading to YouTube is an outward-facing, account-mutating action — **never
+auto-publish.** Build the API request but hand the actual upload to the operator.
+
+`lib/youtube-upload.mjs` builds + validates the Data API `videos.insert` request from
+the publish package (defaults to **private**, Education category, carries the
+synthetic-media disclosure flag, supports `publishAt` scheduling):
+
+```bash
+node -e '
+Promise.all([import("../../lib/youtube-upload.mjs")]).then(([{buildInsertRequest, validateInsertRequest}]) => {
+  const pkg = JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));
+  const req = buildInsertRequest(pkg, { privacyStatus: "private" });   // or publishAtUtc for scheduling
+  const v = validateInsertRequest(req);
+  console.log(v.valid ? "INSERT REQUEST OK" : "ISSUES: "+v.issues.join("; "));
+  console.log(JSON.stringify(req, null, 2));
+})' "state/channels/<slug>/videos/<id>/publish.json"
+```
+
+**Performing the upload (operator):** this needs YouTube OAuth credentials the plugin
+does not and should not hold. One-time setup: create an OAuth client in Google Cloud
+(YouTube Data API v3 enabled), get a refresh token for the channel's account. Then drive
+`youtube.videos.insert` with the request body above + the rendered MP4 as the resumable
+media body (via `googleapis` in a throwaway script, or `curl` against the resumable
+endpoint). Set the **altered/synthetic-content disclosure** in Studio (the request
+surfaces `disclosures.note`). Keep `privacyStatus: private` until the operator confirms,
+then flip to `public`/`unlisted` or let `publishAt` schedule it.
 
 ## 3. Hand off to analytics
 Once live, the video's real metrics become the input to the **analytics** department,

@@ -65,6 +65,13 @@ test('buildMotionPlan sanitizes labeled palette values into valid CSS', () => {
   assert.equal(plan.scenes[0].tokens.accent, '#C8462C')
 })
 
+test('buildMotionPlan carries an optional audioFile (null by default)', () => {
+  const plan = buildMotionPlan(buildBeatSheet({ targetSeconds: 60 }), brand)
+  assert.equal(plan.audioFile, null)
+  const withAudio = buildMotionPlan(buildBeatSheet({ targetSeconds: 60 }), brand, { audioFile: 'narration.wav' })
+  assert.equal(withAudio.audioFile, 'narration.wav')
+})
+
 test('buildMotionPlan validates inputs', () => {
   assert.throws(() => buildMotionPlan([], brand))
   assert.throws(() => buildMotionPlan(buildBeatSheet({ targetSeconds: 60 }), null))

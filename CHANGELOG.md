@@ -3,6 +3,29 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.5.0] — 2026-06-28
+
+Audio-first-class rendering, motion set-pieces, and a ready-to-drive YouTube upload path.
+
+### Added
+- **Audio as a first-class render input**: `motion-plan.mjs` now carries an optional
+  `audioFile`; the template renders the narration `<Audio>` only when the plan supplies
+  it (audio only — never a fake human). The voice department's WAV flows straight into
+  the render with no ffmpeg.
+- **Motion set-pieces** in the template: a **timeline sweep** with ticking years on the
+  progression beat (the visual form of "compress time / crazy progression") and a
+  self-drawing **map-morph** border line on the escalation/wow-factor beat.
+- **YouTube upload path**: `lib/youtube-upload.mjs` builds + validates the Data API
+  `videos.insert` request from a publish package (defaults to **private**, Education
+  category, surfaces the synthetic-media disclosure, supports `publishAt` scheduling).
+  It does NOT upload — that needs the operator's OAuth credentials + consent; the
+  `distribution-publish` skill documents the one-time setup. 122 tests (was 113).
+
+### Validated (local channel state)
+- Rendered a real **25-second clip with synced Piper narration** (frames 0-750) and
+  set-piece stills (timeline sweep at 1875, map-morph) — the full motion+audio pipeline
+  producing a watchable artifact.
+
 ## [0.4.1] — 2026-06-28
 
 Production polish + multi-channel validation.
