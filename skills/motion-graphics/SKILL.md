@@ -40,12 +40,13 @@ pace, accent, texture) + the brand tokens.
 
 ## 2. Scaffold / update the Remotion project
 
-Generate a Remotion project under `videos/<id>/remotion/` whose composition reads
-`../motion-plan.json` + `../script.json` as props (see the vid-1 scaffold for the
-shape: `Root.tsx` registers the composition with `durationInFrames` from the plan;
-`MarginaliaVideo.tsx` maps scenes → `Sequence`s, applying the brand tokens + per-beat
-pace). Because the render is plan-driven, A/B variants are just different
-`motion-plan.json`s — no code edits.
+Copy the reusable, brand-agnostic template from **`assets/remotion-template/`** into
+`videos/<id>/remotion/` (so `../motion-plan.json` resolves to this video's plan). The
+template's composition reads `../motion-plan.json` + `../script.json` as props and is
+already polished: logo sting, paper grain, animated ink-draw margin rule, wax-seal
+stamp on the payoff, map-morph drift, and number accenting — all parameter-driven, so
+A/B variants are just different `motion-plan.json`s (no code edits). See
+`assets/remotion-template/README.md`.
 
 ## 3. Render locally (free)
 

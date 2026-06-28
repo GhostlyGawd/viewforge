@@ -3,6 +3,26 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.4.1] — 2026-06-28
+
+Production polish + multi-channel validation.
+
+### Added
+- **Reusable Remotion render template** (`assets/remotion-template/`): brand-agnostic,
+  driven entirely by `motion-plan.json` + `script.json`. Polish: logo sting, paper-grain
+  texture, animated ink-draw margin rule, wax-seal stamp on the payoff, map-morph drift,
+  and number accenting. The `motion-graphics` skill now scaffolds from it. Replaces the
+  per-video inline composition with one maintained, committed template.
+
+### Validated (on local channel state, not committed)
+- **Piper voiceover proven**: `piper-tts` (free, local) synthesized vid-1's 467-word
+  narration to a real 159s WAV, wired into the composition as a native Remotion `<Audio>`
+  (no ffmpeg needed). Confirms the voice department's free-TTS path end to end.
+- **Factory repeatability**: stood up the two tabled niches as full channels —
+  **Wellspring** (senior-health micro-explainers) and **First Trade** (fintech how-to) —
+  each niche→brand→research with a validated brand + locked slate, from the same engines.
+- vid-1 publish package built + validated (chapters + cited sources + AI-voice disclosure).
+
 ## [0.4.0] — 2026-06-28
 
 The optimization loop closes. The full niche→…→analytics chain is L2, and ViewForge can

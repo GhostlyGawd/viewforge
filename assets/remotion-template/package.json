@@ -1,0 +1,16 @@
+{
+  "name": "viewforge-remotion-template",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ViewForge motion-department render template. Brand-agnostic Remotion project driven by ../motion-plan.json + ../script.json. The motion-graphics skill copies this next to a video's plan to render it. Polish: logo sting, paper grain, animated ink-draw margin rule, wax-seal stamp, map-morph drift.",
+  "scripts": {
+    "start": "remotion studio",
+    "render": "remotion render MarginaliaVideo out/video.mp4 --codec=h264"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.0"
+  }
+}
