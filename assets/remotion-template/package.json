@@ -7,10 +7,11 @@
     "start": "remotion studio",
     "render": "remotion render MarginaliaVideo out/video.mp4 --codec=h264"
   },
+  "comment": "Caret ranges so a fresh install pulls the latest patched 4.x / 18.x (the exact 4.0.0 pin carried transitive advisories). The plugin core stays zero-dep; these deps only exist inside a scaffolded render project, never installed by the plugin's own CI.",
   "dependencies": {
-    "@remotion/cli": "4.0.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "remotion": "4.0.0"
+    "@remotion/cli": "^4.0.350",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.350"
   }
 }

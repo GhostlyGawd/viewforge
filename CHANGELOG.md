@@ -3,6 +3,11 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.5.1] — 2026-06-28
+
+### Fixed
+- Widened the Remotion render-template deps to caret ranges (`^4.0.350`) so fresh installs pull patched versions — the exact `4.0.0` pin carried transitive advisories. The plugin core remains zero-dependency and is unaffected.
+
 ## [0.5.0] — 2026-06-28
 
 Audio-first-class rendering, motion set-pieces, and a ready-to-drive YouTube upload path.
