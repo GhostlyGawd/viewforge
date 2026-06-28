@@ -3,6 +3,34 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.7.0] — 2026-06-28
+
+Archival imagery + music/sound design — the render now looks and sounds like a real
+channel. Built to a written plan (`plans/05-archival-imagery-and-audio.md`) and gated on
+**property + BDD tests** (zero-dep harness in `tests/helpers/`).
+
+### Added — Phase A: archival imagery
+- `lib/asset-license.mjs` — rights-clean gate: PD/CC0/CC-BY/CC-BY-SA usable; **NC** (channel
+  is monetized) and **ND** (we composite) and unknown rejected; CC-BY needs attribution.
+- `lib/asset-source.mjs` — normalize → filter (license + ≥1280px + provenance) → dedup →
+  auditable manifest; plan↔manifest binding/validation.
+- `tools/fetch-assets.mjs` — Openverse + LoC fetch using the tested gate. The template's
+  `ArchivalImage` composites a Ken-Burns photo under a scrim with an on-screen credit.
+- Success criteria **A1–A4** each covered by property/BDD tests; **A5** proven — real CC0
+  1899 fruit-packing photos composite into the comma-story scenes.
+
+### Added — Phase B: music + sound design
+- `lib/audio-mix.mjs` — narration-priority mix: the music bed **ducks under narration**
+  (a fixed dB margin), fades, SFX placed at beat cues; with a validator.
+- `tools/synth-audio.mjs` — generates a rights-clean (CC0) ambient bed + SFX in pure Node
+  (no keys). The composition plays the ducked bed + a comma "slam" SFX.
+- Success criteria **B1–B4** each covered by property/BDD tests; **B5** proven — a rendered
+  clip has narration intelligible over the bed (~20 dB separation) + the SFX.
+
+### Test harness
+- `tests/helpers/prop.mjs` (seeded `forAll`) + `tests/helpers/bdd.mjs`
+  (`feature`/`scenario`/`given`/`when`/`then`). 151 tests (was 122).
+
 ## [0.6.0] — 2026-06-28
 
 ### Changed

@@ -1,5 +1,5 @@
 import React from 'react'
-import { AbsoluteFill, Audio, Sequence, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion'
+import { AbsoluteFill, Audio, Img, Sequence, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion'
 
 // Marginalia EP.01 — upgraded for ENERGY: living background, kinetic headlines that
 // slam in, a money counter that ticks to $40M, and a comma-split set piece that shows
@@ -7,11 +7,28 @@ import { AbsoluteFill, Audio, Sequence, Easing, interpolate, spring, staticFile,
 // (never a fake human).
 
 type Tokens = { bg: string; ink: string; accent: string; displayFont: string; bodyFont: string }
-type Scene = { beatId: string; startFrame: number; endFrame: number; params: Record<string, any>; tokens: Tokens }
+type Scene = { beatId: string; startFrame: number; endFrame: number; params: Record<string, any>; tokens: Tokens; assets?: { localFile: string; credit?: string }[] }
 type Plan = { fps: number; scenes: Scene[]; brandName: string; audioFile?: string | null }
 type Script = { title: string; beats: { id: string; text: string }[] }
 
 const firstSentence = (t: string) => (t || '').split(/(?<=[.!?])\s/)[0] || ''
+
+// Archival image layer: a real rights-clean photo with a slow Ken-Burns move, under a
+// dark scrim so the parchment text stays legible, with an on-screen credit (CC-BY needs
+// attribution). Driven by scene.assets[] (localFile + credit) from the manifest.
+const ArchivalImage: React.FC<{ asset: { localFile: string; credit?: string }; tokens: Tokens; durationInFrames: number }> = ({ asset, tokens, durationInFrames }) => {
+  const frame = useCurrentFrame()
+  const scale = interpolate(frame, [0, durationInFrames], [1.06, 1.2], { extrapolateRight: 'clamp' })
+  const x = interpolate(frame, [0, durationInFrames], [0, -26], { extrapolateRight: 'clamp' })
+  const fadeIn = interpolate(frame, [0, 14], [0, 1], { extrapolateRight: 'clamp' })
+  return (
+    <AbsoluteFill style={{ opacity: fadeIn }}>
+      <Img src={staticFile('assets/' + asset.localFile)} style={{ width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${scale}) translateX(${x}px)`, filter: 'saturate(0.85) contrast(1.02)' }} />
+      <AbsoluteFill style={{ background: `linear-gradient(100deg, ${tokens.bg} 8%, ${tokens.bg}e6 40%, ${tokens.bg}99 78%, ${tokens.bg}40 100%)` }} />
+      {asset.credit ? <div style={{ position: 'absolute', right: 24, bottom: 18, fontSize: 16, color: tokens.ink, opacity: 0.45, fontFamily: tokens.bodyFont }}>{asset.credit}</div> : null}
+    </AbsoluteFill>
+  )
+}
 
 // Living background: a slow-drifting accent glow + paper grain, so frames are never dead flat.
 const LivingBg: React.FC<{ tokens: Tokens; energy?: number }> = ({ tokens, energy = 1 }) => {
@@ -182,9 +199,10 @@ const SceneCard: React.FC<{ scene: Scene; text: string }> = ({ scene, text }) =>
   // money counter only after the headline lands, in the hook
   const showMoney = beatId === 'hook'
 
+  const img = scene.assets && scene.assets[0]
   return (
     <AbsoluteFill style={{ justifyContent: 'center', padding: '0 170px', opacity: fade }}>
-      <LivingBg tokens={tokens} energy={beatId === 'hook' || beatId === 'escalation' ? 1.2 : 0.7} />
+      {img ? <ArchivalImage asset={img} tokens={tokens} durationInFrames={durationInFrames} /> : <LivingBg tokens={tokens} energy={beatId === 'hook' || beatId === 'escalation' ? 1.2 : 0.7} />}
       {beatId === 'escalation' && <CaseBars tokens={tokens} durationInFrames={durationInFrames} />}
       <MarginRule accent={tokens.accent} />
       <div style={{ color: tokens.ink, opacity: 0.5, fontFamily: tokens.bodyFont, letterSpacing: 10, fontSize: 26, marginBottom: 22 }}>
@@ -209,8 +227,24 @@ const SceneCard: React.FC<{ scene: Scene; text: string }> = ({ scene, text }) =>
 export const MarginaliaVideo: React.FC<{ motionPlan: Plan; script: Script; audioFile?: string | null }> = ({ motionPlan, script, audioFile }) => {
   const textByBeat = new Map(script.beats.map((b) => [b.id, b.text]))
   const bg = motionPlan.scenes[0]?.tokens.bg ?? '#000'
-  const stingFrames = Math.round((motionPlan.fps || 30) * 1.4)
+  const fps = motionPlan.fps || 30
+  const stingFrames = Math.round(fps * 1.4)
+  const stingSec = stingFrames / fps
   const audio = audioFile ?? motionPlan.audioFile ?? null
+
+  // Music bed ducks under narration. Mirrors lib/audio-mix.mjs (bed −18dB ≈ 0.13,
+  // duck −30dB ≈ 0.03) — narration stays well above the bed during speech.
+  const narrSegs = script.beats.filter((b) => (b.text || '').trim()).map((b) => ({ s: b.startSec + stingSec, e: b.endSec + stingSec }))
+  const BED = 0.24
+  const DUCK = 0.05
+  const bedVolume = (f: number) => {
+    const t = f / fps
+    return narrSegs.some((x) => t >= x.s && t < x.e) ? DUCK : BED
+  }
+  // SFX: the comma "slam" lands on the comma in the show-dont-tell beat.
+  const sdt = motionPlan.scenes.find((s) => s.beatId === 'show-dont-tell')
+  const slamFrame = sdt ? sdt.startFrame + 18 : null
+
   return (
     <AbsoluteFill style={{ backgroundColor: bg }}>
       {motionPlan.scenes.map((scene) => (
@@ -221,6 +255,15 @@ export const MarginaliaVideo: React.FC<{ motionPlan: Plan; script: Script; audio
       <Sequence from={0} durationInFrames={stingFrames}>
         <Sting tokens={motionPlan.scenes[0]?.tokens} brandName={motionPlan.brandName || 'MARGINALIA'} />
       </Sequence>
+      {/* music bed (CC0, synthesized), ducked under narration */}
+      <Audio src={staticFile('audio/bed.wav')} volume={bedVolume} loop />
+      {/* SFX cue */}
+      {slamFrame != null ? (
+        <Sequence from={slamFrame} durationInFrames={Math.round(fps * 0.5)}>
+          <Audio src={staticFile('audio/slam.wav')} volume={0.55} />
+        </Sequence>
+      ) : null}
+      {/* narration (audio only — never a fake human) */}
       {audio ? (
         <Sequence from={stingFrames}>
           <Audio src={staticFile(audio)} />

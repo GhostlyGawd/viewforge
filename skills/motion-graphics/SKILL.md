@@ -59,9 +59,24 @@ fonts (Fraunces/Inter via `@remotion/google-fonts`) for an exact-brand render. I
 install/render can't run in this environment, scaffold the project + give the user the
 one render command rather than faking an MP4.
 
-## 4. The signature set pieces
+## 4. Archival imagery (rights-clean) + audio
+
+- **Imagery:** `node tools/fetch-assets.mjs <render>/public/assets "<query>" ...` pulls
+  public-domain / CC0 / CC-BY images from Openverse + LoC, filtered by the tested license
+  gate (`lib/asset-license.mjs` — NC/ND/unknown rejected; the channel is monetized + we
+  composite) and a resolution floor, writing an auditable `manifest.json`. Bind images to
+  scenes with `asset-source.bindAssetsToPlan` (validated against the manifest); the
+  template's `ArchivalImage` composites them with a Ken-Burns move, a dark scrim, and an
+  on-screen credit (CC-BY needs attribution).
+- **Audio:** `node tools/synth-audio.mjs <render>/public/audio <durationSec>` generates a
+  rights-clean (CC0) ambient bed + SFX. The composition plays the bed **ducked under the
+  narration** per `lib/audio-mix.mjs` (music sits a fixed margin below speech), with SFX at
+  beat cues. Never a fake human — voice + bed are audio only.
+
+## 5. The signature set pieces
 Build the brand's promised motion identity over iterations: map/timeline morphs, the
-logo sting, ink-draw transitions. Keep them as parameters so they can be tuned.
+logo sting, ink-draw transitions, the money counter, kinetic headlines. Keep them as
+parameters so they can be tuned.
 
 ## Definition of done
 - [ ] `motion-plan.json` built (passes the no-fake-human guard); scenes parameterized.

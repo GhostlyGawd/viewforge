@@ -12,7 +12,7 @@
       "name": "viewforge",
       "source": "./",
       "description": "Brainstorm a niche and brand, then research → plan → write → produce → edit → distribute fully-engaging motion-graphics videos end to end (no fake-human avatars). Optimization is driven by a research-backed, source-cited strategy library seeded from the MrBeast production memos, with anti-reward-hacking and anti-overfitting guards, organized as departments that measurably improve over time.",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "author": {
         "name": "rhen mcleod",
         "email": "saintwraith.biz@gmail.com"
