@@ -4,9 +4,9 @@ import { buildNarrationSpec, validateNarrationSpec, recommendTtsEngine, TTS_ENGI
 
 test('recommended TTS engines are free and local', () => {
   assert.ok(TTS_ENGINES.every((e) => e.cost === 'free' && e.local === true))
-  assert.equal(recommendTtsEngine().id, 'piper')
+  assert.equal(recommendTtsEngine().id, 'kokoro') // most natural free local voice
   assert.equal(recommendTtsEngine('xtts').id, 'xtts')
-  assert.equal(recommendTtsEngine('nonexistent').id, 'piper') // falls back to default
+  assert.equal(recommendTtsEngine('nonexistent').id, 'kokoro') // falls back to default
 })
 
 test('buildNarrationSpec produces per-beat segments with timing + ssml', () => {
@@ -17,7 +17,7 @@ test('buildNarrationSpec produces per-beat segments with timing + ssml', () => {
     ],
   }
   const spec = buildNarrationSpec(script)
-  assert.equal(spec.engine.id, 'piper')
+  assert.equal(spec.engine.id, 'kokoro')
   assert.equal(spec.segments.length, 2)
   assert.ok(spec.segments[0].ssml.includes('<speak>'))
   assert.ok(spec.totalWords > 0)

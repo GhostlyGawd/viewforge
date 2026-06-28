@@ -3,6 +3,19 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.8.0] — 2026-06-28
+
+Much better voice + real rhythm (from user feedback: Piper sounded like TTS, visuals were static).
+
+### Added
+- **Kokoro voice (default)**: tools/synth-voice.py synthesizes per-beat narration with the
+  am_michael voice — markedly more natural than Piper, still free + fully local. voice-spec
+  now defaults to Kokoro. (Human-grade = ElevenLabs, paid, operator opt-in.)
+- **Audio-driven, word-synced captions**: the template gains a CaptionVideo composition whose
+  timing comes from the real narration (captions.json), revealing words in sync with the
+  voice over continuously-moving full-bleed archival photos — continuous rhythm vs static
+  cards. Reveal/window logic is the property+BDD-tested lib/caption-timing.mjs. 159 tests (was 151).
+
 ## [0.7.0] — 2026-06-28
 
 Archival imagery + music/sound design — the render now looks and sounds like a real

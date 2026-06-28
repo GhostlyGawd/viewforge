@@ -37,22 +37,28 @@ rather than speeding the voice past natural pace.
 
 ## 2. Pick the engine (free + local first)
 
-`lib/voice-spec.mjs` recommends free, self-hostable engines (`TTS_ENGINES`): **Piper**
-by default (fast, local, MIT), with Coqui XTTS / Kokoro as higher-expressiveness
-options. No paid API unless the user opts in. This is the "search-for-a-free-tool-first"
-rule applied — don't build a TTS, use one.
+`lib/voice-spec.mjs` recommends free, self-hostable engines (`TTS_ENGINES`): **Kokoro**
+is the default — markedly more natural than Piper, still free + fully local — with voice
+**am_michael**. Piper is a lighter fallback. Genuinely human narration = a paid API
+(ElevenLabs), which the operator can opt into with a key. Don't build a TTS — use one.
 
-## 3. Render the audio locally
+## 3. Render the audio — audio-DRIVEN (preferred)
 
-With Piper installed, render per-beat WAVs from the spec text (loop over segments),
-or one continuous track. Example per segment:
+Use **`tools/synth-voice.py`** (Kokoro): it synthesizes each beat separately, so the
+video can be timed to the REAL narration and the captions word-synced. It writes
+`narration.wav` + `captions.json` (per-beat `startSec`/`durSec`/`words`):
 
 ```bash
-echo "<segment text>" | piper --model en_US-<voice>.onnx --output_file beat-<id>.wav
+# setup once: pip install kokoro-onnx soundfile numpy; download kokoro.onnx + voices.bin
+KOKORO_MODEL=kokoro.onnx KOKORO_VOICES=voices.bin \
+  python tools/synth-voice.py <script.json> <render>/public am_michael
 ```
 
-Store audio under `state/channels/<slug>/videos/<id>/audio/`. If Piper isn't installed,
-note it and leave the spec for the edit step — don't fake an audio file.
+The motion department's `CaptionVideo` composition then drives timing + word-synced
+captions from `captions.json` (timing logic is the property-tested `lib/caption-timing.mjs`).
+If Kokoro isn't set up, fall back to Piper per-segment WAVs, or leave the spec for the
+edit step — don't fake an audio file. (Lighter Piper path: `echo "<text>" | piper -m
+en_US-<voice>.onnx -f beat.wav`.)
 
 ## 4. Disclosure
 The spec carries `disclosureRequired`. Ensure the publish step adds the platform's

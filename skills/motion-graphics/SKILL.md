@@ -73,6 +73,15 @@ one render command rather than faking an MP4.
   narration** per `lib/audio-mix.mjs` (music sits a fixed margin below speech), with SFX at
   beat cues. Never a fake human — voice + bed are audio only.
 
+## 4b. Audio-driven cut with word-synced captions (preferred for flow)
+
+The template ships two compositions: `MarginaliaVideo` (plan-driven) and **`CaptionVideo`**
+(audio-driven). For engaging rhythm, prefer `CaptionVideo`: it reads `captions.json` (from
+`tools/synth-voice.py`) so timing matches the real narration and captions reveal word-by-word
+in sync with the voice, over continuously-moving full-bleed archival photos. The reveal/window
+logic is the property-tested `lib/caption-timing.mjs`. Render it with
+`npx remotion render CaptionVideo out/video.mp4`.
+
 ## 5. The signature set pieces
 Build the brand's promised motion identity over iterations: map/timeline morphs, the
 logo sting, ink-draw transitions, the money counter, kinetic headlines. Keep them as
