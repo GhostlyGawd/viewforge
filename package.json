@@ -1,11 +1,14 @@
 {
   "name": "viewforge",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "description": "ViewForge — a self-improving YouTube channel factory (Claude Code plugin)",
   "homepage": "https://github.com/GhostlyGawd/viewforge#readme",
-  "repository": { "type": "git", "url": "https://github.com/GhostlyGawd/viewforge.git" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GhostlyGawd/viewforge.git"
+  },
   "license": "MIT",
   "scripts": {
     "test": "node --test",

@@ -3,6 +3,17 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.2.1] — 2026-06-28
+
+### Added
+- **Cold-start (autonomous) niche discovery**: `lib/niche-discovery.mjs` —
+  `DISCOVERY_LENSES` (six distinct web-search angles: trending, high-RPM,
+  faceless-format, whitespace, evergreen, product-led), name normalization with
+  lightweight plural folding, duplicate merging (unions the lenses a niche surfaced
+  from), and a faceless-friendliness filter that drops inherently on-camera niches.
+  The niche-select skill gains a Step 0 so it can discover and rank niches with no
+  seed from the operator. 68 tests (was 62).
+
 ## [0.2.0] — 2026-06-28
 
 The brand and research departments — a channel can now go from a chosen niche to a

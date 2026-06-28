@@ -25,12 +25,41 @@ beat another — and so the factor weights themselves become a strategy ViewForg
 improve over time. Then persist the choice into a channel project via
 `lib/state.mjs`. No fake-human content is ever part of a recommended niche.
 
+## 0. Cold start — autonomous discovery (when no seed is given)
+
+If the operator gives **no interest** (or only a loose constraint like "something
+that makes money"), don't ask them to come up with a topic — *discover* niches
+yourself. This is the mode that most directly tests "picks niches well."
+
+Sweep the web across the distinct **discovery lenses** in `lib/niche-discovery.mjs`
+(`DISCOVERY_LENSES`: trending, high-RPM, faceless-format, whitespace, evergreen,
+product-led) — run one search per lens (append the operator's loose constraint if
+they gave one), and harvest candidate niche names from each, tagging which lens each
+came from. Then normalize + dedupe + drop face-led niches with the engine:
+
+```bash
+node -e '
+import("../../lib/niche-discovery.mjs").then(({dedupeCandidates, filterFaceless}) => {
+  const fs = require("fs");
+  const raw = JSON.parse(fs.readFileSync(process.argv[1], "utf8")); // [{name, lenses:[id]}]
+  const { kept, dropped } = filterFaceless(dedupeCandidates(raw));
+  console.log(JSON.stringify({ kept, droppedFaceLed: dropped.map(d => d.name) }, null, 2));
+})' discovered.json
+```
+
+Niches surfaced by **multiple lenses** are the strongest signals (real demand *and*
+monetization *and* whitespace). Take the ~6–8 best deduped candidates into Step 3 for
+grounding — discovery names the candidates, grounding still has to earn the score.
+Then continue to Step 1 only to confirm goal/constraints implied by the pick.
+
 ## 1. Anchor the goal
 
 Establish what the channel is *for* before brainstorming. From `$ARGUMENTS` and one
 short exchange, capture: the operator's interest/expertise, any monetization goal,
 hard constraints (motion-graphics only, no on-camera human), and how often they can
-publish. If the user already named candidate niches, treat those as the seed set.
+publish. If the user already named candidate niches, treat those as the seed set. **If
+no seed was given, run Step 0 (cold start) first** and let discovery produce the
+candidates.
 
 ## 2. Brainstorm candidates (don't settle early)
 
