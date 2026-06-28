@@ -25,10 +25,12 @@ The user's input is in `$ARGUMENTS`. Route on it:
    `stage`, and run the next department:
    - `niche` done → run **brand-suite** (`skills/brand-suite/SKILL.md`).
    - `brand` done → run **video-research** (`skills/video-research/SKILL.md`).
-   - `research` done → **script** and beyond are planned (`ROADMAP.md`) — say what's
-     coming rather than faking output.
-   The department order and maturity are in `departments/README.md`. As of v0.2.0,
-   niche → brand → research are L2 (real engines); later stages are L0.
+   - `research` done → run the production departments per video: **script-write** →
+     **voice-over** → **motion-graphics** → **edit-assemble** (each in `skills/`).
+   - `edit-approved` → **distribution** is planned (`ROADMAP.md`) — say what's coming
+     rather than faking output.
+   The department order and maturity are in `departments/README.md`. As of v0.3.0,
+   niche → brand → research → script → voice → motion → edit are all L2 (real engines).
 
 3. **"strategies" / "what works"** → load the strategy library
    (`lib/strategy-registry.mjs` + `strategy-library/strategies/`) and report the

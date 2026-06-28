@@ -26,13 +26,19 @@ the last, produced end-to-end with no fake humans, optimized by evidence not opi
 - [ ] Mine source corpus #2 (Paddy Galloway / retention teardowns / Creator Insider)
       → 10+ new `documented` strategies.
 
-## v0.3.0 — production vertical slice (a video exists)
-- [ ] **script** department applying validated retention/story strategies.
-- [ ] **motion** department: Remotion project scaffold; every visual element a
-      tweakable parameter (the A/B substrate).
-- [ ] **voice** (synthetic + disclosed) and **edit** (assemble + "no dull moments"
-      QA against hard constraints).
-- [ ] First full video rendered for the real channel.
+## v0.3.0 — production vertical slice (a video exists) ✅
+- [x] **script** department (L2): `lib/script-model.mjs` beat sheet (encodes
+      first-minute / crazy-progression / re-engagement / no-dull / no-abrupt-end) +
+      structure validator; `script-write` skill.
+- [x] **motion** department (L2): `lib/motion-plan.mjs` parameterized scene timeline
+      (the A/B substrate; blocks fake-human brands) + `motion-graphics` skill +
+      runnable Remotion project scaffold.
+- [x] **voice** (L2, `lib/voice-spec.mjs`, free local Piper TTS, disclosed) and
+      **edit** (L2, `lib/edit-qa.mjs`, no-dull-moments + hard-constraint ship gate).
+- [x] Real production run on Marginalia vid-1 ("Why A Misplaced Comma Cost 40 Million
+      Dollars"): grounded script + narration spec + motion plan + brand SVG comps +
+      Remotion project; edit-QA **passed** (0 blocking). Actual MP4 render = local
+      `npm run render` (env-dependent).
 
 ## v0.4.0 — the optimization loop closes
 - [ ] **analytics** department: ingest real metrics, attribute to experiments, run

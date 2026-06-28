@@ -37,25 +37,34 @@ by a **sourced, testable strategy library** with a lifecycle, and a hard
   tweakable, A/B-testable parameter, which is exactly what the optimization loop
   needs.
 
-## What's built (through v0.2.0)
+## What's built (through v0.3.0)
 
-The foundation plus the first three departments — a channel can go from "what's it
-about" to a locked, packaged video slate.
+The foundation plus **seven L2 departments** — a channel can go from "what's it about"
+all the way to an edit-approved, render-ready video.
 
 - **Strategy library**: schema + lifecycle + 9 source-cited MrBeast-memo seeds, with
   a CI gate that rejects any unsourced or malformed strategy.
-- **Integrity + state libs** (zero-dep, 62 tests): `strategy-registry`, `guards`
+- **Integrity + state libs** (zero-dep, 91 tests): `strategy-registry`, `guards`
   (hard constraints incl. no-fake-human + the promotion gate), `niche-score`,
-  `brand-brief`, `video-idea`, `state`.
-- **Three L2 departments** (`/viewforge`):
-  - **niche-select** — brainstorm → ground → score → rank → commit a channel project.
-  - **brand-suite** — derive a brand brief from the niche, generate the suite via
-    `brand-studio`, validate all seven deliverables, persist it.
-  - **video-research** — brainstorm + ground ideas, lock the packaged promise, score
-    on packaging/demand/novelty, hard-block unpaid-off clickbait, lock the slate.
+  `niche-discovery`, `brand-brief`, `video-idea`, `script-model`, `voice-spec`,
+  `motion-plan`, `edit-qa`, `state`.
+- **Seven L2 departments** (`/viewforge`):
+  1. **niche-select** — discover (autonomous cold-start) or brainstorm → ground →
+     score → rank → commit a channel project.
+  2. **brand-suite** — derive a brand brief, generate the suite via `brand-studio`,
+     validate all seven deliverables, persist.
+  3. **video-research** — ground ideas, lock the packaged promise, score, hard-block
+     unpaid-off clickbait, lock the slate.
+  4. **script-write** — retention beat sheet (first-minute / crazy-progression /
+     re-engagement / no-dull / no-abrupt-end) + structure validator.
+  5. **voice-over** — narration spec + free local TTS (Piper); synthetic voice
+     disclosed, never a fake human on screen.
+  6. **motion-graphics** — parameterized scene timeline (the A/B substrate) →
+     Remotion-first render; blocks fake-human brands in code.
+  7. **edit-assemble** — final ship/block QA: no dull moments + the hard constraints.
 
-Run `npm run check` (validates the strategy library, runs the tests, validates the
-manifest). The roadmap to a full produced video is in `ROADMAP.md`.
+A worked example (Marginalia EP.01) takes all seven from a cold-start niche to a
+plan-driven Remotion project + brand comps. Run `npm run check`. Roadmap in `ROADMAP.md`.
 
 ## Layout
 

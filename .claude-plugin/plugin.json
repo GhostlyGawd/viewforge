@@ -1,6 +1,6 @@
 {
   "name": "viewforge",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "A self-improving YouTube channel factory: brainstorm a niche and brand, then research → plan → write → produce → edit → distribute fully-engaging motion-graphics videos end to end (no fake-human avatars). Optimization is driven by a research-backed, source-cited, test-over-time strategy library seeded from the MrBeast production memos, with anti-reward-hacking and anti-overfitting guards. Organized as discrete departments (niche, brand, research, script, voice, motion, edit, thumbnail/title, distribution, analytics) that each measurably improve over time.",
   "author": {
     "name": "rhen mcleod",

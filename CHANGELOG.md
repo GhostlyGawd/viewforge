@@ -3,6 +3,31 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.3.0] — 2026-06-28
+
+The production vertical slice — a channel can now go all the way to an edit-approved,
+render-ready video. Departments 1–7 are L2.
+
+### Added
+- **script department (L2)**: `lib/script-model.mjs` — a retention beat sheet that
+  encodes the strategies (first-minute over-investment, crazy progression, scheduled
+  re-engagement beats, no dull moments, no abrupt ending) and scales to any runtime,
+  plus a structure validator. `skills/script-write/`.
+- **voice department (L2)**: `lib/voice-spec.mjs` — narration spec (per-beat text +
+  SSML + timing + fit check) and a free/self-hosted TTS recommendation (Piper default;
+  Coqui XTTS / Kokoro alternates). `skills/voice-over/`.
+- **motion department (L2)**: `lib/motion-plan.mjs` — a parameterized scene timeline
+  (every visual element a tweakable knob = the A/B substrate) that blocks fake-human
+  brands in code. `skills/motion-graphics/` + a runnable Remotion project scaffold.
+- **edit department (L2)**: `lib/edit-qa.mjs` — final ship/block gate (no-dull-moments
+  scan, narration-coverage check, and the hard constraints incl. no fake human).
+  `skills/edit-assemble/`.
+- **Proof run**: produced Marginalia EP.01 end-to-end — grounded script, narration
+  spec, motion plan, brand SVG comps (thumbnail + title card), and a plan-driven
+  Remotion project; edit-QA passed with zero blocking issues.
+- Command router now walks niche→…→edit; department registry + roadmap updated;
+  improvement-log entry on grounding quantified title claims. 91 tests (was 68).
+
 ## [0.2.1] — 2026-06-28
 
 ### Added
