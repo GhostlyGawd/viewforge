@@ -54,6 +54,15 @@
       "operatorScore": 61,
       "error": null,
       "notes": "No judge pair (under v2.2 the judge is a ranker; no clip-judging protocol exists yet, and the maker deliberately did not self-score). Ground truth for the clip class: c7 stills 55 -> c8 clip 61. The motion pass (slam physics, hyphen fragments, pen easing, handheld drift, ink behavior, counter settle) bought +6 operator points. Cycle 9 targets the convergent finding: material truth via the real public-domain 1872 statute scan."
+    },
+    {
+      "videoId": "hook-lab-c9",
+      "artifact": "authored hook scene, cycle 9 — substrate replaced with the REAL 1872 statute page (LoC scan, public domain); judged by a fresh separated judge (unlabeled frames, no loop history)",
+      "rubricVersion": "v2.2-separated-judge",
+      "rubricScore": 70.9,
+      "operatorScore": null,
+      "error": null,
+      "notes": "Judge dims: ideation 8 ('argues with real evidence the way the references do' — first 8 on any dimension), composition 6 (dead vignette hotspot; slip ends mid-air; drip doesn't land on the stat), type 7 (added type well-chosen but off-the-shelf vs art-directed reference lettering), finish 6 (overlays betray digital seams: clean slip edge, uniform drip stroke, airbrushed scrim, heavy corner vignette on an otherwise authentic scan). Ranker trend: c7 65.5 -> c9 70.9. Operator clip score pending; if the c7 leniency offset (~+10) holds, expect operator low 60s. Cycle 10 = material integration of overlays + drip lands on the dollar figure."
     }
   ]
 }
