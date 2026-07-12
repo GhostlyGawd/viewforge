@@ -205,8 +205,9 @@ feature('Gate composition (v2 §11/§25)', () => {
 
   scenario('Gate publish: a synthetic voice without disclosure never ships', () => {
     const pkg = { title: 't', description: 'd', chapters: [{ startSec: 0, title: 'Intro' }], tags: [], disclosures: [] }
+    const passingBar = { pass: true, blocking: [], warnings: [] } // evaluateQualityBar verdict shape
     const r = when('the plan uses TTS but the package lacks the disclosure', () =>
-      runGatePublish({ plan: { ...cleanPlan, usesSyntheticVoice: true, aiDisclosure: true }, publishPackage: pkg, master: { lufsIntegrated: -14, truePeakDb: -1.2 } }),
+      runGatePublish({ plan: { ...cleanPlan, usesSyntheticVoice: true, aiDisclosure: true }, publishPackage: pkg, master: { lufsIntegrated: -14, truePeakDb: -1.2 }, quality: passingBar }),
     )
     then('publish blocks on the disclosure', () => {
       assert.equal(r.pass, false)
@@ -217,8 +218,18 @@ feature('Gate composition (v2 §11/§25)', () => {
         plan: { ...cleanPlan, usesSyntheticVoice: true, aiDisclosure: true },
         publishPackage: { ...pkg, disclosures: ['Narration is an AI-synthesized voice.'] },
         master: { lufsIntegrated: -14, truePeakDb: -1.2 },
+        quality: passingBar,
       })
       assert.equal(ok.pass, true)
+    })
+    and('v0.12.0: WITHOUT a quality-bar verdict the same cut refuses to ship', () => {
+      const noBar = runGatePublish({
+        plan: { ...cleanPlan, usesSyntheticVoice: true, aiDisclosure: true },
+        publishPackage: { ...pkg, disclosures: ['Narration is an AI-synthesized voice.'] },
+        master: { lufsIntegrated: -14, truePeakDb: -1.2 },
+      })
+      assert.equal(noBar.pass, false)
+      assert.match(noBar.blocking.join(';'), /quality bar unevaluated/)
     })
   })
 })

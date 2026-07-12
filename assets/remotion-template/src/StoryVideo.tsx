@@ -93,10 +93,16 @@ const PhotoCuts: React.FC<{ assets: AssetT[]; tokens: Tokens; durationInFrames: 
   const x = dir * (16 - 32 * p)
   const a = assets[seg % assets.length]
   const fadeIn = seg === 0 ? interpolate(local, [0, 10], [0, 1], { extrapolateRight: 'clamp' }) : 1
+  // fake-3D depth (Kurzgesagt school; quality-bar craft "depth-layering"): a
+  // foreground vignette + accent air that PARALLAXES against the photo's pan, so
+  // the frame reads as layered space rather than a flat card.
+  const fgx = -dir * (10 - 20 * p)
   return (
     <AbsoluteFill style={{ opacity: fadeIn }}>
       <Img src={staticFile('assets/' + a.localFile)} style={{ width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${scale}) translateX(${x}px)`, filter: 'saturate(0.84) contrast(1.04)' }} />
       <AbsoluteFill style={{ background: `linear-gradient(0deg, ${tokens.bg} 5%, ${tokens.bg}b8 36%, ${tokens.bg}${Math.round(dim * 255).toString(16).padStart(2, '0')} 70%, ${tokens.bg}26 100%)` }} />
+      <AbsoluteFill style={{ transform: `translateX(${fgx}px)`, background: `radial-gradient(120% 90% at ${dir > 0 ? 8 : 92}% 110%, ${tokens.accent}1f, transparent 55%)` }} />
+      <AbsoluteFill style={{ boxShadow: `inset 0 0 220px 40px ${tokens.bg}e6`, pointerEvents: 'none' }} />
       {a.credit ? <div style={{ position: 'absolute', right: 22, top: 16, fontSize: 15, color: tokens.ink, opacity: 0.42, fontFamily: tokens.bodyFont }}>{a.credit}</div> : null}
     </AbsoluteFill>
   )
@@ -276,7 +282,14 @@ export const StoryVideo: React.FC<{ captions: Captions; plan: Plan }> = ({ capti
           </Sequence>
         )
       })}
-      {/* SFX: the comma slam lands with the mechanism; a second hit when the payoff counter settles */}
+      {/* SFX: every scene change breathes (whoosh — sfx-on-visual-events strategy;
+          the quality bar wants visual events heard) */}
+      {captions.beats.map((b, i) => (
+        <Sequence key={'wh-' + b.beatId} from={Math.max(0, stingFrames + Math.round(b.startSec * fps) - 4)} durationInFrames={Math.round(fps * 0.55)}>
+          <Audio src={staticFile('audio/whoosh.wav')} volume={i === 0 ? 0.4 : 0.3} />
+        </Sequence>
+      ))}
+      {/* the comma slam lands with the mechanism; a second hit when the payoff counter settles */}
       {mech ? (
         <Sequence from={stingFrames + Math.round(mech.startSec * fps) + 18} durationInFrames={Math.round(fps * 0.6)}>
           <Audio src={staticFile('audio/slam.wav')} volume={0.55} />

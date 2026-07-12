@@ -3,6 +3,46 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.12.0] — 2026-07-12
+
+**The top-1% quality bar, code-enforced.** Operator mandate: nothing ships below the
+bar set by 1M-view visual-only channels. Research-grounded thresholds (short-form
+retention cuts 2-4s; long-form alternates micro-cuts with declared holds; the
+Kurzgesagt school of continuous layered motion) become a SHIP GATE input. 257 tests.
+
+### Added — lib/quality-bar.mjs
+- **Cadence**: the visual-event timeline (scene starts, intra-scene cuts, set-piece
+  events, voice-synced kinetic reveals, SFX) may never gap beyond 5s — unless the
+  scene DECLARED a hold (solver holdMs), capped at 15s. Holds are choices, never
+  accidents.
+- **Static-scene detection over real pixels**: zero-dep PNG decode (node:zlib) +
+  sampled frame differencing over the Gate-B stills; a scene whose start/mid/end
+  stills are near-identical BLOCKS.
+- **Sound density** (≥3 SFX/min, provisional — enters as the sfx-on-visual-events
+  hypothesis with a 10-video expiry), **grammar variety** (≥4 grammars for ≥6-scene
+  cuts — the slideshow finding, promoted to the bar), and the **craft rubric**
+  (anchored 0-4 dimensions: composition, depth-layering, motion-purpose,
+  type-discipline, color-hierarchy, polish; the VLM scores, the code decides;
+  <75/100 does not ship).
+- `runGatePublish` now REFUSES an unevaluated or failing bar.
+- Three sourced strategies: visual-event-cadence (documented), continuous-motion-
+  depth (documented, Kurzgesagt Skillshare), sfx-on-visual-events (hypothesis).
+
+### Added — capability to pass the bar
+- **Real brand typography**: Fraunces/Inter latin subsets embedded as buffer-backed
+  FontFace (synchronous — async font loading hangs under Remotion's frozen render
+  clock; learned in production), bundled under public/fonts/.
+- **Whoosh SFX** (tools/synth-audio.mjs) on every scene transition in StoryVideo +
+  the existing slams → 11 SFX/min on EP.01.
+- **Parallax foreground depth** in PhotoCuts: accent air + vignette translating
+  against the photo pan (fake-3D layering).
+
+### Verified
+- EP.01 re-rendered and PASSED the full bar on real measurements: max event gap
+  2.2s, 9 grammars, 11 SFX/min, zero static scenes (per-scene pixel Δ 18-38 vs
+  threshold 2.5), craft 78.1/100, mastered −14.45 LUFS / −1.04 dBTP. The same gate
+  demonstrably rejects both earlier renders (single-grammar slideshow; 2 SFX/min).
+
 ## [0.11.0] — 2026-07-12
 
 **The composed cut.** Operator verdict on the rebuilt render: "still the same exact

@@ -1,0 +1,21 @@
+{
+  "id": "sfx-on-visual-events",
+  "title": "Visual events should be heard: SFX density ≥3/min",
+  "category": "production",
+  "principle": "In top edits, reveals, counters, and transitions carry sound design — the ear confirms what the eye sees. Our provisional floor is 3 SFX per minute for explainer-format videos.",
+  "rule": "Place an SFX cue on set-piece moments (slams, settles, reveals, transitions); lib/quality-bar.mjs blocks below minSfxPerMinute at the ship gate. The specific number is a ViewForge hypothesis and must earn validation on our own channels.",
+  "targetMetric": "AVP",
+  "domain": "content",
+  "guardMetrics": ["likeRatio"],
+  "appliesTo": ["motion", "edit"],
+  "source": {
+    "kind": "internal",
+    "rationale": "Observed convention across 1M-view visual-only channels (sound-designed reveals), but no external quantitative source found for the 3/min floor — so it enters as a hypothesis with an expiry rather than a documented claim."
+  },
+  "status": "hypothesis",
+  "confidence": 0.4,
+  "expiresAfterVideos": 10,
+  "evidence": [],
+  "createdUtc": "2026-07-12",
+  "lastReviewedUtc": "2026-07-12"
+}

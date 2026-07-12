@@ -1,0 +1,22 @@
+{
+  "id": "visual-event-cadence",
+  "title": "Something changes on screen every few seconds — holds are declared, never accidental",
+  "category": "retention",
+  "principle": "Top-performing edits keep a constant visual pulse: short-form retention data shows cuts every 2-4s; long-form educational pacing alternates fast micro-cut stretches with deliberate processing holds. Dead frames shed viewers; undeclared stillness is an editing defect, not a style.",
+  "rule": "No stretch longer than ~5s without a visual event (cut, set-piece motion, reveal); intentional holds are declared in the plan (solver holdMs) and capped at ~15s. Enforced by lib/quality-bar.mjs validateCadence at the ship gate.",
+  "targetMetric": "AVP",
+  "domain": "content",
+  "guardMetrics": ["likeRatio"],
+  "appliesTo": ["motion", "edit"],
+  "source": {
+    "kind": "external",
+    "name": "Miracamp — Editing a YouTube video: duration and speed tips (alternating micro-cuts with holds); OpusClip — Ideal YouTube Shorts length & format for retention (2-4s cuts); Sound Images — Mastering video length & pacing",
+    "url": "https://www.miracamp.com/learn/youtube/duration-of-a-video",
+    "date": "2026-07"
+  },
+  "status": "documented",
+  "confidence": 0.5,
+  "evidence": [],
+  "createdUtc": "2026-07-12",
+  "lastReviewedUtc": "2026-07-12"
+}

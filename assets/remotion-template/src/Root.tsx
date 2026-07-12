@@ -1,4 +1,5 @@
 import React from 'react'
+import './fonts'
 import { Composition } from 'remotion'
 import { MarginaliaVideo } from './MarginaliaVideo'
 import { CaptionVideo } from './CaptionVideo'
