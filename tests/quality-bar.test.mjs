@@ -163,3 +163,8 @@ test('v2.1 (the +23 incident): frame judging scores only still-judgeable dims, r
   assert.equal(perfect.score, 100) // renormalized
   assert.equal(scoreRubricV2Frame({ 'visual-ideation': 10 }).score, Math.round((0.25 / 0.55) * 1000) / 10)
 })
+
+test('v2.2 (the +10.4 incident): the judge is a separate context — maker-as-judge is not a judge', () => {
+  assert.equal(JUDGE_PROTOCOL.separateContext, true) // no loop history, no maker predictions, unlabeled artifacts
+  assert.equal(JUDGE_PROTOCOL.version, 'v2.2')
+})

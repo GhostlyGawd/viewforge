@@ -3,6 +3,25 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.14.2] — 2026-07-12
+
+**The replication experiment.** Operator scored the cycle-7 hook frames 55 (and
+revised c4 to 44, agreeing with the comparative judge's 44.5). The judge's 65.4 on
+c7 (+10.4) looked like maker-as-judge inflation — so we tested it: a **separated
+judge** (fresh context, unlabeled frames, no loop history) re-scored the same
+frames and landed at 65.5, within 0.1 of the maker. The residual ~+10 at this tier
+is systematic model-judge bias, not maker identity. 273 tests.
+
+### Added
+- **`JUDGE_PROTOCOL` v2.2** — `separateContext: true`: judges run with no loop
+  history, no maker predictions, unlabeled artifacts. Separation removes a real
+  confound; the documented replication result records that it does NOT remove
+  shared-model bias — the judge is a **ranker** (which cycle is better), the
+  operator is the meter, and the ledger will supply a derived correction once
+  enough pairs exist.
+- Calibration ledger: v2.2-separated-judge entry for hook-lab-c7 (65.5 vs 55),
+  including the spread finding (judges scored c4→c7 as +21; the operator +11).
+
 ## [0.14.1] — 2026-07-12
 
 **The +23 incident: judging goes comparative.** Second calibration entry recorded:

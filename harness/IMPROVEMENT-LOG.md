@@ -18,6 +18,29 @@ vague note. This log records each such change with its reproduction and the
 
 ## Entries
 
+## 2026-07-12 — the judge replication experiment: separating the judge did NOT close the gap
+- **Incident:** operator scored hook-lab-c7 at 55 vs the comparative judge's 65.4
+  (+10.4). Hypothesis: maker-as-judge inflation (the maker scored its own fresh
+  work). Test: a SEPARATED judge — fresh context, unlabeled frames, no loop
+  history, no predictions — re-scored the same frames against the same references.
+  Result: 65.5, within 0.1 of the maker's estimate. The maker-bias hypothesis is
+  weakened as the full explanation; the ~+10 residual at this tier is *systematic
+  model-judge bias shared across contexts*. Second signal: judges scored the
+  c4→c7 improvement +21 where the operator scored +11 — judges over-credit
+  improvement magnitude.
+- **Reproduction:** both judgments are in `business/calibration-ledger.json`
+  (v2.1-comparative and v2.2-separated-judge rows for hook-lab-c7); the v2.2 test
+  in `tests/quality-bar.test.mjs` pins the protocol.
+- **Generalization:** separation stays (it removes a real confound and costs
+  little), but the lesson is that *procedural* fixes cannot remove *shared model*
+  bias — only measurement against operator ground truth can, which is what the
+  ledger is for. When enough pairs exist, the judge's number gets a ledger-derived
+  correction; until then the judge is treated as a RANKER (which cycle is better)
+  rather than a meter (how good is it), and ship decisions key off operator scores.
+- **Guard against gaming:** the correction derives from ledger pairs the operator
+  provides, so the judge cannot self-certify; over-crediting improvement shows up
+  as spread error in the very next pair.
+
 ## 2026-07-12 — the rebuilt judge STILL ran +23 hot (76 vs 53): absolute scoring is the defect
 - **Incident:** the v2 blind judge (shuffled frames, maker/judge separation, exemplar
   anchors) scored the design-loop cycle-4 hook frame 76; the operator scored it 53.
