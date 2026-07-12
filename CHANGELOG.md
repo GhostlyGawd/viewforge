@@ -3,6 +3,31 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.11.0] — 2026-07-12
+
+**The composed cut.** Operator verdict on the rebuilt render: "still the same exact
+slideshow formula every single thing — no animation, no engagement." Correct: one
+scene grammar (photo + Ken Burns + bottom captions) repeated nine times, while the
+set-piece library sat unused in the other composition. 249 tests.
+
+### Added
+- **`sceneType` is a first-class scene parameter** (in `SCENE_DEFAULTS`/`BEAT_MOTION`,
+  so it's on the A/B surface like every other knob): the education grammar maps
+  hook→kinetic-open, show-dont-tell→mechanism, progression→timeline,
+  reengage→reveal/counter, escalation→chart, payoff→money-payoff, outro→recap;
+  demo/short beats mapped too. Tested: ≥5 distinct grammars by construction.
+- **`StoryVideo` composition** — the composed cut: audio-first timing + word-synced
+  captions (CaptionVideo's strengths) woven with the set-piece library
+  (MarginaliaVideo's strengths — now exported), rendered per `params.sceneType`:
+  voice-synced kinetic type, the comma-split mechanism with its SFX, timeline sweep,
+  push-in reveals with accent flash, a running refund counter, comparable-case bars,
+  the $40M payoff counter with wax seal + hit, brand sting + end card. Beats also cut
+  WITHIN themselves: `cutsPerScene` finally drives real hard cuts across
+  `scene.assets[]` with alternating Ken-Burns directions.
+- **Grammar-variety check in edit-QA**: a ≥4-scene cut using a single sceneType is
+  flagged loudly as "a slideshow, not a video" (warning — a uniform grammar must be
+  a visible choice, never a default).
+
 ## [0.10.1] — 2026-07-12
 
 The bare-render incident, dogfooded. A real end-to-end render in a sandbox produced

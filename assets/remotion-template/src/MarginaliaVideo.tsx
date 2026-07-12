@@ -16,7 +16,7 @@ const firstSentence = (t: string) => (t || '').split(/(?<=[.!?])\s/)[0] || ''
 // Archival image layer: a real rights-clean photo with a slow Ken-Burns move, under a
 // dark scrim so the parchment text stays legible, with an on-screen credit (CC-BY needs
 // attribution). Driven by scene.assets[] (localFile + credit) from the manifest.
-const ArchivalImage: React.FC<{ asset: { localFile: string; credit?: string }; tokens: Tokens; durationInFrames: number }> = ({ asset, tokens, durationInFrames }) => {
+export const ArchivalImage: React.FC<{ asset: { localFile: string; credit?: string }; tokens: Tokens; durationInFrames: number }> = ({ asset, tokens, durationInFrames }) => {
   const frame = useCurrentFrame()
   const scale = interpolate(frame, [0, durationInFrames], [1.06, 1.2], { extrapolateRight: 'clamp' })
   const x = interpolate(frame, [0, durationInFrames], [0, -26], { extrapolateRight: 'clamp' })
@@ -31,7 +31,7 @@ const ArchivalImage: React.FC<{ asset: { localFile: string; credit?: string }; t
 }
 
 // Living background: a slow-drifting accent glow + paper grain, so frames are never dead flat.
-const LivingBg: React.FC<{ tokens: Tokens; energy?: number }> = ({ tokens, energy = 1 }) => {
+export const LivingBg: React.FC<{ tokens: Tokens; energy?: number }> = ({ tokens, energy = 1 }) => {
   const frame = useCurrentFrame()
   const { fps } = useVideoConfig()
   const t = frame / fps
@@ -50,7 +50,7 @@ const LivingBg: React.FC<{ tokens: Tokens; energy?: number }> = ({ tokens, energ
   )
 }
 
-const MarginRule: React.FC<{ accent: string }> = ({ accent }) => {
+export const MarginRule: React.FC<{ accent: string }> = ({ accent }) => {
   const frame = useCurrentFrame()
   const h = interpolate(frame, [0, 16], [0, 1], { extrapolateRight: 'clamp' })
   return (
@@ -62,7 +62,7 @@ const MarginRule: React.FC<{ accent: string }> = ({ accent }) => {
 }
 
 // Kinetic headline: each word springs up in sequence; number/emphasis words scale + accent.
-const Kinetic: React.FC<{ text: string; tokens: Tokens; size: number }> = ({ text, tokens, size }) => {
+export const Kinetic: React.FC<{ text: string; tokens: Tokens; size: number }> = ({ text, tokens, size }) => {
   const frame = useCurrentFrame()
   const { fps } = useVideoConfig()
   const words = text.split(' ')
@@ -82,7 +82,7 @@ const Kinetic: React.FC<{ text: string; tokens: Tokens; size: number }> = ({ tex
 }
 
 // Money counter: ticks $0 → target, odometer feel, with a pulse on settle.
-const MoneyCounter: React.FC<{ target: number; tokens: Tokens; startFrame?: number; runFrames?: number }> = ({ target, tokens, startFrame = 0, runFrames = 60 }) => {
+export const MoneyCounter: React.FC<{ target: number; tokens: Tokens; startFrame?: number; runFrames?: number }> = ({ target, tokens, startFrame = 0, runFrames = 60 }) => {
   const frame = useCurrentFrame()
   const p = interpolate(frame, [startFrame, startFrame + runFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic) })
   const val = Math.round(target * p)
@@ -95,7 +95,7 @@ const MoneyCounter: React.FC<{ target: number; tokens: Tokens; startFrame?: numb
 }
 
 // Comma-split set piece: "fruit plants" → comma slams in → splits into two meanings.
-const CommaSplit: React.FC<{ tokens: Tokens }> = ({ tokens }) => {
+export const CommaSplit: React.FC<{ tokens: Tokens }> = ({ tokens }) => {
   const frame = useCurrentFrame()
   const { fps } = useVideoConfig()
   const slam = spring({ frame: frame - 18, fps, config: { damping: 9, stiffness: 200 } })
@@ -116,7 +116,7 @@ const CommaSplit: React.FC<{ tokens: Tokens }> = ({ tokens }) => {
   )
 }
 
-const TimelineSweep: React.FC<{ accent: string; ink: string; durationInFrames: number }> = ({ accent, ink, durationInFrames }) => {
+export const TimelineSweep: React.FC<{ accent: string; ink: string; durationInFrames: number }> = ({ accent, ink, durationInFrames }) => {
   const frame = useCurrentFrame()
   const p = interpolate(frame, [0, durationInFrames], [0, 1], { extrapolateRight: 'clamp' })
   const year = Math.round(1872 + p * 4)
@@ -134,7 +134,7 @@ const TimelineSweep: React.FC<{ accent: string; ink: string; durationInFrames: n
 }
 
 // Bar race of the famous comma cases (escalation beat).
-const CaseBars: React.FC<{ tokens: Tokens; durationInFrames: number }> = ({ tokens, durationInFrames }) => {
+export const CaseBars: React.FC<{ tokens: Tokens; durationInFrames: number }> = ({ tokens, durationInFrames }) => {
   const frame = useCurrentFrame()
   const cases = [
     { label: 'Rogers', v: 2.13 },
@@ -160,7 +160,7 @@ const CaseBars: React.FC<{ tokens: Tokens; durationInFrames: number }> = ({ toke
   )
 }
 
-const WaxSeal: React.FC<{ accent: string; ink: string }> = ({ accent, ink }) => {
+export const WaxSeal: React.FC<{ accent: string; ink: string }> = ({ accent, ink }) => {
   const frame = useCurrentFrame()
   const { fps } = useVideoConfig()
   const s = spring({ frame, fps, config: { damping: 11, stiffness: 130 } })
@@ -171,7 +171,7 @@ const WaxSeal: React.FC<{ accent: string; ink: string }> = ({ accent, ink }) => 
   )
 }
 
-const Sting: React.FC<{ tokens: Tokens; brandName: string }> = ({ tokens, brandName }) => {
+export const Sting: React.FC<{ tokens: Tokens; brandName: string }> = ({ tokens, brandName }) => {
   const frame = useCurrentFrame()
   const { fps, durationInFrames } = useVideoConfig()
   const s = spring({ frame, fps, config: { damping: 13, stiffness: 110 } })

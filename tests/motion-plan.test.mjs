@@ -134,3 +134,12 @@ test('applyResolvedTimeline refuses partial mappings and unresolved input (only 
   assert.throws(() => applyResolvedTimeline(plan, [...solved.scenes, { id: 'ghost', resolvedStartMs: 0, resolvedDurationMs: 100 }]), /no plan scene/)
   assert.throws(() => applyResolvedTimeline(plan, beats.map((b) => ({ id: b.id, voMs: 2000 }))), /not resolved/)
 })
+
+test('every beat carries a sceneType from the §19 grammar, and sceneType is an A/B knob', () => {
+  const plan = buildMotionPlan(buildBeatSheet({ targetSeconds: 120 }), brand)
+  assert.ok(plan.scenes.every((s) => typeof s.params.sceneType === 'string' && s.params.sceneType.length > 0))
+  assert.equal(plan.scenes.find((s) => s.beatId === 'hook').params.sceneType, 'kinetic-open')
+  assert.equal(plan.scenes.find((s) => s.beatId === 'payoff').params.sceneType, 'money-payoff')
+  assert.ok(new Set(plan.scenes.map((s) => s.params.sceneType)).size >= 5) // the grammar varies by construction
+  assert.ok(tweakableParameters(plan).includes('sceneType')) // the optimizer may A/B it
+})

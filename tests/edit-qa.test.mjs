@@ -136,3 +136,18 @@ test('a cut where NO scene carries a visual asset is BLOCKED, not warned (the ba
   const fb = runEditQa({ motionPlan: withFallback, narrationSpec, plan: { packaging: { claimPaidOff: true } } })
   assert.ok(fb.warnings.some((w) => /ships on the placeholder \(missing: chart-1\)/.test(w)))
 })
+
+test('a ≥4-scene cut using one single scene grammar is flagged as a slideshow (grammar-variety check)', () => {
+  const mk = (types) => ({
+    visualMode: 'motion-graphics',
+    fps: 30,
+    durationFrames: 1800,
+    scenes: types.map((sceneType, i) => ({ beatId: `b${i}`, startSec: i * 15, endSec: (i + 1) * 15, params: { sceneType, cutsPerScene: 5 }, assets: [{ id: `a${i}`, localFile: `${i}.jpg` }] })),
+  })
+  const narrationSpec = { segments: ['b0', 'b1', 'b2', 'b3'].map((beatId) => ({ beatId, words: 30, spokenSec: 14 })) }
+  const mono = runEditQa({ motionPlan: mk(['photo-caption', 'photo-caption', 'photo-caption', 'photo-caption']), narrationSpec, plan: { packaging: { claimPaidOff: true } } })
+  assert.equal(mono.passed, true) // a visible choice, not a block
+  assert.ok(mono.warnings.some((w) => /slideshow, not a video/.test(w)))
+  const varied = runEditQa({ motionPlan: mk(['kinetic-open', 'mechanism', 'chart', 'money-payoff']), narrationSpec, plan: { packaging: { claimPaidOff: true } } })
+  assert.ok(!varied.warnings.some((w) => /slideshow/.test(w)))
+})
