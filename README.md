@@ -37,7 +37,7 @@ by a **sourced, testable strategy library** with a lifecycle, and a hard
   tweakable, A/B-testable parameter, which is exactly what the optimization loop
   needs.
 
-## What's built (through v0.9.0)
+## What's built (through v0.10.0)
 
 The foundation plus **the full nine-department chain at L2** — a channel can go from
 "what's it about" all the way to a published video whose real metrics feed back and
@@ -48,16 +48,24 @@ the master bus has enforceable loudness targets (−14 LUFS / −1 dBTP).
 
 - **Strategy library**: schema + lifecycle + 9 source-cited MrBeast-memo seeds, with
   a CI gate that rejects any unsourced or malformed strategy.
-- **Integrity + state libs** (zero-dep, 210 tests): `strategy-registry`, `guards`
-  (hard constraints incl. no-fake-human, research-only-never-published + the
-  promotion gate), `niche-score`, `niche-discovery`, `brand-brief`, `video-idea`,
-  `script-model`, `voice-spec`, `motion-plan`, `timing-solver` (audio-first scene
-  timing: VO overruns bounce to script with a word budget; voice never stretched
-  > ±4%), `caption-timing` (timestamp-first word sync), `audio-mix` (12–15 dB duck +
-  −14 LUFS mastering checks), `render-cache` (per-scene content-hash render keys +
-  codec-strict concat), `asset-license`, `asset-source` (provenance: genAI b-roll
-  logs model+prompt+seed; UI-truth must be captured), `edit-qa`, `distribution`,
-  `analytics`, `youtube-upload`, `state`.
+- **Integrity + state libs** (zero-dep, 245 tests): `strategy-registry` (+ rule
+  domains: packaging|content), `guards` (hard constraints incl. no-fake-human,
+  research-only-never-published + the promotion gate: out-of-sample, anti-Goodhart,
+  youtube_api-provenance-only, topic-cluster confound guard), `niche-score`,
+  `niche-discovery`, `brand-brief`, `video-idea`, `packaging-experiment` (thumbnail
+  Test & Compare — the fast out-of-sample path), `script-model` (3 scene grammars:
+  education/demo/short), `voice-spec`, `motion-plan`, `timing-solver` (audio-first
+  scene timing: VO overruns bounce to script with a word budget; voice never
+  stretched > ±4%), `caption-timing` (timestamp-first word sync + whisperX merge),
+  `audio-mix` (12–15 dB duck + −14 LUFS mastering checks), `render-cache`
+  (per-scene content-hash render keys + codec-strict concat), `capture-plan`
+  (capture-first demos: 2x-scale contract, deterministic cursor tracks, Playwright
+  emitter), `scene-qc` (Gate-B visual harness: WCAG contrast math, caption
+  spot-checks, fail-closed aggregation), `gates` (Gate 0 at every gate; A/B/publish
+  composed), `asset-license`, `asset-source` (provenance: genAI b-roll logs
+  model+prompt+seed; UI-truth must be captured; §22 scene-scoped fallbacks),
+  `edit-qa`, `distribution`, `analytics` (domain separation, provenance
+  admissibility, expiry), `youtube-upload`, `state`.
 - **Seven L2 departments** (`/viewforge`):
   1. **niche-select** — discover (autonomous cold-start) or brainstorm → ground →
      score → rank → commit a channel project.
@@ -93,11 +101,11 @@ skills/              the nine departments (niche-select … analytics-optimize)
 lib/                 tested zero-dep engines (timing-solver, render-cache, guards, …)
 strategy-library/    sourced, schema-valid strategies + SCHEMA + SOURCES
 departments/         the department registry + maturity model
-plans/               written build plans (05 imagery/audio, 06 audio-first v2)
+plans/               written build plans (05 imagery/audio, 06 audio-first, 07 v2 completion)
 assets/              the reusable Remotion render template
 state/channels/      per-channel projects (live ones gitignored; _example checked in)
-tools/               check-strategies (CI gate), synth-voice, synth-audio, fetch-assets
-tests/               node --test property + BDD suites (210)
+tools/               check-strategies (CI gate), synth-voice, align-words, synth-audio, fetch-assets
+tests/               node --test property + BDD suites (245)
 ARCHITECTURE.md · ANTI-REWARD-HACKING.md · ROADMAP.md · harness/IMPROVEMENT-LOG.md
 ```
 

@@ -58,6 +58,29 @@ voice stretch ≤ ±4%) — a blocking issue there stops the ship like any other
 
 Tighten any flagged dull moment in the edit (trim dead air — "no dull moments").
 
+## 2b. Gate B — the automated pre-assembly gate (v2 §25)
+
+Run the composed gate from `lib/gates.mjs` — it evaluates Gate 0 (hard constraints)
+plus the resolved-timeline invariants, the scene-QC verdict, the mastering numbers,
+and publishable assets in one verdict:
+
+1. **Export stills**: `lib/scene-qc.mjs` `stillPlan(resolvedScenes)` names the exact
+   frames (start/mid/end per scene, from the SOLVER's timeline) — render each with
+   `npx remotion still <comp> --frame=<frame> out/qc/<sceneId>-<position>.png`.
+2. **Review the stills against the checklist** (`QC_CHECKS`): text overflow, caption
+   word vs `expectedCaptionAt(captions, atMs)` (the code tells you which word MUST be
+   showing), cursor/highlight on the stated target, brand tokens. Contrast is math,
+   not judgment: `checkTokenContrast(tokens)` blocks below 3:1. Record findings as
+   `{ sceneId, checkId, note }` — invalid check ids fail closed.
+3. **Aggregate + gate**: `runGateB({ plan, resolvedScenes, qcFindings, master,
+   motionPlan, manifest })` → `rerenderScenes` lists exactly the scenes to re-render
+   (per-scene, cached — never the whole video). Blocking = fix and re-run; warnings =
+   note for the operator.
+
+At publish time, `runGatePublish` re-checks Gate 0 + the publish package (synthetic-
+voice disclosure included) + the master. Gate A (`runGateA`) belongs to the research/
+script steps — cheap to reject before production spend.
+
 ## 3. Record the verdict
 
 Write `edit-qa.json` and set the video's `stage` to `edit-approved` (or `blocked`

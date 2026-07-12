@@ -5,8 +5,16 @@
   "principle": "The packaging is the product's promise. Designing the title/thumbnail first forces the whole video to be built to deliver one clear, clickable idea.",
   "rule": "Lock a working title + thumbnail concept at the research/script stage and make the video pay it off. If a segment doesn't serve the packaged promise, cut it.",
   "targetMetric": "CTR",
-  "guardMetrics": ["AVP"],
-  "appliesTo": ["research", "script", "thumbnail", "title"],
+  "domain": "packaging",
+  "guardMetrics": [
+    "AVP"
+  ],
+  "appliesTo": [
+    "research",
+    "script",
+    "thumbnail",
+    "title"
+  ],
   "source": {
     "kind": "external",
     "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",

@@ -3,6 +3,83 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.10.0] — 2026-07-12
+
+**Master Document v2 completion.** Everything in the v2 doc that belongs in a
+Phase-0 plugin is now built and tested (245 tests, was 210). Built to
+`plans/07-v2-completion.md`. The §24 Phase-1/2 service stack (Postgres/Redis/S3,
+dashboard) is deliberately NOT built here — the filesystem contracts are the API
+payloads it will lift, and ROADMAP documents the mapping.
+
+### Added — the learning loop as a hypothesis engine (v2 §10/§17/§23)
+- **Rule domains**: strategies carry `domain: packaging|content`, validated
+  consistent with their targetMetric (CTR ⇒ packaging; retention/watch ⇒ content);
+  `queryStrategies` slices by domain; all 10 seeds stamped; the CI gate enforces it.
+  `evaluateStrategyEvidence` EXCLUDES cross-domain observations — one metric never
+  writes the other domain's rules.
+- **Metrics provenance** (§17): observations carry `provenance: youtube_api|manual|
+  simulated`; only `youtube_api` is admissible anywhere (`isAdmissibleEvidence`);
+  `manual` is stored but advances nothing; contradictions (`youtube_api` +
+  `simulated:true`) are refused. Legacy observations keep their old semantics.
+- **Topic-cluster confound guard**: when observations carry `topicCluster`, holdout
+  wins must span ≥2 distinct clusters to promote — a topic effect can't masquerade
+  as a style effect. Engages only when clusters are logged.
+- **Evidence classes**: `experiment|observational|comments` — comments-class moves a
+  rule into testing but can never satisfy the promotion bar.
+- **Expiry** (`applyExpiry` + `expiresAfterVideos`): unvalidated rules retire when
+  their window passes; `ground-quantified-claims` (the internal hypothesis) now
+  carries a 10-video window. Validated rules never expire this way.
+- **`lib/packaging-experiment.mjs`** — thumbnail Test & Compare as a first-class
+  object: primary + challenger must pay off the SAME promise (no dishonest arm);
+  results ingest as holdout, experiment-class observations — the fast out-of-sample
+  path — and only from `youtube_api` provenance.
+
+### Added — gates + the visual QC harness (v2 §11/§25)
+- **`lib/gates.mjs`** — the v2 gate order composed from existing validators, with
+  Gate 0 (hard constraints) evaluated at EVERY gate: Gate A (packaging locked +
+  grounded + script structure + narration fit; cheap to reject), Gate B (resolved-
+  timeline invariants + scene QC + master + publishable assets → `rerenderScenes`
+  feeds the per-scene loop), Gate publish (package + synthetic-voice disclosure).
+- **`lib/scene-qc.mjs`** — the harness around the VLM: `stillPlan` (start/mid/end
+  per RESOLVED scene), WCAG contrast math (`contrastRatio`, thresholds 3:1 block /
+  4.5:1 warn — and it flagged the house accent at 4.09:1 as borderline),
+  `expectedCaptionAt` (the word that MUST be on screen at a still's timestamp),
+  `aggregateFindings` (fail-closed on unknown checks; explicit severity may
+  escalate, never downgrade).
+
+### Added — capture-first (v2 §7/§16/§20)
+- **`lib/capture-plan.mjs`** — the capture contract (goto/click/type/hover/wait,
+  labels required, **deviceScale ≥ 2 enforced**), `cursorTrackFromSteps`
+  (deterministic timed track — positions KNOWN from the script, never detected;
+  smoothstep moves, click events at their position), `validateCursorTrack`,
+  `toPlaywrightScript` (fixed viewport, 2x, video on, OS cursor hidden, boundingBox
+  positions → cursor-track JSON).
+- **Template `src/overlay.tsx`** — the §20 Tier-1 components: `CursorOverlay`,
+  `ClickRipple`, `FocusRing`, `CalloutLabel`, `ZoomPan` (crisp because captures are
+  2x), `BrowserFrame`, and the composed `CaptureScene`. Not registered as a
+  composition — the template builds without capture assets.
+
+### Added — scene grammars, alignment, fallbacks (v2 §19/§6/§22)
+- **`buildBeatSheet({format})`** — three grammars: `education` (unchanged),
+  `demo` (hero → ui-reveal → cursor-action → transform → proof → benefit → cta;
+  the validator enforces §13 `show_ui_early`: real UI by ≤8% of runtime), `short`
+  (hook-burst → proof → insight → cta). Motion presets for every new beat.
+- **`mergeAlignmentIntoCaptions`** — upgrades `revealSec` to REAL whisperX word
+  timestamps: word-count and transcript mismatches refused with the beat named
+  (punctuation/case-insensitive), inter-beat grace spill clamped down, never late.
+  `tools/align-words.py` is the env-dependent runner.
+- **`applyAssetFallbacks`** (§22) — a missing asset placeholders + flags ONLY its
+  scene; `dirtySceneIds` feeds the render cache; input plan never mutated.
+
+### Changed
+- Skills updated: research gains the challenger/Test & Compare step + Gate A;
+  analytics gains provenance/domain/cluster/expiry procedure; motion gains the
+  capture-first section, the §18 `npx skills add remotion` bootstrap, and the format
+  grammars; edit gains the full Gate-B still-review procedure.
+- `harness/IMPROVEMENT-LOG.md`: dogfooded the caption rounding incident (reveal
+  times must floor — a caption may be early, never late) with its reproducing
+  property test.
+
 ## [0.9.0] — 2026-07-12
 
 **Audio-first timing — the Master Document v2 adoption.** Scene durations are now

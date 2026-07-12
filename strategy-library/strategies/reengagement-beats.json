@@ -5,8 +5,14 @@
   "principle": "Retention sags at predictable points. Plant a planned re-engagement spike — highly interesting content that still fits the story — right where viewers tend to leave.",
   "rule": "Place a 're-engagement' beat around 3:00 and again around 6:00 (a reveal, escalation, or surprise). The goal: if they watch the first half, they almost certainly finish.",
   "targetMetric": "retention_50pct",
-  "guardMetrics": ["AVP"],
-  "appliesTo": ["script", "edit"],
+  "domain": "content",
+  "guardMetrics": [
+    "AVP"
+  ],
+  "appliesTo": [
+    "script",
+    "edit"
+  ],
   "source": {
     "kind": "external",
     "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",

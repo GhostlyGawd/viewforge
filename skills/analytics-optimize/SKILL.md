@@ -33,16 +33,38 @@ never promote anything.)
 
 For each strategy the video tested (ideally as a controlled A/B vs a baseline), build an
 observation. Assign the video to a `train` or `holdout` cohort — promotion REQUIRES
-out-of-sample (holdout) wins, so plan experiments to accumulate both.
+out-of-sample (holdout) wins, so plan experiments to accumulate both. Always set:
+
+- **`provenance`** (v2 §17): `youtube_api` | `manual` | `simulated`. Only
+  `youtube_api` is admissible anywhere; hand-typed (`manual`) numbers are stored but
+  advance nothing.
+- **`evidenceClass`**: `experiment` (Test & Compare — the fast path) |
+  `observational` | `comments` (moves a rule into testing, never validates it).
+- **`topicCluster`**: the video's topic bucket — when clusters are logged, promotion
+  requires holdout wins across ≥2 distinct clusters (a topic effect must not
+  masquerade as a style effect).
 
 ```bash
 node -e '
 import("../../lib/analytics.mjs").then(({computeObservation, evaluateStrategyEvidence, applyEvidence}) => {
   const o = computeObservation({ videoId:"vid-1", cohort:"holdout", targetMetric:"retention_30s",
-    baseline:0.50, treatment:0.57, guards:[{metric:"likeRatio",baseline:0.04,treatment:0.041}], simulated:false });
+    baseline:0.50, treatment:0.57, guards:[{metric:"likeRatio",baseline:0.04,treatment:0.041}],
+    provenance:"youtube_api", evidenceClass:"observational", topicCluster:"legal-history" });
   console.log(JSON.stringify(o));
 })'
 ```
+
+**Domain separation (v2 §10) is enforced in code**: a CTR observation can only
+advance a `packaging`-domain strategy, retention/watch evidence only `content` —
+`evaluateStrategyEvidence` excludes cross-domain observations with a named reason.
+
+**Thumbnail Test & Compare** results ingest via `lib/packaging-experiment.mjs`
+(`ingestExperimentResult`): winner + watch-time shares → a holdout, experiment-class
+observation, only when `provenance: "youtube_api"`.
+
+**Expiry (v2 §23)**: after ingesting, run `applyExpiry(strategy, { videosSinceCreated })`
+for strategies carrying `expiresAfterVideos` — unvalidated observational rules retire
+when their window passes; validated ones never expire this way.
 
 ## 3. Run the promotion gate + advance the lifecycle
 

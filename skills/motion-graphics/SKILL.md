@@ -77,6 +77,20 @@ stamp on the payoff, map-morph drift, and number accenting — all parameter-dri
 A/B variants are just different `motion-plan.json`s (no code edits). See
 `assets/remotion-template/README.md`.
 
+When writing Remotion code by hand inside the render project, install the **official
+Remotion Agent Skills** first (v2 §18) — they teach the agent correct Remotion
+patterns (animations, audio, captions, transitions) so renderer correctness stops
+being a prompt problem:
+
+```bash
+npx skills add remotion   # inside videos/<id>/remotion
+```
+
+Formats: `buildBeatSheet({ format })` speaks three §19 grammars — `education`
+(default), `demo` (capture-first: real UI on screen by ≤8% of runtime, enforced by
+the script validator), and `short` (hook-burst → proof → one insight → CTA). Each
+grammar's beats carry motion presets.
+
 ## 3. Render locally (free)
 
 ```bash
@@ -120,6 +134,20 @@ property-tested `lib/caption-timing.mjs`. Render it with
 `planSceneRenders` re-renders only cache misses, `dirtyScenes` shows exactly what an
 edit invalidated, and `concatPlan` refuses to stream-copy-concat segments whose codec
 params differ. A one-scene fix costs one scene.
+
+## 4d. Product demos: capture the REAL thing (v2 §7)
+
+For a demo channel, the most convincing pixel is a real one. `lib/capture-plan.mjs`
+owns the contract: `buildCaptureSpec` (goto/click/type/hover/wait steps, labels
+required, **2x device scale enforced** for zoom headroom) → `toPlaywrightScript`
+emits the .spec.ts that records the real app with the OS cursor hidden and per-step
+boundingBox positions written to a cursor track. `cursorTrackFromSteps` turns steps +
+positions into the deterministic track the overlay draws from — positions are KNOWN
+from the script, never detected. The template's `src/overlay.tsx` supplies the Tier-1
+components (§20): `CursorOverlay`, `ClickRipple`, `FocusRing`, `CalloutLabel`,
+`ZoomPan`, `BrowserFrame`, and the composed `CaptureScene`. Captured footage enters
+the manifest as `origin: "captured"` — the only origin `uiTruth` accepts; never
+genAI-fake the product UI.
 
 ## 5. The signature set pieces
 Build the brand's promised motion identity over iterations: map/timeline morphs, the
