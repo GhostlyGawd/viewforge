@@ -3,6 +3,33 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.14.0] — 2026-07-12
+
+**Run like a business.** Operator mandate: free/open first; paid is fine when it's
+reasonably priced, won't sink a solo dev, and raises revenue odds — but everything
+documented, traceable, and organized with a P&L. Money decisions now get
+strategy-library discipline. 271 tests.
+
+### Added
+- **`business/services.json`** — the service registry: every dependency (free,
+  open, paid, planned) with license, pricing, a decision record (rationale +
+  alternatives + date), and — for anything paid — an **adoption trigger**: the
+  measurable condition under which we start paying (e.g. ElevenLabs only after the
+  free open-voice upgrade + direction layer still leaves performance-voice <6/10 in
+  operator scores). Currently 9 services, projected spend **$0/mo**.
+- **`lib/business.mjs`** — validateServices (no unexplained dependencies; planned
+  paid requires trigger), projectedMonthlySpend, costPerVideo, monthlyPnL (revenue
+  assumptions explicit, never defaulted — hypotheses until real analytics),
+  breakEvenViewsPerVideo, and **canAdoptPaidService**: adoption requires trigger
+  EVIDENCE (ledger/analytics citations) AND cap room.
+- **The solo-dev cap in CI** — `monthlySpendCapUsd: $100`; `tools/check-services.mjs`
+  fails the build when projected spend exceeds it, exactly like an unsourced
+  strategy. Raising the cap is a deliberate commit.
+- **`business/PNL.md`** — the operating statement: current actuals ($0/$0,
+  pre-launch), the operating rules, a worked projection with labeled hypotheses
+  (8 videos/mo × 10k views × $4 RPM ≈ $320/mo; ElevenLabs at trigger ≈
+  break-even 232 views/video), and the paid pipeline with triggers.
+
 ## [0.13.0] — 2026-07-12
 
 **Closed-loop creation.** Operator scored the shipped cut 39/100 against a rubric
