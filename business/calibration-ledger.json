@@ -18,6 +18,15 @@
       "operatorScore": 53,
       "error": 23,
       "notes": "Blind judge, shuffled frames, exemplar anchors by DESCRIPTION only (reference pack empty). Leniency bias: no dimension scored below 6; world-coherence scored 8 from a single frame it cannot assess. Error shrank +39 to +23 across revisions — still inadmissible. Triggered v2.1: comparative judging against REAL reference frames required; unanchored absolute scores inadmissible."
+    },
+    {
+      "videoId": "hook-lab-c4",
+      "artifact": "authored hook scene, design-loop cycle 4 (same frames as prior entry)",
+      "rubricVersion": "v2.1-comparative",
+      "rubricScore": 44.5,
+      "operatorScore": 53,
+      "error": -8.5,
+      "notes": "First comparative judgment: c4 frames on screen WITH vox-ok + harris-hawaii reference frames (assets/reference-pack), stillJudgeable dims only (ideation 4, composition 5, type 5, finish 4). Error inside ±10 for the first time and HARSH rather than lenient — the safe direction. NOT a blind pair: the judge knew the operator's 53 when scoring, so this validates the protocol's direction, not its calibration. v2.1 stays provisional until a blind pair (next artifact scored by operator before the judge) lands inside ±10."
     }
   ]
 }

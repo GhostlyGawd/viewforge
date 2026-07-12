@@ -1,0 +1,3 @@
+# Research-only frames are never committed (no redistribution); refetch with
+# tools/fetch-reference-pack.mjs. The manifest + hashes ARE committed.
+frames/

@@ -19,3 +19,9 @@ Rules (enforced, not suggested):
   rubric can't separate them, the rubric lacks range (see the calibration ledger).
 - Populate via yt-dlp stills or manual capture; record the source video URL per
   frame in manifest.json. The pack is versioned like the rules file.
+- Frames are NOT committed (no redistribution — see `.gitignore`); the manifest
+  with source URLs + sha256 IS. Refetch anywhere with
+  `node tools/fetch-reference-pack.mjs`; `--frames` prints the yt-dlp commands
+  for operator-curated mid-video captures (datacenter IPs are PO-token-walled).
+- Under `JUDGE_PROTOCOL` v2.1 (the +23 incident) a craft score produced without
+  one of these frames literally on screen next to ours is inadmissible.
