@@ -3,6 +3,30 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.14.1] — 2026-07-12
+
+**The +23 incident: judging goes comparative.** Second calibration entry recorded:
+the v2 blind judge scored the design-loop cycle-4 hook frame 76; the operator scored
+it **53**. Error shrank +39 → +23 across rubric revisions — still far outside the
+±10 admissibility gate. Root cause: absolute scoring with described (not visible)
+anchors runs lenient, and the judge scored cut-level dimensions (world-coherence)
+from a single still it cannot assess. 272 tests.
+
+### Added
+- **`JUDGE_PROTOCOL` v2.1** (`lib/quality-bar.mjs`) — judging is now comparative
+  ONLY: our frame side-by-side with a REAL frame from `assets/reference-pack/` for
+  the same grammar, with a per-dimension "what the reference does that ours doesn't"
+  observation. No reference on screen ⇒ the score is **inadmissible**. Frame-level
+  judging is restricted to `stillJudgeable` dims (visual-ideation, composition,
+  type-information, finish); motion/sound/voice/world-coherence must be scored from
+  clips or the cut.
+- **`scoreRubricV2Frame`** — the frame-level score over stillJudgeable dims with
+  renormalized weights, so a still can never silently claim credit for dimensions
+  it cannot show.
+- **`business/calibration-ledger.json`** — the ledger leaves test fixtures and
+  becomes a real tracked artifact; both real entries recorded (v1: 78.1 vs 39;
+  v2-blind-judge: 76 vs 53).
+
 ## [0.14.0] — 2026-07-12
 
 **Run like a business.** Operator mandate: free/open first; paid is fine when it's

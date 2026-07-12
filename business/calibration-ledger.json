@@ -1,0 +1,23 @@
+{
+  "note": "The rubric is the hypothesis; the operator is the data. Entries are append-only. A rubric version with mean |error| > 10 vs the operator is inadmissible at the ship gate (lib/quality-bar.mjs rubricNeedsRevision).",
+  "entries": [
+    {
+      "videoId": "marginalia-ep01-story",
+      "artifact": "full 61s cut",
+      "rubricVersion": "v1",
+      "rubricScore": 78.1,
+      "operatorScore": 39,
+      "error": 39.1,
+      "notes": "Self-scored by the maker; defect-absence rubric; still-based. Triggered the v2 rebuild + design loop."
+    },
+    {
+      "videoId": "hook-lab-c4",
+      "artifact": "authored hook scene, design-loop cycle 4 (drain frame)",
+      "rubricVersion": "v2-blind-judge",
+      "rubricScore": 76,
+      "operatorScore": 53,
+      "error": 23,
+      "notes": "Blind judge, shuffled frames, exemplar anchors by DESCRIPTION only (reference pack empty). Leniency bias: no dimension scored below 6; world-coherence scored 8 from a single frame it cannot assess. Error shrank +39 to +23 across revisions — still inadmissible. Triggered v2.1: comparative judging against REAL reference frames required; unanchored absolute scores inadmissible."
+    }
+  ]
+}

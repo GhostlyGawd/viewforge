@@ -18,6 +18,32 @@ vague note. This log records each such change with its reproduction and the
 
 ## Entries
 
+## 2026-07-12 — the rebuilt judge STILL ran +23 hot (76 vs 53): absolute scoring is the defect
+- **Incident:** the v2 blind judge (shuffled frames, maker/judge separation, exemplar
+  anchors) scored the design-loop cycle-4 hook frame 76; the operator scored it 53.
+  Error improved +39 → +23 across rubric revisions but still fails the ledger's ±10
+  admissibility gate. Two mechanisms: (1) leniency bias — with anchors that are
+  *descriptions* rather than visible artifacts, no dimension was scored below 6;
+  scores compress toward 6–8 regardless of quality. (2) scope violation — the judge
+  scored world-coherence (a cut-level property) 8 from a single still that cannot
+  exhibit it.
+- **Reproduction:** `business/calibration-ledger.json` records both real entries;
+  the v2.1 test in `tests/quality-bar.test.mjs` asserts the protocol is comparative,
+  inadmissible without a reference, and that `scoreRubricV2Frame` refuses to award
+  cut-level dimensions from a still (weights renormalized over stillJudgeable only).
+- **Generalization:** the failure class is *absolute judgment against remembered
+  anchors*. A model judge is a comparator, not a meter: it discriminates "A vs B on
+  screen together" far better than it estimates "A on a 0–10 scale from memory."
+  So JUDGE_PROTOCOL v2.1: every craft score is produced side-by-side with a REAL
+  reference frame of the same grammar, with a per-dimension observation of what the
+  reference does that ours doesn't; and each artifact class (still/clip/cut) may
+  only be scored on dimensions it can physically exhibit.
+- **Guard against gaming:** a score without a reference on screen is inadmissible
+  by protocol, so the judge cannot drift lenient in private; the calibration ledger
+  keeps operator ground truth as the target, so anchoring to weak references (to
+  make ours look good) shows up as ledger error and invalidates the rubric version,
+  not the operator.
+
 ## 2026-07-12 — the quality rubric failed its first calibration test (78 vs 39)
 - **Incident:** rubric v1 scored the EP.01 story cut 78/100; the operator scored it
   39/100. Root causes, in order: the maker scored its own work (self-referential

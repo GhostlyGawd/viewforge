@@ -2,7 +2,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { deflateSync } from 'node:zlib'
-import { QUALITY_BAR, visualEvents, validateCadence, decodePng, frameDifference, detectStaticScenes, CRAFT_RUBRIC, scoreCraft, evaluateQualityBar } from '../lib/quality-bar.mjs'
+import { QUALITY_BAR, visualEvents, validateCadence, decodePng, frameDifference, detectStaticScenes, CRAFT_RUBRIC, scoreCraft, evaluateQualityBar, JUDGE_PROTOCOL, scoreRubricV2Frame } from '../lib/quality-bar.mjs'
 import { runGatePublish } from '../lib/gates.mjs'
 import { forAll, gens } from './helpers/prop.mjs'
 
@@ -153,4 +153,13 @@ test('the ship gate refuses an unevaluated or failing bar; a passing bar ships (
   assert.equal(failing.pass, false)
   assert.match(failing.blocking.join(';'), /quality: cadence/)
   assert.equal(runGatePublish({ ...base, quality: { pass: true, blocking: [], warnings: [] } }).pass, true)
+})
+
+test('v2.1 (the +23 incident): frame judging scores only still-judgeable dims, renormalized; protocol demands a real reference', () => {
+  assert.equal(JUDGE_PROTOCOL.comparative, true)
+  assert.equal(JUDGE_PROTOCOL.inadmissibleWithoutReference, true)
+  assert.ok(!JUDGE_PROTOCOL.stillJudgeable.includes('world-coherence')) // a single frame cannot assess a cut-level property
+  const perfect = scoreRubricV2Frame({ 'visual-ideation': 10, composition: 10, 'type-information': 10, finish: 10 })
+  assert.equal(perfect.score, 100) // renormalized
+  assert.equal(scoreRubricV2Frame({ 'visual-ideation': 10 }).score, Math.round((0.25 / 0.55) * 1000) / 10)
 })
