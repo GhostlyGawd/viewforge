@@ -45,6 +45,15 @@
       "operatorScore": 55,
       "error": 10.5,
       "notes": "REPLICATION RESULT: the separated judge scored ideation 7 / composition 6 / type 7 / finish 5 = 65.5 — within 0.1 of the maker's 65.4. This WEAKENS the maker-bias hypothesis as the full explanation: the ~+10 residual at this tier is systematic model-judge bias shared across contexts. Also note the spread: judges saw c4→c7 as +21 (44.5→65.5); the operator saw +11 (44→55) — judges over-credit improvement. Two pairs cannot separate offset from gain; next blind pair decides. The separated judge's qualitative read converged with the operator's: 'flawless vector cleanliness is the single loudest tell', 'one centered card floating in inert darkness', fix = composite the actual archival scan (1872 Statutes at Large is public domain — publishable, not research-only)."
+    },
+    {
+      "videoId": "hook-lab-c8",
+      "artifact": "authored hook scene, design-loop cycle 8 — the MOTION pass, scored as a 9s CLIP (first clip-class entry)",
+      "rubricVersion": "operator-only",
+      "rubricScore": null,
+      "operatorScore": 61,
+      "error": null,
+      "notes": "No judge pair (under v2.2 the judge is a ranker; no clip-judging protocol exists yet, and the maker deliberately did not self-score). Ground truth for the clip class: c7 stills 55 -> c8 clip 61. The motion pass (slam physics, hyphen fragments, pen easing, handheld drift, ink behavior, counter settle) bought +6 operator points. Cycle 9 targets the convergent finding: material truth via the real public-domain 1872 statute scan."
     }
   ]
 }
