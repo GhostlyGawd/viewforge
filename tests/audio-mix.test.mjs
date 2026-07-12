@@ -145,3 +145,126 @@ test('narrationSegmentsFromBeats keeps only spoken beats and applies the offset'
   assert.equal(segs[0].startSec, 1.4)
   assert.ok(isNarrating(5, segs))
 })
+
+// ---------------------------------------------------------------------------
+// Mastering targets + Gate-B audio checks (Master Doc v2 §6/§21/§25) — plan 06 Phase B
+// ---------------------------------------------------------------------------
+import { MASTER_TARGETS, validateMaster, silenceGaps, duckDepthDb, ffmpegLoudnormArgs } from '../lib/audio-mix.mjs'
+
+test('property: B1 — validateMaster accepts exactly the −14±1 LU / ≤ −1 dBTP window', () => {
+  forAll(
+    gens.record({ lufs: gens.float(-20, -8), tp: gens.float(-6, 1) }),
+    ({ lufs, tp }) => {
+      const r = validateMaster({ lufsIntegrated: lufs, truePeakDb: tp })
+      const lufsOk = Math.abs(lufs - MASTER_TARGETS.lufsIntegrated) <= MASTER_TARGETS.lufsToleranceLu
+      const tpOk = tp <= MASTER_TARGETS.truePeakDbMax
+      // avoid asserting exactly on the boundary (float epsilon)
+      if (Math.abs(Math.abs(lufs + 14) - 1) < 0.01 || Math.abs(tp + 1) < 0.01) return true
+      return r.valid === (lufsOk && tpOk)
+    },
+    { runs: 400 },
+  )
+})
+
+test('property: B2 — every silence gap > 700ms is found and blocks; ≤ 700ms never does', () => {
+  forAll(
+    (rng) => {
+      const runtime = gens.int(20, 90)(rng)
+      // audible spans with random gaps between them
+      const spans = []
+      let t = gens.float(0, 0.5)(rng)
+      while (t < runtime - 2) {
+        const len = gens.float(1, 6)(rng)
+        spans.push({ startSec: t, endSec: Math.min(runtime, t + len) })
+        t += len + gens.float(0.05, 1.4)(rng)
+      }
+      return { runtime, spans }
+    },
+    ({ runtime, spans }) => {
+      const gaps = silenceGaps(spans, runtime)
+      // recompute gaps naively from the sorted spans (incl. head), tail excluded when last span reaches runtime
+      const sorted = [...spans].sort((a, b) => a.startSec - b.startSec)
+      let cursor = 0
+      const expect = []
+      for (const s of [...sorted, { startSec: runtime, endSec: runtime }]) {
+        const gapMs = Math.round((s.startSec - cursor) * 1000)
+        if (gapMs > 700) expect.push(gapMs)
+        cursor = Math.max(cursor, s.endSec)
+      }
+      if (gaps.length !== expect.length) return false
+      if (!gaps.every((g) => g.gapMs > 700)) return false
+      const r = validateMaster({ lufsIntegrated: -14, truePeakDb: -1.5, audible: spans, runtimeSec: runtime })
+      return r.valid === (expect.length === 0)
+    },
+    { runs: 250 },
+  )
+})
+
+test('property: B3 — duck depth < 12 dB blocks; 12–15 passes clean; > 15 warns only', () => {
+  forAll(
+    gens.record({ depth: gens.float(4, 30) }),
+    ({ depth }) => {
+      const mix = { narrationDb: -6, duckDb: -6 - depth }
+      const r = validateMaster({ lufsIntegrated: -14, truePeakDb: -1.5, mix })
+      if (Math.abs(depth - 12) < 0.01 || Math.abs(depth - 15) < 0.01) return true // skip boundary epsilon
+      if (depth < 12) return !r.valid && r.issues.some((i) => /duck/.test(i))
+      if (depth > 15) return r.valid && r.warnings.some((w) => /duck/.test(w))
+      return r.valid && r.warnings.length === 0
+    },
+    { runs: 300 },
+  )
+})
+
+test('property: B4 — voice stretch outside ±4% is rejected by the master validator too', () => {
+  forAll(
+    gens.record({ pct: gens.float(-12, 12) }),
+    ({ pct }) => {
+      const r = validateMaster({ lufsIntegrated: -14, truePeakDb: -1.5, voiceStretchPct: pct })
+      if (Math.abs(Math.abs(pct) - 4) < 0.01) return true
+      return r.valid === (Math.abs(pct) < 4)
+    },
+    { runs: 300 },
+  )
+})
+
+feature('Mastering the final mix (Gate B audio)', () => {
+  scenario('The house default mix sits inside the v2 duck window', () => {
+    then('duck depth is 12–15 dB under narration', () => {
+      const d = duckDepthDb()
+      assert.ok(d >= MASTER_TARGETS.duckUnderNarrationDbMin && d <= MASTER_TARGETS.duckUnderNarrationDbMax, `depth ${d}`)
+    })
+  })
+
+  scenario('B5 — the two-pass loudnorm args carry the exact targets', () => {
+    const measure = when('we build the measure pass', () => ffmpegLoudnormArgs({ pass: 'measure' }))
+    const apply = and('the apply pass from measured values', () =>
+      ffmpegLoudnormArgs({ pass: 'apply', measured: { inputI: -19.2, inputTp: -3.1, inputLra: 6.4, inputThresh: -29.5 } }),
+    )
+    then('both passes target I=-14, TP=-1 and the apply pass is linear', () => {
+      assert.match(measure.join(' '), /loudnorm=I=-14:TP=-1:LRA=11/)
+      assert.match(measure.join(' '), /print_format=json/)
+      assert.match(apply.join(' '), /measured_I=-19\.2/)
+      assert.match(apply.join(' '), /linear=true/)
+    })
+    and('an apply pass without measured values refuses to guess', () => {
+      assert.throws(() => ffmpegLoudnormArgs({ pass: 'apply' }), /needs measured/)
+    })
+  })
+
+  scenario('An unverified master never passes', () => {
+    then('missing loudness or true-peak measurements are blocking', () => {
+      assert.equal(validateMaster({}).valid, false)
+      assert.equal(validateMaster({ lufsIntegrated: -14 }).valid, false)
+      assert.equal(validateMaster({ truePeakDb: -2 }).valid, false)
+    })
+  })
+
+  scenario('Dead air at the head of the video counts', () => {
+    const gaps = when('the first audible thing happens at 1.2s', () => silenceGaps([{ startSec: 1.2, endSec: 30 }], 30))
+    then('the 1200ms head gap is reported', () => {
+      assert.equal(gaps.length, 1)
+      assert.equal(gaps[0].gapMs, 1200)
+      assert.equal(gaps[0].startSec, 0)
+    })
+  })
+})

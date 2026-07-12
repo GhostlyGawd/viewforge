@@ -7,7 +7,7 @@ import { AbsoluteFill, Audio, Img, Sequence, Easing, interpolate, spring, static
 // the current spoken word pops. Music bed ducks under the narration.
 
 type Tokens = { bg: string; ink: string; accent: string; displayFont: string; bodyFont: string }
-type BeatT = { beatId: string; startSec: number; durSec: number; words: string[] }
+type BeatT = { beatId: string; startSec: number; durSec: number; words: string[]; revealSec?: number[] }
 type Captions = { totalSec: number; voice: string; beats: BeatT[] }
 type Scene = { beatId: string; tokens: Tokens; assets?: { localFile: string; credit?: string }[] }
 type Plan = { fps: number; scenes: Scene[]; brandName: string }
@@ -49,14 +49,25 @@ const MovingBg: React.FC<{ tokens: Tokens; asset?: { localFile: string; credit?:
   )
 }
 
-// Word-synced caption: reveals words across the beat in time with the voice; the most
-// recent word pops in accent. A rolling window keeps it readable on long beats.
+// Word-synced caption: words appear WITH the voice. Reveal times come from
+// captions.json's per-word revealSec when present (real/char-weighted timing produced
+// by tools/synth-voice.py; lib/caption-timing.mjs is the tested spec) and fall back to
+// an even split across the beat. The most recent word pops in accent; a rolling window
+// keeps it readable on long beats.
 const Captions: React.FC<{ beat: BeatT; tokens: Tokens; durationInFrames: number }> = ({ beat, tokens, durationInFrames }) => {
   const frame = useCurrentFrame()
   const { fps } = useVideoConfig()
-  const progress = interpolate(frame, [0, durationInFrames], [0, 1], { extrapolateRight: 'clamp' })
   const total = beat.words.length
-  const revealed = Math.min(total - 1, Math.floor(progress * total))
+  const durSec = durationInFrames / fps
+  // reveal times (sec, beat-relative) — mirrors revealedIndexAtTime in the lib
+  const times = beat.revealSec && beat.revealSec.length === total ? beat.revealSec : beat.words.map((_, i) => (i / total) * durSec)
+  const tSec = frame / fps
+  let revealed = -1
+  for (let i = 0; i < total; i++) {
+    if (times[i] <= tSec + 1e-9) revealed = i
+    else break
+  }
+  if (revealed < 0) return null // before the first word: captions never precede the voice
   const WINDOW = 12
   const start = Math.max(0, revealed - WINDOW + 1)
   const visible = beat.words.slice(start, revealed + 1)
@@ -66,7 +77,7 @@ const Captions: React.FC<{ beat: BeatT; tokens: Tokens; durationInFrames: number
         const globalIdx = start + i
         const isCurrent = globalIdx === revealed
         const age = revealed - globalIdx
-        const pop = isCurrent ? spring({ frame: frame - (globalIdx / total) * durationInFrames, fps, config: { damping: 12, stiffness: 200 } }) : 1
+        const pop = isCurrent ? spring({ frame: frame - Math.round(times[globalIdx] * fps), fps, config: { damping: 12, stiffness: 200 } }) : 1
         const isNum = /\d/.test(w) || /million|dollars/i.test(w)
         return (
           <span key={globalIdx} style={{ display: 'inline-block', transform: `scale(${isCurrent ? 0.9 + pop * 0.12 : 1})`, color: isCurrent || isNum ? tokens.accent : tokens.ink, opacity: Math.max(0.32, 1 - age * 0.06) }}>
@@ -83,10 +94,11 @@ export const CaptionVideo: React.FC<{ captions: Captions; plan: Plan }> = ({ cap
   const sceneByBeat = new Map(plan.scenes.map((s) => [s.beatId, s]))
   const tokens = plan.scenes[0]?.tokens
   // bed ducks: narration is ~continuous here, so the bed mostly sits at duck level.
+  // ~13dB under narration (v2 §6 window 12–15dB) — mirrors lib/audio-mix.mjs.
   const segs = captions.beats.map((b) => ({ s: b.startSec, e: b.startSec + b.durSec }))
   const bedVolume = (f: number) => {
     const t = f / fps
-    return segs.some((x) => t >= x.s && t < x.e) ? 0.05 : 0.24
+    return segs.some((x) => t >= x.s && t < x.e) ? 0.22 : 0.24
   }
   return (
     <AbsoluteFill style={{ backgroundColor: tokens?.bg ?? '#000' }}>

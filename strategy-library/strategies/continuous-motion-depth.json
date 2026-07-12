@@ -1,0 +1,22 @@
+{
+  "id": "continuous-motion-depth",
+  "title": "Nothing sits still: continuous motion with layered fake-3D depth",
+  "category": "production",
+  "principle": "The Kurzgesagt school of motion design keeps every element alive — overlapping action, exaggerated eased movement, and fake-3D depth (foreground/midground/background parallax) — so frames read as a living scene rather than a slide.",
+  "rule": "Every scene must show measurable pixel change across its duration (static-scene detection over Gate-B stills blocks at the ship gate), and compositions should layer depth: background drift + midground subject + foreground accents.",
+  "targetMetric": "AVP",
+  "domain": "content",
+  "guardMetrics": ["likeRatio"],
+  "appliesTo": ["motion"],
+  "source": {
+    "kind": "external",
+    "name": "Kurzgesagt — Motion Graphics with Kurzgesagt (Skillshare, parts 1-3: key poses, fake 3D depth, exaggerated movement, overlapping action)",
+    "url": "https://www.skillshare.com/en/classes/motion-graphics-with-kurzgesagt-part-1/631970755",
+    "date": "2026-07"
+  },
+  "status": "documented",
+  "confidence": 0.55,
+  "evidence": [],
+  "createdUtc": "2026-07-12",
+  "lastReviewedUtc": "2026-07-12"
+}

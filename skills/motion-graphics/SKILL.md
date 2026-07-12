@@ -38,6 +38,35 @@ Promise.all([import("../../lib/script-model.mjs"), import("../../lib/motion-plan
 enforced in code, not just prose. Each scene carries resolved params (transition,
 pace, accent, texture) + the brand tokens.
 
+## 1b. Re-time the plan from the REAL narration (audio-first — do not skip)
+
+A fresh plan is `timingSource: "authored"` — beat-sheet guesses. Once the voice
+department has produced `captions.json` (real per-beat durations), the **timing
+solver** owns the seconds:
+
+```bash
+node -e '
+Promise.all([import("../../lib/timing-solver.mjs"), import("../../lib/motion-plan.mjs")])
+.then(([ts, mp]) => {
+  const fs = require("fs");
+  const captions = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+  const plan = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+  // author CONSTRAINTS per beat (minMs/maxMs/padAfterMs) — never resolved times
+  const scenes = ts.scenesFromCaptions(captions.beats, { /* beatId: {minMs, maxMs} */ });
+  const solved = ts.solveTimeline(scenes, { padAfterMs: 0, targetMs: null });
+  if (!solved.ok) { console.error("BOUNCE:", JSON.stringify(solved.bounces), JSON.stringify(solved.flags)); process.exit(1); }
+  const retimed = mp.applyResolvedTimeline(plan, solved.scenes);
+  fs.writeFileSync(process.argv[2], JSON.stringify(retimed, null, 2) + "\n");
+  console.log("timingSource:", retimed.timingSource, "| total", solved.totalMs + "ms");
+})' "<captions.json>" "<motion-plan.json>"
+```
+
+- A **bounce** means a beat's VO overran its `maxMs`: the video goes back to
+  **script-write** with the bounce's `wordBudget` — never stretch the voice (±4% cap,
+  enforced). A short beat becomes a visual **hold** (`holdMs`), never dead air.
+- `validateResolvedTimeline` re-checks the invariants before render; the renderer
+  reads only resolved timing.
+
 ## 2. Scaffold / update the Remotion project
 
 Copy the reusable, brand-agnostic template from **`assets/remotion-template/`** into
@@ -47,6 +76,20 @@ already polished: logo sting, paper grain, animated ink-draw margin rule, wax-se
 stamp on the payoff, map-morph drift, and number accenting — all parameter-driven, so
 A/B variants are just different `motion-plan.json`s (no code edits). See
 `assets/remotion-template/README.md`.
+
+When writing Remotion code by hand inside the render project, install the **official
+Remotion Agent Skills** first (v2 §18) — they teach the agent correct Remotion
+patterns (animations, audio, captions, transitions) so renderer correctness stops
+being a prompt problem:
+
+```bash
+npx skills add remotion   # inside videos/<id>/remotion
+```
+
+Formats: `buildBeatSheet({ format })` speaks three §19 grammars — `education`
+(default), `demo` (capture-first: real UI on screen by ≤8% of runtime, enforced by
+the script validator), and `short` (hook-burst → proof → one insight → CTA). Each
+grammar's beats carry motion presets.
 
 ## 3. Render locally (free)
 
@@ -78,9 +121,33 @@ one render command rather than faking an MP4.
 The template ships two compositions: `MarginaliaVideo` (plan-driven) and **`CaptionVideo`**
 (audio-driven). For engaging rhythm, prefer `CaptionVideo`: it reads `captions.json` (from
 `tools/synth-voice.py`) so timing matches the real narration and captions reveal word-by-word
-in sync with the voice, over continuously-moving full-bleed archival photos. The reveal/window
-logic is the property-tested `lib/caption-timing.mjs`. Render it with
+in sync with the voice — per-word `revealSec` when present (char-weighted within the real
+beat audio; whisperX alignment is the upgrade path), even split as fallback — over
+continuously-moving full-bleed archival photos. The reveal/window logic is the
+property-tested `lib/caption-timing.mjs`. Render it with
 `npx remotion render CaptionVideo out/video.mp4`.
+
+## 4c. Iterate per scene, not per video
+
+`lib/render-cache.mjs` gives each scene a content-hash identity
+(`renderKey = sha256(scene + brandVersion + assetHashes + rendererVersion)`):
+`planSceneRenders` re-renders only cache misses, `dirtyScenes` shows exactly what an
+edit invalidated, and `concatPlan` refuses to stream-copy-concat segments whose codec
+params differ. A one-scene fix costs one scene.
+
+## 4d. Product demos: capture the REAL thing (v2 §7)
+
+For a demo channel, the most convincing pixel is a real one. `lib/capture-plan.mjs`
+owns the contract: `buildCaptureSpec` (goto/click/type/hover/wait steps, labels
+required, **2x device scale enforced** for zoom headroom) → `toPlaywrightScript`
+emits the .spec.ts that records the real app with the OS cursor hidden and per-step
+boundingBox positions written to a cursor track. `cursorTrackFromSteps` turns steps +
+positions into the deterministic track the overlay draws from — positions are KNOWN
+from the script, never detected. The template's `src/overlay.tsx` supplies the Tier-1
+components (§20): `CursorOverlay`, `ClickRipple`, `FocusRing`, `CalloutLabel`,
+`ZoomPan`, `BrowserFrame`, and the composed `CaptureScene`. Captured footage enters
+the manifest as `origin: "captured"` — the only origin `uiTruth` accepts; never
+genAI-fake the product UI.
 
 ## 5. The signature set pieces
 Build the brand's promised motion identity over iterations: map/timeline morphs, the
@@ -89,6 +156,8 @@ parameters so they can be tuned.
 
 ## Definition of done
 - [ ] `motion-plan.json` built (passes the no-fake-human guard); scenes parameterized.
+- [ ] Plan re-timed from the real narration: `timingSource: "audio-solver"` (or the
+      bounce honestly sent back to script-write with its word budget).
 - [ ] Remotion project scaffolded/updated and plan-driven.
 - [ ] Video rendered locally (or the render command handed over if the env can't run it).
 - [ ] Handed off to **edit-assemble**.

@@ -18,6 +18,62 @@ vague note. This log records each such change with its reproduction and the
 
 ## Entries
 
+## 2026-07-12 — "no dull moments" was Goodharted by its own proxies (the bare render)
+- **Incident:** the factory produced a 47s cut with ZERO visual assets bound — every
+  scene rendered on the background-glow fallback with the same caption layout — and
+  it sailed through edit-QA and Gate B. The operator's verdict: "static shitty
+  background glow with the same text over and over." All the machinery agreed it was
+  fine, because "engaging" was measured entirely by proxies (narration coverage,
+  cutsPerScene params) and the QC checklist covered correctness (caption-sync,
+  contrast, overflow) but never the direct question: is anything actually ON screen?
+  A second compounding miss: the voice used the documented "obviously synthetic"
+  fallback engine, re-making the exact complaint recorded in the v0.8.0 changelog.
+- **Reproduction:** "a cut where NO scene carries a visual asset is BLOCKED" in
+  `tests/edit-qa.test.mjs` — the incident's own shape (narrated, fast-cut params,
+  zero assets) must fail the ship gate.
+- **Generalization:** any quality bar built ONLY from proxy metrics will pass a
+  degenerate artifact that satisfies the proxies. Every proxy set needs at least one
+  direct material check. Here: an entirely bare cut is a blocking defect; individual
+  bare scenes warn; fallback-degraded scenes warn with their missing list.
+- **Guard against gaming:** the check reads bound assets (which must exist in the
+  rights-clean manifest to bind at all), not planner-authored params — inflating
+  cutsPerScene or narration text can no longer stand in for having visuals.
+
+## 2026-07-12 — severity floors must not override code-defined gradation
+- **Incident:** the Gate-B aggregator's anti-shrug rule ("an explicit severity can
+  never downgrade a blocking check") silently escalated `checkTokenContrast`'s own
+  warn-band findings (ratio 3–4.5:1) to blocking, because `contrast` is registered
+  block-severity. The end-to-end drive showed the house accent (4.09:1 — a
+  legitimate warn) forcing a scene re-render.
+- **Reproduction:** the "graded checks honor the code-defined band" test in
+  `tests/scene-qc.test.mjs` — warn-band contrast findings must aggregate as
+  warnings, block-band and severity-less contrast findings must block.
+- **Generalization:** a severity floor is for BINARY defects judged by a model; a
+  check whose bands are computed in code (`graded: true`) must have its computed
+  severity honored in both directions — otherwise the code's judgment is overruled
+  by a rule meant to constrain the model's.
+- **Guard against gaming:** the VLM still can't shrug off binary blockers (the
+  floor stands for non-graded checks), and a severity-less contrast finding
+  defaults to block — the warn path exists only via the tested numeric bands.
+
+## 2026-07-12 — caption reveal times must floor, never round (a caption may be early, never late)
+- **Incident:** while adopting Master Doc v2's timestamp-first captions, reveal times
+  were rounded to the nearest millisecond. Rounding UP pushes a word's reveal *after*
+  the instant the voice says it — at the word's true onset the caption still shows the
+  previous word. A per-word desync of <1ms is invisible in isolation but is exactly
+  the "caption doesn't match the audible word" class the v2 Gate-B checklist exists
+  to catch.
+- **Reproduction:** the D2 round-trip property in `tests/caption-timing.test.mjs`
+  ("at any word's start time, that word is current") failed on the first run with a
+  real counterexample; it now pins the floored behavior.
+- **Generalization:** every time quantization in the caption path must err EARLY
+  (floor), never late — a caption may appear ≤1ms before its word, never after.
+  `normalizeAlignedWords` floors; `mergeAlignmentIntoCaptions` clamps grace-window
+  spill down into the beat.
+- **Guard against gaming:** the property tests the round-trip against the UNrounded
+  source times, so the invariant can't be satisfied by adjusting both sides of the
+  comparison.
+
 ## 2026-06-28 — numeric title claims must be grounded at research time, not script time
 - **Incident:** the research department locked vid-1's title "Why A Misplaced Comma
   Cost 40 Million Dollars" with a specific number, but `claimPaidOff:true` was asserted

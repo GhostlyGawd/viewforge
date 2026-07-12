@@ -107,11 +107,37 @@ import("../../lib/state.mjs").then(({addVideo, advanceStage}) => {
 })' "<channel-slug>" chosen.json
 ```
 
+## 5b. Plan the packaging experiment (challenger + Test & Compare)
+
+Packaging is a hypothesis — give the winner a **challenger** (v2 §10/§13): a second
+title + thumbnail concept that pays off the SAME promise. Build the Test & Compare
+record with `lib/packaging-experiment.mjs`:
+
+```bash
+node -e '
+import("../../lib/packaging-experiment.mjs").then(({buildPackagingExperiment}) => {
+  const exp = buildPackagingExperiment({
+    id: "exp-vid1-thumb", videoId: "vid-1", strategyId: "thumbnail-title-extremity",
+    promise: "a misplaced comma cost the US $40M",
+    primary:    { title: "...", thumbnailConcept: "..." },
+    challenger: { title: "...", thumbnailConcept: "..." },
+  });
+  console.log(JSON.stringify(exp, null, 2));
+})'
+```
+
+Both arms are validated (an experiment is never a licence for one dishonest arm).
+At publish, launch YouTube's native **Test & Compare** with both thumbnails; the
+analytics department ingests the result as holdout, experiment-class evidence — the
+fastest honest path to a validated packaging strategy.
+
 ## 6. Report + hand off
 
-Give the user the ranked slate: each chosen title, its score, the packaged promise,
-the demand evidence, and the format (noting novelty vs recent uploads). Flag anything
-that was blocked and why. Next department: **script** (planned in `ROADMAP.md`).
+Give the user the ranked slate: each chosen title, its score, the packaged promise +
+challenger, the demand evidence, and the format (noting novelty vs recent uploads).
+Flag anything that was blocked and why. **Gate A** (`lib/gates.mjs` `runGateA`) is the
+readiness check before production spend: packaging locked + grounded, script structure
+valid — cheap to reject here, expensive after. Next department: **script**.
 
 ## Definition of done
 

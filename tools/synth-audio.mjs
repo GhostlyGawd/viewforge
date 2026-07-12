@@ -74,6 +74,25 @@ function generateSlam() {
   return out
 }
 
+// Transition whoosh: noise through a rising one-pole lowpass with a swell-and-release
+// envelope — the scene-change breath (sfx-on-visual-events strategy; the quality bar
+// wants visual events HEARD).
+function generateWhoosh() {
+  const dur = 0.5
+  const n = Math.floor(dur * SR)
+  const out = new Float32Array(n)
+  let y = 0
+  for (let i = 0; i < n; i++) {
+    const t = i / SR
+    const p = t / dur
+    const alpha = 0.03 + 0.45 * p * p // filter opens as it sweeps up
+    y += alpha * ((Math.random() * 2 - 1) - y)
+    const env = Math.sin(Math.PI * Math.min(1, p * 1.15)) ** 1.6 // swell then release
+    out[i] = Math.max(-1, Math.min(1, y * env * 1.4))
+  }
+  return out
+}
+
 const [outDir, durStr] = process.argv.slice(2)
 if (!outDir) {
   console.error('usage: node tools/synth-audio.mjs <outDir> [durationSec]')
@@ -83,12 +102,14 @@ const duration = Number(durStr) || 30
 fs.mkdirSync(outDir, { recursive: true })
 writeWav(path.join(outDir, 'bed.wav'), generateBed(duration))
 writeWav(path.join(outDir, 'slam.wav'), generateSlam())
+writeWav(path.join(outDir, 'whoosh.wav'), generateWhoosh())
 
 const manifest = {
   assets: [
     { id: 'bed', localFile: 'bed.wav', kind: 'music', license: 'cc0', source: 'synthesized', sourceUrl: 'viewforge:tools/synth-audio.mjs', attribution: 'ViewForge (generated)' },
     { id: 'slam', localFile: 'slam.wav', kind: 'sfx', license: 'cc0', source: 'synthesized', sourceUrl: 'viewforge:tools/synth-audio.mjs', attribution: 'ViewForge (generated)' },
+    { id: 'whoosh', localFile: 'whoosh.wav', kind: 'sfx', license: 'cc0', source: 'synthesized', sourceUrl: 'viewforge:tools/synth-audio.mjs', attribution: 'ViewForge (generated)' },
   ],
 }
 fs.writeFileSync(path.join(outDir, 'audio-manifest.json'), JSON.stringify(manifest, null, 2) + '\n')
-console.log(`synth-audio: wrote bed.wav (${duration}s) + slam.wav + audio-manifest.json (CC0) to ${outDir}`)
+console.log(`synth-audio: wrote bed.wav (${duration}s) + slam.wav + whoosh.wav + audio-manifest.json (CC0) to ${outDir}`)

@@ -21,6 +21,8 @@ the right to drive the pipeline by default once they pass the promotion gate in
 | `principle` | ✅ | the underlying claim, in plain language |
 | `rule` | | the concrete, do-this-now tactic the pipeline applies |
 | `targetMetric` | ✅ | the metric it aims to move (see `KNOWN_METRICS`) |
+| `domain` | | `packaging` \| `content` — where the rule's evidence lives; must be consistent with `targetMetric` (CTR ⇒ packaging; retention/watch/satisfaction ⇒ content). CTR evidence can never advance a content rule, and vice versa |
+| `expiresAfterVideos` | | positive integer; an unvalidated rule retires after this many published videos (`applyExpiry`) — observational/comments-backed rules never live forever |
 | `guardMetrics` | | metrics it must **not** sacrifice (anti-Goodhart) |
 | `appliesTo` | | pipeline stages it informs: `niche`,`brand`,`research`,`script`,`voice`,`motion`,`edit`,`thumbnail`,`title`,`distribution` |
 | `source` | ✅ | provenance — see below |
@@ -68,6 +70,14 @@ The whole point of the lifecycle is to stop ViewForge from fooling itself:
 - **Anti-Goodhart**: a strategy that lifts its `targetMetric` by tanking a
   `guardMetric` (clickbait CTR that destroys AVP/likeRatio) is **rejected**, not
   rewarded.
-- **No fabricated data**: `simulated:true` observations can never promote anything.
+- **No fabricated data**: `simulated:true` observations can never promote anything,
+  and only `youtube_api`-provenance measurements are admissible at all — `manual`
+  numbers are stored but advance nothing.
+- **No domain crossing**: a CTR win can never validate a content rule (or vice
+  versa); the analytics loop excludes cross-domain observations before counting.
+- **No topic confounds**: when observations carry `topicCluster`, holdout wins must
+  span ≥2 distinct clusters — a topic effect must not masquerade as a style effect.
+- **Comments are direction, not proof**: `evidenceClass:"comments"` observations can
+  move a rule into `testing` but never satisfy the promotion bar.
 
 See `ANTI-REWARD-HACKING.md` at the plugin root for the full philosophy.

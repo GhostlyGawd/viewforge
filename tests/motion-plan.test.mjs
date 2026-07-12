@@ -1,7 +1,9 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { buildMotionPlan, tweakableParameters, extractCssColor, extractFontFamily, VISUAL_MODE } from '../lib/motion-plan.mjs'
+import { buildMotionPlan, applyResolvedTimeline, tweakableParameters, extractCssColor, extractFontFamily, VISUAL_MODE } from '../lib/motion-plan.mjs'
 import { buildBeatSheet } from '../lib/script-model.mjs'
+import { solveTimeline } from '../lib/timing-solver.mjs'
+import { forAll, gens } from './helpers/prop.mjs'
 
 const brand = {
   name: 'Marginalia',
@@ -75,4 +77,69 @@ test('buildMotionPlan carries an optional audioFile (null by default)', () => {
 test('buildMotionPlan validates inputs', () => {
   assert.throws(() => buildMotionPlan([], brand))
   assert.throws(() => buildMotionPlan(buildBeatSheet({ targetSeconds: 60 }), null))
+})
+
+// ---- audio-first re-timing (Master Doc v2: A7) ----
+
+test('a fresh plan is authored; applyResolvedTimeline re-times it from the real audio and stamps provenance', () => {
+  const beats = buildBeatSheet({ targetSeconds: 480 })
+  const plan = buildMotionPlan(beats, brand, { fps: 30 })
+  assert.equal(plan.timingSource, 'authored')
+
+  // real narration ran long on the hook, short on the outro — the solver, not the
+  // beat sheet, now owns the seconds
+  const solved = solveTimeline(beats.map((b) => ({ id: b.id, voMs: (b.durationSec + (b.id === 'hook' ? 2 : 0)) * 1000, minMs: 1000 })))
+  assert.equal(solved.ok, true)
+
+  const retimed = applyResolvedTimeline(plan, solved.scenes)
+  assert.equal(retimed.timingSource, 'audio-solver')
+  const hook = retimed.scenes.find((s) => s.beatId === 'hook')
+  const authoredHook = plan.scenes.find((s) => s.beatId === 'hook')
+  assert.equal(hook.endSec - hook.startSec, authoredHook.endSec - authoredHook.startSec + 2) // the real 2s overrun is now IN the timeline
+  assert.equal(retimed.durationFrames, Math.max(...retimed.scenes.map((s) => s.endFrame)))
+  // immutability: the authored plan is untouched
+  assert.equal(plan.timingSource, 'authored')
+  assert.equal(plan.scenes.find((s) => s.beatId === 'hook').endSec, authoredHook.endSec)
+})
+
+test('property: applyResolvedTimeline maps resolved ms → sec/frames exactly, for every scene', () => {
+  const beats = buildBeatSheet({ targetSeconds: 240 })
+  const plan = buildMotionPlan(beats, brand, { fps: 30 })
+  forAll(
+    (rng) => beats.map((b) => ({ id: b.id, voMs: gens.int(800, 20000)(rng), padAfterMs: gens.int(0, 400)(rng) })),
+    (sceneInputs) => {
+      const solved = solveTimeline(sceneInputs)
+      if (!solved.ok) return false
+      const retimed = applyResolvedTimeline(plan, solved.scenes, { fps: 30 })
+      return retimed.scenes.every((sc) => {
+        const s = solved.scenes.find((x) => x.id === sc.beatId)
+        return (
+          sc.startSec === Math.round(s.resolvedStartMs) / 1000 &&
+          sc.endSec === Math.round(s.resolvedStartMs + s.resolvedDurationMs) / 1000 &&
+          sc.startFrame === Math.round(sc.startSec * 30) &&
+          sc.endFrame === Math.round(sc.endSec * 30) &&
+          sc.holdMs === s.holdMs
+        )
+      })
+    },
+    { runs: 150 },
+  )
+})
+
+test('applyResolvedTimeline refuses partial mappings and unresolved input (only solver output times a render)', () => {
+  const beats = buildBeatSheet({ targetSeconds: 120 })
+  const plan = buildMotionPlan(beats, brand)
+  const solved = solveTimeline(beats.map((b) => ({ id: b.id, voMs: 2000 })))
+  assert.throws(() => applyResolvedTimeline(plan, solved.scenes.slice(1)), /no resolved timing/)
+  assert.throws(() => applyResolvedTimeline(plan, [...solved.scenes, { id: 'ghost', resolvedStartMs: 0, resolvedDurationMs: 100 }]), /no plan scene/)
+  assert.throws(() => applyResolvedTimeline(plan, beats.map((b) => ({ id: b.id, voMs: 2000 }))), /not resolved/)
+})
+
+test('every beat carries a sceneType from the §19 grammar, and sceneType is an A/B knob', () => {
+  const plan = buildMotionPlan(buildBeatSheet({ targetSeconds: 120 }), brand)
+  assert.ok(plan.scenes.every((s) => typeof s.params.sceneType === 'string' && s.params.sceneType.length > 0))
+  assert.equal(plan.scenes.find((s) => s.beatId === 'hook').params.sceneType, 'kinetic-open')
+  assert.equal(plan.scenes.find((s) => s.beatId === 'payoff').params.sceneType, 'money-payoff')
+  assert.ok(new Set(plan.scenes.map((s) => s.params.sceneType)).size >= 5) // the grammar varies by construction
+  assert.ok(tweakableParameters(plan).includes('sceneType')) // the optimizer may A/B it
 })

@@ -22,14 +22,14 @@ come.
 |---|------------|------|--------|----------|
 | 1 | **niche** | Pick a niche well: score candidates on demand/growth/monetization/saturation/differentiability/production-fit/repeatability/cost/durability | `lib/niche-score.mjs` | **L2** (skill: `niche-select`) |
 | 2 | **brand** | Brainstorm + build the full brand suite & guide for the chosen niche; validate completeness before advancing | `lib/brand-brief.mjs` (+ `brand-studio` plugin) | **L2** (skill: `brand-suite`) |
-| 3 | **research** | Find video ideas, validate demand, lock the packaged promise (title/thumb first); reject unpaid-off clickbait | `lib/video-idea.mjs` | **L2** (skill: `video-research`) |
+| 3 | **research** | Find video ideas, validate demand, lock the packaged promise (title/thumb first) + a challenger for Test & Compare; reject unpaid-off clickbait; Gate A readiness | `lib/video-idea.mjs` + `lib/packaging-experiment.mjs` + `lib/gates.mjs` | **L2** (skill: `video-research`) |
 | 4 | **script** | Write the script applying retention/story strategies (first-minute, crazy-progression, re-engagement beats) via a beat sheet + structure validator | `lib/script-model.mjs` | **L2** (skill: `script-write`) |
-| 5 | **voice** | Narration spec + free local TTS (Piper); synthetic voice disclosed; never a fake human on screen | `lib/voice-spec.mjs` | **L2** (skill: `voice-over`) |
-| 6 | **motion** | Produce the visuals — parameterized scene timeline → Remotion-first programmatic motion graphics | `lib/motion-plan.mjs` (+ Remotion) | **L2** (skill: `motion-graphics`) |
-| 7 | **edit** | Assemble + tighten ("no dull moments"), final ship/block QA against hard constraints | `lib/edit-qa.mjs` | **L2** (skill: `edit-assemble`) |
+| 5 | **voice** | Narration spec + free local TTS (Kokoro default, Piper fallback); real per-beat durations + word reveal times out to `captions.json`; synthetic voice disclosed; never a fake human on screen | `lib/voice-spec.mjs` + `lib/caption-timing.mjs` | **L2** (skill: `voice-over`) |
+| 6 | **motion** | Produce the visuals — **audio-first**: the timing solver resolves scene durations from the real narration (VO overruns bounce to script), then the parameterized timeline → Remotion-first motion graphics, per-scene render cache; **capture-first** for demos (real UI + branded overlay, deterministic cursor tracks); three §19 grammars (education/demo/short) | `lib/motion-plan.mjs` + `lib/timing-solver.mjs` + `lib/render-cache.mjs` + `lib/capture-plan.mjs` (+ Remotion) | **L2** (skill: `motion-graphics`) |
+| 7 | **edit** | Assemble + tighten ("no dull moments"), master to −14 LUFS / −1 dBTP, run Gate B (scene-QC stills + contrast math + caption spot-checks → per-scene re-render list), final ship/block QA against hard constraints incl. research-only-never-published | `lib/edit-qa.mjs` + `lib/audio-mix.mjs` + `lib/gates.mjs` + `lib/scene-qc.mjs` | **L2** (skill: `edit-assemble`) |
 | 8 | **package** | Title + thumbnail at the extremity the content can honestly pay off | — | L0 |
 | 9 | **distribute** | Publish package: description/chapters/tags/end-screens + synthetic-voice disclosure, validated | `lib/distribution.mjs` | **L2** (skill: `distribution-publish`) |
-| 10 | **analytics** | Ingest real metrics → observations → attribute → promotion gate → advance strategy lifecycle (the loop-closer) | `lib/analytics.mjs` (+ `guards.mjs`) | **L2** (skill: `analytics-optimize`) |
+| 10 | **analytics** | Ingest real metrics (youtube_api provenance only) → observations with domain/evidence-class/topic-cluster → attribute → promotion gate (cross-domain refused, single-cluster wins refused, comments never validate) → advance lifecycle + expire stale rules; Test & Compare is the fast path | `lib/analytics.mjs` + `lib/packaging-experiment.mjs` (+ `guards.mjs`) | **L2** (skill: `analytics-optimize`) |
 
 ## Building a new department
 

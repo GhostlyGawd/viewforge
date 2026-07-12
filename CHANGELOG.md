@@ -3,6 +3,233 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.12.0] — 2026-07-12
+
+**The top-1% quality bar, code-enforced.** Operator mandate: nothing ships below the
+bar set by 1M-view visual-only channels. Research-grounded thresholds (short-form
+retention cuts 2-4s; long-form alternates micro-cuts with declared holds; the
+Kurzgesagt school of continuous layered motion) become a SHIP GATE input. 257 tests.
+
+### Added — lib/quality-bar.mjs
+- **Cadence**: the visual-event timeline (scene starts, intra-scene cuts, set-piece
+  events, voice-synced kinetic reveals, SFX) may never gap beyond 5s — unless the
+  scene DECLARED a hold (solver holdMs), capped at 15s. Holds are choices, never
+  accidents.
+- **Static-scene detection over real pixels**: zero-dep PNG decode (node:zlib) +
+  sampled frame differencing over the Gate-B stills; a scene whose start/mid/end
+  stills are near-identical BLOCKS.
+- **Sound density** (≥3 SFX/min, provisional — enters as the sfx-on-visual-events
+  hypothesis with a 10-video expiry), **grammar variety** (≥4 grammars for ≥6-scene
+  cuts — the slideshow finding, promoted to the bar), and the **craft rubric**
+  (anchored 0-4 dimensions: composition, depth-layering, motion-purpose,
+  type-discipline, color-hierarchy, polish; the VLM scores, the code decides;
+  <75/100 does not ship).
+- `runGatePublish` now REFUSES an unevaluated or failing bar.
+- Three sourced strategies: visual-event-cadence (documented), continuous-motion-
+  depth (documented, Kurzgesagt Skillshare), sfx-on-visual-events (hypothesis).
+
+### Added — capability to pass the bar
+- **Real brand typography**: Fraunces/Inter latin subsets embedded as buffer-backed
+  FontFace (synchronous — async font loading hangs under Remotion's frozen render
+  clock; learned in production), bundled under public/fonts/.
+- **Whoosh SFX** (tools/synth-audio.mjs) on every scene transition in StoryVideo +
+  the existing slams → 11 SFX/min on EP.01.
+- **Parallax foreground depth** in PhotoCuts: accent air + vignette translating
+  against the photo pan (fake-3D layering).
+
+### Verified
+- EP.01 re-rendered and PASSED the full bar on real measurements: max event gap
+  2.2s, 9 grammars, 11 SFX/min, zero static scenes (per-scene pixel Δ 18-38 vs
+  threshold 2.5), craft 78.1/100, mastered −14.45 LUFS / −1.04 dBTP. The same gate
+  demonstrably rejects both earlier renders (single-grammar slideshow; 2 SFX/min).
+
+## [0.11.0] — 2026-07-12
+
+**The composed cut.** Operator verdict on the rebuilt render: "still the same exact
+slideshow formula every single thing — no animation, no engagement." Correct: one
+scene grammar (photo + Ken Burns + bottom captions) repeated nine times, while the
+set-piece library sat unused in the other composition. 249 tests.
+
+### Added
+- **`sceneType` is a first-class scene parameter** (in `SCENE_DEFAULTS`/`BEAT_MOTION`,
+  so it's on the A/B surface like every other knob): the education grammar maps
+  hook→kinetic-open, show-dont-tell→mechanism, progression→timeline,
+  reengage→reveal/counter, escalation→chart, payoff→money-payoff, outro→recap;
+  demo/short beats mapped too. Tested: ≥5 distinct grammars by construction.
+- **`StoryVideo` composition** — the composed cut: audio-first timing + word-synced
+  captions (CaptionVideo's strengths) woven with the set-piece library
+  (MarginaliaVideo's strengths — now exported), rendered per `params.sceneType`:
+  voice-synced kinetic type, the comma-split mechanism with its SFX, timeline sweep,
+  push-in reveals with accent flash, a running refund counter, comparable-case bars,
+  the $40M payoff counter with wax seal + hit, brand sting + end card. Beats also cut
+  WITHIN themselves: `cutsPerScene` finally drives real hard cuts across
+  `scene.assets[]` with alternating Ken-Burns directions.
+- **Grammar-variety check in edit-QA**: a ≥4-scene cut using a single sceneType is
+  flagged loudly as "a slideshow, not a video" (warning — a uniform grammar must be
+  a visible choice, never a default).
+
+## [0.10.1] — 2026-07-12
+
+The bare-render incident, dogfooded. A real end-to-end render in a sandbox produced
+a technically-passing but visually dead video (zero assets bound → 47s of background
+fallback; fallback-tier voice) — and every gate agreed it was fine. 247 tests.
+
+### Fixed
+- **edit-QA visual-material gate**: a cut where NO scene carries a visual asset is
+  now **blocking** (a full-length background-fallback render is a dead render, not a
+  style); individual bare scenes warn; `assetFallback`-degraded scenes warn with
+  their missing list. Direct material check paired with the existing proxies
+  (narration coverage, cut counts) — see IMPROVEMENT-LOG: proxies alone get
+  Goodharted by degenerate artifacts.
+- The healthy edit-QA fixture now binds imagery per scene, reflecting the real
+  pipeline since v0.7.0.
+
+## [0.10.0] — 2026-07-12
+
+**Master Document v2 completion.** Everything in the v2 doc that belongs in a
+Phase-0 plugin is now built and tested (245 tests, was 210). Built to
+`plans/07-v2-completion.md`. The §24 Phase-1/2 service stack (Postgres/Redis/S3,
+dashboard) is deliberately NOT built here — the filesystem contracts are the API
+payloads it will lift, and ROADMAP documents the mapping.
+
+### Added — the learning loop as a hypothesis engine (v2 §10/§17/§23)
+- **Rule domains**: strategies carry `domain: packaging|content`, validated
+  consistent with their targetMetric (CTR ⇒ packaging; retention/watch ⇒ content);
+  `queryStrategies` slices by domain; all 10 seeds stamped; the CI gate enforces it.
+  `evaluateStrategyEvidence` EXCLUDES cross-domain observations — one metric never
+  writes the other domain's rules.
+- **Metrics provenance** (§17): observations carry `provenance: youtube_api|manual|
+  simulated`; only `youtube_api` is admissible anywhere (`isAdmissibleEvidence`);
+  `manual` is stored but advances nothing; contradictions (`youtube_api` +
+  `simulated:true`) are refused. Legacy observations keep their old semantics.
+- **Topic-cluster confound guard**: when observations carry `topicCluster`, holdout
+  wins must span ≥2 distinct clusters to promote — a topic effect can't masquerade
+  as a style effect. Engages only when clusters are logged.
+- **Evidence classes**: `experiment|observational|comments` — comments-class moves a
+  rule into testing but can never satisfy the promotion bar.
+- **Expiry** (`applyExpiry` + `expiresAfterVideos`): unvalidated rules retire when
+  their window passes; `ground-quantified-claims` (the internal hypothesis) now
+  carries a 10-video window. Validated rules never expire this way.
+- **`lib/packaging-experiment.mjs`** — thumbnail Test & Compare as a first-class
+  object: primary + challenger must pay off the SAME promise (no dishonest arm);
+  results ingest as holdout, experiment-class observations — the fast out-of-sample
+  path — and only from `youtube_api` provenance.
+
+### Added — gates + the visual QC harness (v2 §11/§25)
+- **`lib/gates.mjs`** — the v2 gate order composed from existing validators, with
+  Gate 0 (hard constraints) evaluated at EVERY gate: Gate A (packaging locked +
+  grounded + script structure + narration fit; cheap to reject), Gate B (resolved-
+  timeline invariants + scene QC + master + publishable assets → `rerenderScenes`
+  feeds the per-scene loop), Gate publish (package + synthetic-voice disclosure).
+- **`lib/scene-qc.mjs`** — the harness around the VLM: `stillPlan` (start/mid/end
+  per RESOLVED scene), WCAG contrast math (`contrastRatio`, thresholds 3:1 block /
+  4.5:1 warn — and it flagged the house accent at 4.09:1 as borderline),
+  `expectedCaptionAt` (the word that MUST be on screen at a still's timestamp),
+  `aggregateFindings` (fail-closed on unknown checks; explicit severity may
+  escalate, never downgrade).
+
+### Added — capture-first (v2 §7/§16/§20)
+- **`lib/capture-plan.mjs`** — the capture contract (goto/click/type/hover/wait,
+  labels required, **deviceScale ≥ 2 enforced**), `cursorTrackFromSteps`
+  (deterministic timed track — positions KNOWN from the script, never detected;
+  smoothstep moves, click events at their position), `validateCursorTrack`,
+  `toPlaywrightScript` (fixed viewport, 2x, video on, OS cursor hidden, boundingBox
+  positions → cursor-track JSON).
+- **Template `src/overlay.tsx`** — the §20 Tier-1 components: `CursorOverlay`,
+  `ClickRipple`, `FocusRing`, `CalloutLabel`, `ZoomPan` (crisp because captures are
+  2x), `BrowserFrame`, and the composed `CaptureScene`. Not registered as a
+  composition — the template builds without capture assets.
+
+### Added — scene grammars, alignment, fallbacks (v2 §19/§6/§22)
+- **`buildBeatSheet({format})`** — three grammars: `education` (unchanged),
+  `demo` (hero → ui-reveal → cursor-action → transform → proof → benefit → cta;
+  the validator enforces §13 `show_ui_early`: real UI by ≤8% of runtime), `short`
+  (hook-burst → proof → insight → cta). Motion presets for every new beat.
+- **`mergeAlignmentIntoCaptions`** — upgrades `revealSec` to REAL whisperX word
+  timestamps: word-count and transcript mismatches refused with the beat named
+  (punctuation/case-insensitive), inter-beat grace spill clamped down, never late.
+  `tools/align-words.py` is the env-dependent runner.
+- **`applyAssetFallbacks`** (§22) — a missing asset placeholders + flags ONLY its
+  scene; `dirtySceneIds` feeds the render cache; input plan never mutated.
+
+### Changed
+- Skills updated: research gains the challenger/Test & Compare step + Gate A;
+  analytics gains provenance/domain/cluster/expiry procedure; motion gains the
+  capture-first section, the §18 `npx skills add remotion` bootstrap, and the format
+  grammars; edit gains the full Gate-B still-review procedure.
+- `harness/IMPROVEMENT-LOG.md`: dogfooded the caption rounding incident (reveal
+  times must floor — a caption may be early, never late) with its reproducing
+  property test.
+
+## [0.9.0] — 2026-07-12
+
+**Audio-first timing — the Master Document v2 adoption.** Scene durations are now
+SOLVER OUTPUTS derived from the real narration audio, not beat-sheet guesses; renders
+cache per scene; the master bus gets enforceable loudness targets; captions go
+timestamp-first; asset provenance is enforced in code. Built to a written plan
+(`plans/06-audio-first-v2.md`), property + BDD tested. 210 tests (was 159). The v2
+doc's "integrity layer" (§27) is *adapted from ViewForge*, so this release adds the
+audio-first production core around the guards that already existed.
+
+### Added — the timing solver (v2 §15, the doc's "biggest change")
+- `lib/timing-solver.mjs` — scenes author only constraints (`minMs`/`maxMs`/
+  `padAfterMs`); the solver assigns `resolvedStartMs`/`resolvedDurationMs` from the
+  measured VO. Overflow **bounces to script with an explicit word budget**
+  (⌊maxMs/1000 × 2.5 wps⌋) — voice is never stretched beyond ±4% (enforced). Underflow
+  becomes a recorded visual **hold**, never dead air. Total drift beyond ±10% of
+  target flags review. The solver is the only writer of resolved fields (input
+  carrying them is rejected); `validateResolvedTimeline` re-checks invariants;
+  `toCaptionBeats` emits the caption shape from the same resolved truth.
+- `lib/motion-plan.mjs` — `applyResolvedTimeline(plan, solved)` rewrites scene
+  seconds/frames from solver output, immutably, with `timingSource` provenance
+  (`'authored'` → `'audio-solver'`); partial mappings throw.
+
+### Added — mastering targets + Gate-B audio checks (v2 §6/§21/§25)
+- `lib/audio-mix.mjs` — `MASTER_TARGETS` (−14 LUFS integrated ±1 LU, −1 dBTP,
+  silence-gap ceiling 700 ms, duck window, ±4% stretch cap), `validateMaster` over
+  MEASURED values (never intentions), `silenceGaps` (head/tail count too),
+  `duckDepthDb`, and `ffmpegLoudnormArgs` (pure two-pass loudnorm builder).
+- **Duck window adopted**: music now ducks 12–15 dB under narration (v2 §6) instead
+  of vanishing — `MIX_DEFAULTS.duckDb` −30 → **−19** (13 dB duck); both template
+  compositions updated to match (0.05 → 0.22 under speech).
+
+### Added — per-scene render cache + concat plan (v2 §6/§22)
+- `lib/render-cache.mjs` — `renderKey = sha256(scene + brandVersion + assetHashes +
+  rendererVersion)` over canonical JSON (ambiguity rejected: non-finite numbers
+  throw; asset hashes are a set), `planSceneRenders` (only cache misses render),
+  `dirtyScenes` (a one-scene edit dirties exactly that scene), `concatPlan` (refuses
+  codec-param mismatches instead of silently re-encoding; demuxer-safe escaping).
+
+### Added — timestamp-first captions (v2 §6)
+- `lib/caption-timing.mjs` — `weightedRevealTimes` (char-weighted within the beat's
+  REAL audio duration), `normalizeAlignedWords` (whisperX-style timestamps; rejects
+  non-monotonic alignment; floors to ms so a caption may appear ≤1ms early, never
+  late), `revealedIndexAtTime` (words appear WITH the voice: −1 before the first
+  word), `revealSec` validation in `validateCaptionBeats`.
+- `tools/synth-voice.py` emits per-word `revealSec` into `captions.json`;
+  `CaptionVideo` consumes it (even split kept as fallback). whisperX forced
+  alignment documented as the upgrade path to true timestamps.
+
+### Added — asset provenance enforcement (v2 §8/§16)
+- `lib/asset-source.mjs` — `origin` (`captured|generated-ai|licensed|owned|
+  research-only`), `isPublishable`; **research-only is never publishable** regardless
+  of license, refused at bind time (`bindAssetsToPlan` throws) AND at assembly
+  (`validatePlanAssets`, edit-QA); `generated-ai` must log `genai {model, prompt,
+  seed}` for reproducibility; `uiTruth` requires `origin: 'captured'` — never
+  genAI-fake the product UI.
+- `lib/guards.mjs` — new hard constraint **`research-only-never-published`** (block).
+- `lib/edit-qa.mjs` — `runEditQa` accepts the asset manifest and scans the actual
+  timeline; the computed signal beats whatever the plan claims about itself.
+
+### Changed
+- Skills updated to the audio-first order: voice-over → **timing solver** →
+  motion-graphics → edit-assemble (+ mastering step with the loudnorm two-pass and
+  Gate-B audio checklist).
+
+### Deferred (tracked in ROADMAP, deliberately)
+- Strategy expiry/confidence labels (v2 §23), VLM QC on per-scene stills (§25 visual
+  half), Playwright capture-first demos (§7), Remotion Automators licensing at scale (§3).
+
 ## [0.8.0] — 2026-06-28
 
 Much better voice + real rhythm (from user feedback: Piper sounded like TTS, visuals were static).

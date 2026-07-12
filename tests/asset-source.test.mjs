@@ -118,3 +118,86 @@ feature('Binding assets to a motion plan', () => {
     })
   })
 })
+
+// ---------------------------------------------------------------------------
+// Provenance: genAI + research-only (Master Doc v2 §8/§16) — plan 06 Phase E
+// ---------------------------------------------------------------------------
+import { ASSET_ORIGINS, isPublishable } from '../lib/asset-source.mjs'
+
+const cleanAsset = (over = {}) => ({
+  id: 'a1', title: 't', url: 'https://x/img.jpg', source: 'openverse', sourceUrl: 'https://x/page',
+  license: 'cc0', attribution: 'someone', width: 1920, height: 1080, ...over,
+})
+
+test('property: E1 — research-only is NEVER publishable, regardless of license or flags', () => {
+  forAll(
+    gens.record({ license: gens.pick(['cc0', 'public-domain', 'cc-by', 'all-rights-reserved']), publishable: gens.pick([true, false, undefined]) }),
+    ({ license, publishable }) => {
+      const a = cleanAsset({ origin: 'research-only', license, publishable })
+      if (isPublishable(a)) return false
+      const { kept, dropped } = filterUsable([a])
+      if (kept.length !== 0) return false
+      return /research-only/.test(dropped[0].reason)
+    },
+    { runs: 200 },
+  )
+})
+
+test('property: E3 — generated-ai requires full {model, prompt, seed} provenance', () => {
+  forAll(
+    gens.record({ model: gens.pick(['veo-3', '']), prompt: gens.pick(['a slow dolly over 1899 crates', '']), hasSeed: gens.bool() }),
+    ({ model, prompt, hasSeed }) => {
+      const genai = { ...(model && { model }), ...(prompt && { prompt }), ...(hasSeed ? { seed: 42 } : {}) }
+      const a = cleanAsset({ origin: 'generated-ai', genai })
+      const complete = !!model && !!prompt && hasSeed
+      const v = validateManifest([a])
+      const { kept } = filterUsable([a])
+      return v.valid === complete && (kept.length === 1) === complete
+    },
+    { runs: 200 },
+  )
+})
+
+feature('Asset provenance enforcement', () => {
+  scenario('E2 — binding research-only material to a plan is refused at bind time', () => {
+    const manifest = given('a manifest that (incorrectly) carries a research-only pull', () => ({
+      assets: [cleanAsset(), cleanAsset({ id: 'yt1', origin: 'research-only' })],
+    }))
+    const plan = { scenes: [{ beatId: 'hook' }] }
+    then('the publishable asset binds; the research pull throws', () => {
+      assert.ok(bindAssetsToPlan(plan, manifest, { hook: ['a1'] }))
+      assert.throws(() => bindAssetsToPlan(plan, manifest, { hook: ['yt1'] }), /research-only/)
+    })
+    and('the assembly-time re-check catches one smuggled in some other way', () => {
+      const smuggled = { scenes: [{ beatId: 'hook', assets: ['yt1'] }] }
+      const v = validatePlanAssets(smuggled, manifest)
+      assert.equal(v.valid, false)
+      assert.match(v.errors.join(';'), /never ships/)
+    })
+  })
+
+  scenario('E4 — UI-truth shots must be real captures, never genAI', () => {
+    then('uiTruth with origin generated-ai (or unset) fails; captured passes', () => {
+      assert.equal(validateManifest([cleanAsset({ uiTruth: true, origin: 'generated-ai', genai: { model: 'veo-3', prompt: 'fake ui', seed: 1 } })]).valid, false)
+      assert.equal(validateManifest([cleanAsset({ uiTruth: true })]).valid, false)
+      assert.equal(validateManifest([cleanAsset({ uiTruth: true, origin: 'captured' })]).valid, true)
+    })
+  })
+
+  scenario('Unknown origins are named and rejected', () => {
+    then('a typo origin fails validation with the origin echoed', () => {
+      const v = validateManifest([cleanAsset({ origin: 'genrated-ai' })])
+      assert.equal(v.valid, false)
+      assert.match(v.errors.join(';'), /unknown origin "genrated-ai"/)
+      assert.deepEqual([...ASSET_ORIGINS].sort(), ['captured', 'generated-ai', 'licensed', 'owned', 'research-only'])
+    })
+  })
+
+  scenario('Assets with no origin behave exactly as before (back-compat)', () => {
+    then('a plain licensed archival asset still passes the gates', () => {
+      assert.equal(isPublishable(cleanAsset()), true)
+      assert.equal(validateManifest([cleanAsset()]).valid, true)
+      assert.equal(filterUsable([cleanAsset()]).kept.length, 1)
+    })
+  })
+})

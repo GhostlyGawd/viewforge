@@ -57,14 +57,22 @@ the system can invent its own tactics without trusting them prematurely.
 
 ### 3. Integrity + state — the libs
 
-Four zero-dependency, fully-tested modules:
+The load-bearing zero-dependency, fully-tested modules (each department's engine
+lives beside these; the full list is `lib/`):
 
 | module | responsibility |
 |--------|----------------|
 | `lib/strategy-registry.mjs` | load / validate / query strategies; the schema authority |
-| `lib/guards.mjs` | hard constraints (incl. **no fake-human visual**) + the promotion gate (anti-overfit, anti-Goodhart, no fabricated data) |
+| `lib/guards.mjs` | hard constraints (incl. **no fake-human visual**, **research-only never published**) + the promotion gate (anti-overfit, anti-Goodhart, no fabricated data) |
 | `lib/niche-score.mjs` | transparent weighted niche scoring (the niche department's engine) |
 | `lib/state.mjs` | atomic, schema-validated, immutable per-channel project state |
+| `lib/timing-solver.mjs` | **audio-first timing**: scene durations solved from the real narration; overflow bounces to script with a word budget; voice never stretched > ±4% |
+| `lib/render-cache.mjs` | per-scene render identity (content-hash keys) + codec-strict concat plan — an edit re-renders one scene, not the video |
+| `lib/audio-mix.mjs` | narration-priority mix (12–15 dB duck) + mastering targets (−14 LUFS / −1 dBTP) with Gate-B audio checks over measured values |
+| `lib/gates.mjs` | the v2 gate order composed: Gate 0 at EVERY gate; A (packaging/script readiness), B (QC + master + assets → per-scene re-render list), publish (disclosure) |
+| `lib/scene-qc.mjs` | the Gate-B visual harness: stills from the resolved timeline, WCAG contrast math, caption spot-check targets, fail-closed findings aggregation — the VLM judges, the policy is code |
+| `lib/packaging-experiment.mjs` | thumbnail Test & Compare: challenger packaging, result ingestion → holdout experiment-class evidence, youtube_api provenance only |
+| `lib/capture-plan.mjs` | capture-first demos: the §16 contract (2x scale enforced), deterministic cursor tracks from scripted steps, the Playwright script emitter |
 
 Why deterministic libs under the agentic skills? Because the parts that must "make
 no mistakes" — never overwrite state, never promote a gamed strategy, never ship a
@@ -77,9 +85,11 @@ creativity; the libs bring guarantees.
 niche(state) ─▶ brand(state) ─▶ research(state) ─▶ plan a video
        │
        ▼
-   for the video:  script ─▶ voice ─▶ motion ─▶ edit ─▶ package(title/thumb)
-       │                 (each pulls validated strategies for its stage,
-       │                  checked against HARD_CONSTRAINTS before render)
+   for the video:  script ─▶ voice ─▶ TIMING SOLVER ─▶ motion ─▶ edit ─▶ package
+       │                 (audio-first: the real narration's measured durations
+       │                  resolve the scene timeline; VO overruns bounce back to
+       │                  script with a word budget. each stage pulls validated
+       │                  strategies, checked against HARD_CONSTRAINTS before render)
        ▼
    distribute ─▶ measure (CTR/AVD/AVP/retention/likeRatio …)
        │

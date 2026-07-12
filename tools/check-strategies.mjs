@@ -6,7 +6,7 @@
 // strategy without a real source, a bad metric, or a broken lifecycle state stops CI.
 
 import { fileURLToPath } from 'node:url'
-import { loadStrategies } from '../lib/strategy-registry.mjs'
+import { loadStrategies, strategyDomain } from '../lib/strategy-registry.mjs'
 
 const dir = fileURLToPath(new URL('../strategy-library/strategies/', import.meta.url))
 const { strategies, problems } = loadStrategies(dir)
@@ -25,10 +25,14 @@ if (strategies.length === 0) {
 // Light health summary so the library's shape is visible in CI logs.
 const byStatus = {}
 const byCategory = {}
+const byDomain = {}
 for (const s of strategies) {
   byStatus[s.status] = (byStatus[s.status] || 0) + 1
   byCategory[s.category] = (byCategory[s.category] || 0) + 1
+  const d = strategyDomain(s)
+  byDomain[d] = (byDomain[d] || 0) + 1
 }
 console.log(`check-strategies OK — ${strategies.length} strategies, all sourced + schema-valid`)
 console.log(`  by status:   ${JSON.stringify(byStatus)}`)
 console.log(`  by category: ${JSON.stringify(byCategory)}`)
+console.log(`  by domain:   ${JSON.stringify(byDomain)} (packaging evidence never writes content rules, and vice versa)`)

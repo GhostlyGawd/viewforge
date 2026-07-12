@@ -5,8 +5,14 @@
   "principle": "Audiences reward novelty and tire of repetition. Running the same video format consecutively depresses click-through and return rate even when each one is good.",
   "rule": "Rotate formats across the upload schedule (e.g. last-to-leave, stair-stepping escalation, chase). Track format used per video so the planner never ships the same structure twice in a row.",
   "targetMetric": "returnViewerRate",
-  "guardMetrics": ["CTR"],
-  "appliesTo": ["research", "script"],
+  "domain": "content",
+  "guardMetrics": [
+    "CTR"
+  ],
+  "appliesTo": [
+    "research",
+    "script"
+  ],
   "source": {
     "kind": "external",
     "name": "MrBeast — 'How to Succeed in MrBeast Production' internal memo (2024 leak)",

@@ -58,6 +58,77 @@ the last, produced end-to-end with no fake humans, optimized by evidence not opi
 - [ ] Department self-re-weighting (niche factor weights learned from outcomes).
 - [ ] Harness self-audit: surface mistakes → dogfood into tests/guards automatically.
 
+## v0.9.0 — audio-first timing (Master Doc v2 adoption) ✅
+Built to `plans/06-audio-first-v2.md`; the v2 doc's integrity layer (§27) was adapted
+FROM ViewForge, so this milestone added the audio-first production core around it.
+- [x] **Timing solver** (`lib/timing-solver.mjs`): scene durations are solver outputs
+      from the real VO; overflow bounces to script with a word budget; underflow is a
+      visual hold; ±4% voice-stretch cap; ±10% drift review flag;
+      `applyResolvedTimeline` + `timingSource` provenance on motion plans.
+- [x] **Mastering spec**: −14 LUFS / −1 dBTP targets, 700 ms dead-air ceiling,
+      12–15 dB duck window (defaults + template aligned), two-pass loudnorm builder,
+      `validateMaster` over measured values.
+- [x] **Per-scene render cache** (`lib/render-cache.mjs`): content-hash render keys,
+      dirty-scene diffing, codec-param-strict concat plan.
+- [x] **Timestamp-first captions**: real alignment accepted (whisperX-shape),
+      char-weighted reveal within real beat audio as fallback; `revealSec` flows
+      synth-voice → captions.json → CaptionVideo.
+- [x] **Provenance enforcement**: `origin` on assets; research-only never publishable
+      (bind + assembly, new hard constraint); genAI b-roll must log model+prompt+seed;
+      UI-truth requires real capture.
+
+## v0.10.0 — Master Doc v2 completion ✅
+Built to `plans/07-v2-completion.md`. The remaining adoptable v2 surface:
+- [x] **Learning loop as a hypothesis engine** (§10/§17/§23): rule domains
+      (packaging|content) with cross-domain evidence refused in code; metrics
+      provenance (only `youtube_api` admissible — `manual` stored, never learned
+      from); topic-cluster confound guard in the promotion gate; comments-class
+      evidence enters testing but never validates; jobs-based expiry
+      (`expiresAfterVideos` + `applyExpiry`); packaging **Test & Compare**
+      experiments (`lib/packaging-experiment.mjs`) as the fast out-of-sample path.
+      Seeds carry validated `domain`; the CI gate enforces consistency forever.
+- [x] **Gates composed** (§11/§25): `lib/gates.mjs` — Gate 0 evaluated at EVERY
+      gate; Gate A (packaging locked + grounded + script structure, cheap to
+      reject); Gate B (timeline invariants + scene QC + master + publishable
+      assets → per-scene re-render list); Gate publish (disclosure re-checked).
+- [x] **Scene QC harness** (§25 visual half): `lib/scene-qc.mjs` — still plan from
+      the RESOLVED timeline, WCAG contrast math on brand tokens, caption-at-
+      timestamp spot-check target, findings aggregation that fails closed. The VLM
+      judges; the policy is code.
+- [x] **Capture-first** (§7/§16/§20): `lib/capture-plan.mjs` (contract with 2x scale
+      enforced, deterministic cursor tracks from scripted steps, Playwright script
+      emitter) + the template's Tier-1 overlay components (CursorOverlay,
+      ClickRipple, FocusRing, CalloutLabel, ZoomPan, BrowserFrame, CaptureScene).
+- [x] **Scene grammars** (§19/§13): `buildBeatSheet({format})` — education, demo
+      (UI reveal ≤8% of runtime, validator-enforced), short; motion presets for all.
+- [x] **whisperX alignment** (§6): `tools/align-words.py` + the property-tested
+      `mergeAlignmentIntoCaptions` (count/transcript mismatches refused, grace
+      clamping); `revealSec` upgrades from char-weighted to true timestamps.
+- [x] **§22 fallbacks**: `applyAssetFallbacks` — a missing asset placeholders +
+      flags only its scene; the dirty list feeds the render cache.
+
+## The §24 phase mapping (what this repo IS, and what it is not yet)
+- **Phase 0 — the spine: ViewForge itself.** Claude Code as orchestrator, contracts
+  on the filesystem (`captions.json`, `motion-plan.json`, manifests, strategies),
+  tested zero-dep engines, one video end-to-end. **This is done and is this repo.**
+- **Phase 1 — the services (not started, deliberate):** wrap each department as an
+  orchestrator worker; Postgres (jobs/scenes/assets/experiments/strategies), Redis
+  queues, S3 media. The filesystem contracts become API payloads UNCHANGED — that is
+  why they are schemas-first today.
+- **Phase 2 — the platform (not started):** dashboard gates (Gate A approval UI,
+  QC review, rule promotion), capture farm, parallel/Lambda rendering, Test &
+  Compare automation.
+
+## Still deferred (operator- or scale-blocked, not code-blocked)
+- [ ] **Live YouTube Analytics ingest** — needs the operator's OAuth; the loop
+      refuses to learn from anything else, by design.
+- [ ] **Running the capture/alignment runners in CI** — Playwright + whisperX are
+      env-dependent tools; their decidable logic is already lib-tested.
+- [ ] **Thumbnail composition tool** — Remotion still-frame or `sharp` compositor.
+- [ ] **Remotion licensing** (v2 §3): free at the current solo scale; automating at
+      company scale puts this in Remotion's "Automators" tier ($0.01/render,
+      $100/mo minimum) — budget as COGS when volume arrives.
+
 ## Tooling gaps to resolve (search-first, then build)
 Per the brief, when a capability is missing: find a free/forkable tool first, adopt
 or wrap it; only build if nothing fits, and note it here.
@@ -65,11 +136,13 @@ or wrap it; only build if nothing fits, and note it here.
 | Need | Status | Plan |
 |------|--------|------|
 | Programmatic video render | chosen | **Remotion** (open-source, React) |
-| TTS / narration | open | evaluate Piper / Coqui / XTTS (self-host, free) before paid APIs |
+| TTS / narration | chosen | **Kokoro** (free local, default), Piper fallback; ElevenLabs = paid opt-in |
 | Thumbnail composition | open | Remotion still-frame or `sharp`-based compositor |
-| Captions / subtitles | open | whisper.cpp (local, free) |
+| Captions / subtitles | shipped | audio-driven word-synced captions (`revealSec`); **whisperX** forced alignment = the upgrade to true word timestamps |
+| Word-level alignment | open | whisperX (local, free) — feeds `normalizeAlignedWords` |
+| Loudness mastering | shipped | ffmpeg two-pass loudnorm via `ffmpegLoudnormArgs` (−14 LUFS / −1 dBTP), validated by `validateMaster` |
 | Real analytics ingest | open | YouTube Data/Analytics API (official) |
-| B-roll / music (rights-clean) | open | catalog of CC0 / licensed sources; never fake-human footage |
+| B-roll / music (rights-clean) | open | catalog of CC0 / licensed sources; genAI b-roll allowed with `genai {model,prompt,seed}` provenance; never fake-human footage |
 
 ## Non-negotiables (carried in every version)
 - No fake-human visuals (`no-fake-human-visual` hard constraint).
