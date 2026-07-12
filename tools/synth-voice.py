@@ -28,6 +28,17 @@ from kokoro_onnx import Kokoro
 SR = 24000
 DEFAULT_VOICE = "am_michael"  # the chosen Marginalia narrator (Kokoro US male)
 
+def reveal_sec(words, dur):
+    """Char-weighted per-word reveal times in [0, dur) — longer words take longer.
+    Must stay formula-identical to lib/caption-timing.mjs weightedRevealTimes."""
+    weights = [len(w) + 1 for w in words]
+    total = sum(weights) or 1
+    out, cum = [], 0
+    for w in weights:
+        out.append(round((cum / total) * dur, 3))
+        cum += w
+    return out
+
 def main():
     if len(sys.argv) < 3:
         print("usage: python tools/synth-voice.py <script.json> <publicDir> [voice] [beatIds]")
@@ -50,8 +61,14 @@ def main():
         samples, sr = k.create(txt, voice=voice, speed=1.0, lang="en-us")
         samples = np.asarray(samples, dtype=np.float32)
         dur = len(samples) / sr
+        words = txt.split()
         timing.append({"beatId": b["id"], "startSec": round(t, 3), "durSec": round(dur, 3),
-                       "text": txt, "words": txt.split()})
+                       "text": txt, "words": words,
+                       # per-word reveal times within the beat's REAL duration,
+                       # char-weighted (mirrors lib/caption-timing.mjs
+                       # weightedRevealTimes — the tested spec). Upgrade path: replace
+                       # with whisperX forced alignment for true word timestamps.
+                       "revealSec": reveal_sec(words, dur)})
         chunks += [samples, gap]
         t += dur + len(gap) / SR
         print(f"  {b['id']}: {dur:.1f}s")

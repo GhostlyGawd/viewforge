@@ -58,3 +58,48 @@ test('runEditQa warns on low narration coverage (dead air)', () => {
   const r = runEditQa({ motionPlan, narrationSpec })
   assert.ok(r.warnings.some((w) => w.includes('coverage')))
 })
+
+// ---------------------------------------------------------------------------
+// Assembly-time publishable enforcement (Master Doc v2 §16/§25 Gate 0) — plan 06 Phase E
+// ---------------------------------------------------------------------------
+test('runEditQa BLOCKS a timeline carrying a research-only asset (enforced at assembly, not by convention)', () => {
+  const motionPlan = {
+    visualMode: 'motion-graphics',
+    fps: 30,
+    durationFrames: 900,
+    scenes: [
+      { beatId: 'hook', startSec: 0, endSec: 10, params: { cutsPerScene: 6 }, assets: ['yt-pull-1'] },
+      { beatId: 'payoff', startSec: 10, endSec: 30, params: { cutsPerScene: 4 }, assets: ['pd-photo'] },
+    ],
+  }
+  const manifest = {
+    assets: [
+      { id: 'yt-pull-1', origin: 'research-only', license: 'unknown', source: 'yt-dlp', sourceUrl: 'https://youtube.com/w', url: 'x', width: 1920, height: 1080 },
+      { id: 'pd-photo', license: 'cc0', source: 'loc', sourceUrl: 'https://loc.gov/x', url: 'y', width: 1920, height: 1080 },
+    ],
+  }
+  const narrationSpec = { segments: [{ beatId: 'hook', words: 20, spokenSec: 9 }, { beatId: 'payoff', words: 40, spokenSec: 18 }] }
+
+  const res = runEditQa({ motionPlan, narrationSpec, plan: { packaging: { claimPaidOff: true } }, manifest })
+  assert.equal(res.passed, false)
+  assert.match(res.blocking.join(';'), /non-publishable asset "yt-pull-1"/)
+  assert.match(res.blocking.join(';'), /research-only-never-published/)
+
+  // pull the research asset → the same cut ships
+  const cleanPlan = { ...motionPlan, scenes: motionPlan.scenes.map((s) => (s.beatId === 'hook' ? { ...s, assets: [] } : s)) }
+  const ok = runEditQa({ motionPlan: cleanPlan, narrationSpec, plan: { packaging: { claimPaidOff: true } }, manifest })
+  assert.equal(ok.passed, true)
+})
+
+test('a plan cannot talk its way past the manifest scan (computed signal wins over plan claims)', () => {
+  const motionPlan = {
+    visualMode: 'motion-graphics',
+    fps: 30,
+    durationFrames: 300,
+    scenes: [{ beatId: 'hook', startSec: 0, endSec: 10, params: {}, assets: ['yt-pull-1'] }],
+  }
+  const manifest = { assets: [{ id: 'yt-pull-1', origin: 'research-only' }] }
+  const res = runEditQa({ motionPlan, narrationSpec: { segments: [] }, plan: { usesResearchOnlyAssets: false }, manifest })
+  assert.equal(res.passed, false)
+  assert.match(res.blocking.join(';'), /research-only-never-published/)
+})

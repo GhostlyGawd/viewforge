@@ -58,6 +58,36 @@ the last, produced end-to-end with no fake humans, optimized by evidence not opi
 - [ ] Department self-re-weighting (niche factor weights learned from outcomes).
 - [ ] Harness self-audit: surface mistakes → dogfood into tests/guards automatically.
 
+## v0.9.0 — audio-first timing (Master Doc v2 adoption) ✅
+Built to `plans/06-audio-first-v2.md`; the v2 doc's integrity layer (§27) was adapted
+FROM ViewForge, so this milestone added the audio-first production core around it.
+- [x] **Timing solver** (`lib/timing-solver.mjs`): scene durations are solver outputs
+      from the real VO; overflow bounces to script with a word budget; underflow is a
+      visual hold; ±4% voice-stretch cap; ±10% drift review flag;
+      `applyResolvedTimeline` + `timingSource` provenance on motion plans.
+- [x] **Mastering spec**: −14 LUFS / −1 dBTP targets, 700 ms dead-air ceiling,
+      12–15 dB duck window (defaults + template aligned), two-pass loudnorm builder,
+      `validateMaster` over measured values.
+- [x] **Per-scene render cache** (`lib/render-cache.mjs`): content-hash render keys,
+      dirty-scene diffing, codec-param-strict concat plan.
+- [x] **Timestamp-first captions**: real alignment accepted (whisperX-shape),
+      char-weighted reveal within real beat audio as fallback; `revealSec` flows
+      synth-voice → captions.json → CaptionVideo.
+- [x] **Provenance enforcement**: `origin` on assets; research-only never publishable
+      (bind + assembly, new hard constraint); genAI b-roll must log model+prompt+seed;
+      UI-truth requires real capture.
+
+## v2 items deliberately deferred (each needs its own milestone)
+- [ ] Strategy **expiry / confidence labels** (v2 §10/§23): observational rules
+      auto-expire unless re-confirmed — touches the strategy schema, CI gate, and seeds.
+- [ ] **VLM QC on per-scene stills** (v2 §25 Gate B, visual half): needs a still-export
+      harness; the audio half shipped in v0.9.0.
+- [ ] **Playwright capture-first** product demos (v2 §7) — becomes load-bearing when a
+      product-demo channel exists; UI-truth-requires-capture is already enforced.
+- [ ] **Remotion licensing** (v2 §3): free at the current solo scale; automating at
+      company scale puts this in Remotion's "Automators" tier ($0.01/render,
+      $100/mo minimum) — budget as COGS when volume arrives.
+
 ## Tooling gaps to resolve (search-first, then build)
 Per the brief, when a capability is missing: find a free/forkable tool first, adopt
 or wrap it; only build if nothing fits, and note it here.
@@ -65,11 +95,13 @@ or wrap it; only build if nothing fits, and note it here.
 | Need | Status | Plan |
 |------|--------|------|
 | Programmatic video render | chosen | **Remotion** (open-source, React) |
-| TTS / narration | open | evaluate Piper / Coqui / XTTS (self-host, free) before paid APIs |
+| TTS / narration | chosen | **Kokoro** (free local, default), Piper fallback; ElevenLabs = paid opt-in |
 | Thumbnail composition | open | Remotion still-frame or `sharp`-based compositor |
-| Captions / subtitles | open | whisper.cpp (local, free) |
+| Captions / subtitles | shipped | audio-driven word-synced captions (`revealSec`); **whisperX** forced alignment = the upgrade to true word timestamps |
+| Word-level alignment | open | whisperX (local, free) — feeds `normalizeAlignedWords` |
+| Loudness mastering | shipped | ffmpeg two-pass loudnorm via `ffmpegLoudnormArgs` (−14 LUFS / −1 dBTP), validated by `validateMaster` |
 | Real analytics ingest | open | YouTube Data/Analytics API (official) |
-| B-roll / music (rights-clean) | open | catalog of CC0 / licensed sources; never fake-human footage |
+| B-roll / music (rights-clean) | open | catalog of CC0 / licensed sources; genAI b-roll allowed with `genai {model,prompt,seed}` provenance; never fake-human footage |
 
 ## Non-negotiables (carried in every version)
 - No fake-human visuals (`no-fake-human-visual` hard constraint).

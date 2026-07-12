@@ -232,11 +232,13 @@ export const MarginaliaVideo: React.FC<{ motionPlan: Plan; script: Script; audio
   const stingSec = stingFrames / fps
   const audio = audioFile ?? motionPlan.audioFile ?? null
 
-  // Music bed ducks under narration. Mirrors lib/audio-mix.mjs (bed −18dB ≈ 0.13,
-  // duck −30dB ≈ 0.03) — narration stays well above the bed during speech.
+  // Music bed ducks under narration. Mirrors lib/audio-mix.mjs MIX_DEFAULTS: with
+  // narration at 1.0, the bed sits ~12dB under it (0.24) and ducks to ~13dB under
+  // (0.22) during speech — inside the v2 §6 12–15dB window, so the music stays
+  // musical instead of vanishing. validateMaster enforces the window in code.
   const narrSegs = script.beats.filter((b) => (b.text || '').trim()).map((b) => ({ s: b.startSec + stingSec, e: b.endSec + stingSec }))
   const BED = 0.24
-  const DUCK = 0.05
+  const DUCK = 0.22
   const bedVolume = (f: number) => {
     const t = f / fps
     return narrSegs.some((x) => t >= x.s && t < x.e) ? DUCK : BED

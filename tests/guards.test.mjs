@@ -123,3 +123,13 @@ test('PROMOTION_DEFAULTS are sane and frozen', () => {
   assert.ok(PROMOTION_DEFAULTS.minObservations >= 3)
   assert.throws(() => (PROMOTION_DEFAULTS.minObservations = 1))
 })
+
+// ---------------------------------------------------------------------------
+// Gate 0: research-only-never-published (Master Doc v2 §16/§25) — plan 06 Phase E
+// ---------------------------------------------------------------------------
+test('checkHardConstraints blocks a plan carrying research-only assets', () => {
+  const r = checkHardConstraints({ visualMode: 'motion-graphics', usesResearchOnlyAssets: true })
+  assert.equal(r.ok, false)
+  assert.ok(r.violations.some((v) => v.id === 'research-only-never-published' && v.severity === 'block'))
+  assert.equal(checkHardConstraints({ visualMode: 'motion-graphics', usesResearchOnlyAssets: false }).ok, true)
+})

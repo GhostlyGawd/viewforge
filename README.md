@@ -37,18 +37,27 @@ by a **sourced, testable strategy library** with a lifecycle, and a hard
   tweakable, A/B-testable parameter, which is exactly what the optimization loop
   needs.
 
-## What's built (through v0.4.0)
+## What's built (through v0.9.0)
 
 The foundation plus **the full nine-department chain at L2** — a channel can go from
 "what's it about" all the way to a published video whose real metrics feed back and
-improve the next one. The analytics department **closes the optimization loop**.
+improve the next one. The analytics department **closes the optimization loop**, and
+production is **audio-first**: scene durations are solved from the real narration
+(never guessed), captions are word-timed to the voice, renders cache per scene, and
+the master bus has enforceable loudness targets (−14 LUFS / −1 dBTP).
 
 - **Strategy library**: schema + lifecycle + 9 source-cited MrBeast-memo seeds, with
   a CI gate that rejects any unsourced or malformed strategy.
-- **Integrity + state libs** (zero-dep, 91 tests): `strategy-registry`, `guards`
-  (hard constraints incl. no-fake-human + the promotion gate), `niche-score`,
-  `niche-discovery`, `brand-brief`, `video-idea`, `script-model`, `voice-spec`,
-  `motion-plan`, `edit-qa`, `state`.
+- **Integrity + state libs** (zero-dep, 210 tests): `strategy-registry`, `guards`
+  (hard constraints incl. no-fake-human, research-only-never-published + the
+  promotion gate), `niche-score`, `niche-discovery`, `brand-brief`, `video-idea`,
+  `script-model`, `voice-spec`, `motion-plan`, `timing-solver` (audio-first scene
+  timing: VO overruns bounce to script with a word budget; voice never stretched
+  > ±4%), `caption-timing` (timestamp-first word sync), `audio-mix` (12–15 dB duck +
+  −14 LUFS mastering checks), `render-cache` (per-scene content-hash render keys +
+  codec-strict concat), `asset-license`, `asset-source` (provenance: genAI b-roll
+  logs model+prompt+seed; UI-truth must be captured), `edit-qa`, `distribution`,
+  `analytics`, `youtube-upload`, `state`.
 - **Seven L2 departments** (`/viewforge`):
   1. **niche-select** — discover (autonomous cold-start) or brainstorm → ground →
      score → rank → commit a channel project.
@@ -80,13 +89,15 @@ Run `npm run check`. Roadmap in `ROADMAP.md`.
 ```
 .claude-plugin/      plugin + marketplace manifests
 commands/            /viewforge — the factory router
-skills/              departments (v0.1.0: niche-select)
-lib/                 tested zero-dep engines: strategy-registry, guards, niche-score, state
+skills/              the nine departments (niche-select … analytics-optimize)
+lib/                 tested zero-dep engines (timing-solver, render-cache, guards, …)
 strategy-library/    sourced, schema-valid strategies + SCHEMA + SOURCES
 departments/         the department registry + maturity model
+plans/               written build plans (05 imagery/audio, 06 audio-first v2)
+assets/              the reusable Remotion render template
 state/channels/      per-channel projects (live ones gitignored; _example checked in)
-tools/               check-strategies (CI gate)
-tests/               node --test suites (46)
+tools/               check-strategies (CI gate), synth-voice, synth-audio, fetch-assets
+tests/               node --test property + BDD suites (210)
 ARCHITECTURE.md · ANTI-REWARD-HACKING.md · ROADMAP.md · harness/IMPROVEMENT-LOG.md
 ```
 

@@ -3,6 +3,75 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.9.0] — 2026-07-12
+
+**Audio-first timing — the Master Document v2 adoption.** Scene durations are now
+SOLVER OUTPUTS derived from the real narration audio, not beat-sheet guesses; renders
+cache per scene; the master bus gets enforceable loudness targets; captions go
+timestamp-first; asset provenance is enforced in code. Built to a written plan
+(`plans/06-audio-first-v2.md`), property + BDD tested. 210 tests (was 159). The v2
+doc's "integrity layer" (§27) is *adapted from ViewForge*, so this release adds the
+audio-first production core around the guards that already existed.
+
+### Added — the timing solver (v2 §15, the doc's "biggest change")
+- `lib/timing-solver.mjs` — scenes author only constraints (`minMs`/`maxMs`/
+  `padAfterMs`); the solver assigns `resolvedStartMs`/`resolvedDurationMs` from the
+  measured VO. Overflow **bounces to script with an explicit word budget**
+  (⌊maxMs/1000 × 2.5 wps⌋) — voice is never stretched beyond ±4% (enforced). Underflow
+  becomes a recorded visual **hold**, never dead air. Total drift beyond ±10% of
+  target flags review. The solver is the only writer of resolved fields (input
+  carrying them is rejected); `validateResolvedTimeline` re-checks invariants;
+  `toCaptionBeats` emits the caption shape from the same resolved truth.
+- `lib/motion-plan.mjs` — `applyResolvedTimeline(plan, solved)` rewrites scene
+  seconds/frames from solver output, immutably, with `timingSource` provenance
+  (`'authored'` → `'audio-solver'`); partial mappings throw.
+
+### Added — mastering targets + Gate-B audio checks (v2 §6/§21/§25)
+- `lib/audio-mix.mjs` — `MASTER_TARGETS` (−14 LUFS integrated ±1 LU, −1 dBTP,
+  silence-gap ceiling 700 ms, duck window, ±4% stretch cap), `validateMaster` over
+  MEASURED values (never intentions), `silenceGaps` (head/tail count too),
+  `duckDepthDb`, and `ffmpegLoudnormArgs` (pure two-pass loudnorm builder).
+- **Duck window adopted**: music now ducks 12–15 dB under narration (v2 §6) instead
+  of vanishing — `MIX_DEFAULTS.duckDb` −30 → **−19** (13 dB duck); both template
+  compositions updated to match (0.05 → 0.22 under speech).
+
+### Added — per-scene render cache + concat plan (v2 §6/§22)
+- `lib/render-cache.mjs` — `renderKey = sha256(scene + brandVersion + assetHashes +
+  rendererVersion)` over canonical JSON (ambiguity rejected: non-finite numbers
+  throw; asset hashes are a set), `planSceneRenders` (only cache misses render),
+  `dirtyScenes` (a one-scene edit dirties exactly that scene), `concatPlan` (refuses
+  codec-param mismatches instead of silently re-encoding; demuxer-safe escaping).
+
+### Added — timestamp-first captions (v2 §6)
+- `lib/caption-timing.mjs` — `weightedRevealTimes` (char-weighted within the beat's
+  REAL audio duration), `normalizeAlignedWords` (whisperX-style timestamps; rejects
+  non-monotonic alignment; floors to ms so a caption may appear ≤1ms early, never
+  late), `revealedIndexAtTime` (words appear WITH the voice: −1 before the first
+  word), `revealSec` validation in `validateCaptionBeats`.
+- `tools/synth-voice.py` emits per-word `revealSec` into `captions.json`;
+  `CaptionVideo` consumes it (even split kept as fallback). whisperX forced
+  alignment documented as the upgrade path to true timestamps.
+
+### Added — asset provenance enforcement (v2 §8/§16)
+- `lib/asset-source.mjs` — `origin` (`captured|generated-ai|licensed|owned|
+  research-only`), `isPublishable`; **research-only is never publishable** regardless
+  of license, refused at bind time (`bindAssetsToPlan` throws) AND at assembly
+  (`validatePlanAssets`, edit-QA); `generated-ai` must log `genai {model, prompt,
+  seed}` for reproducibility; `uiTruth` requires `origin: 'captured'` — never
+  genAI-fake the product UI.
+- `lib/guards.mjs` — new hard constraint **`research-only-never-published`** (block).
+- `lib/edit-qa.mjs` — `runEditQa` accepts the asset manifest and scans the actual
+  timeline; the computed signal beats whatever the plan claims about itself.
+
+### Changed
+- Skills updated to the audio-first order: voice-over → **timing solver** →
+  motion-graphics → edit-assemble (+ mastering step with the loudnorm two-pass and
+  Gate-B audio checklist).
+
+### Deferred (tracked in ROADMAP, deliberately)
+- Strategy expiry/confidence labels (v2 §23), VLM QC on per-scene stills (§25 visual
+  half), Playwright capture-first demos (§7), Remotion Automators licensing at scale (§3).
+
 ## [0.8.0] — 2026-06-28
 
 Much better voice + real rhythm (from user feedback: Piper sounded like TTS, visuals were static).

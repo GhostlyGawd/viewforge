@@ -46,7 +46,9 @@ is the default — markedly more natural than Piper, still free + fully local �
 
 Use **`tools/synth-voice.py`** (Kokoro): it synthesizes each beat separately, so the
 video can be timed to the REAL narration and the captions word-synced. It writes
-`narration.wav` + `captions.json` (per-beat `startSec`/`durSec`/`words`):
+`narration.wav` + `captions.json` (per-beat `startSec`/`durSec`/`words` + per-word
+`revealSec`, char-weighted within the beat's real duration — whisperX forced alignment
+is the upgrade path for true word timestamps):
 
 ```bash
 # setup once: pip install kokoro-onnx soundfile numpy; download kokoro.onnx + voices.bin
@@ -54,8 +56,12 @@ KOKORO_MODEL=kokoro.onnx KOKORO_VOICES=voices.bin \
   python tools/synth-voice.py <script.json> <render>/public am_michael
 ```
 
-The motion department's `CaptionVideo` composition then drives timing + word-synced
-captions from `captions.json` (timing logic is the property-tested `lib/caption-timing.mjs`).
+Downstream, `captions.json` is the timing AUTHORITY (audio-first): the motion
+department runs `lib/timing-solver.mjs` over its per-beat durations to resolve scene
+timing, and `CaptionVideo` reveals words from `revealSec` (logic:
+the property-tested `lib/caption-timing.mjs`). If a beat's VO overruns the scene's
+`maxMs`, the solver bounces it back to script-write with an explicit word budget —
+never speed up the voice (±4% stretch cap, enforced in code).
 If Kokoro isn't set up, fall back to Piper per-segment WAVs, or leave the spec for the
 edit step — don't fake an audio file. (Lighter Piper path: `echo "<text>" | piper -m
 en_US-<voice>.onnx -f beat.wav`.)
