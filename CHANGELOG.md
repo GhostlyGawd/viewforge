@@ -3,6 +3,38 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.13.0] — 2026-07-12
+
+**Closed-loop creation.** Operator scored the shipped cut 39/100 against a rubric
+self-score of 78 and named the root cause: "the way you're working is fundamentally
+wrong." Confirmed — the system was open-loop: scenes designed blind, one shot, all
+perception spent at the gate after creation. Built to `plans/09-design-loop.md`.
+266 tests.
+
+### Added
+- **`lib/design-loop.mjs`** — the perceive→adjust→perceive skeleton: deep-on-hero
+  cycle budgets (idea-carrying grammars ~10 cycles, connective ~4), immutable cycle
+  records (critique → patch → judge score → render key), stop rules
+  (target/plateau/budget), and the invariant that the BEST cycle ships, never
+  blindly the last. Critiques must cite rubric dimensions + concrete observations;
+  the judge never patches, the maker never scores.
+- **RUBRIC_V2** — viewer-experience dimensions led by **visual-ideation** ("does the
+  scene SHOW the idea or decorate the narration?"), exemplar anchors (anchor9 = a
+  reference-pack frame, anchor3 = stock explainer), 0–10 discriminative scale.
+- **The calibration ledger** — every judged video records (rubricVersion,
+  rubricScore, operatorScore); mean-|error| > 10 vs the operator ⇒
+  `rubricNeedsRevision` and the version is inadmissible at the ship gate. First
+  entry recorded: EP.01, v1, 78.1 vs 39 — revise.
+- **`assets/reference-pack/`** — exemplar frames per scene grammar (research-only,
+  unpublishable by the existing gate); the maker iterates toward them, the judge
+  anchors on them.
+- Ship threshold raised to the operator's stated minimum: `minCraftScore` **87**.
+  Current output correctly does not ship.
+
+### Deferred pending operator API keys (flagged in the 39)
+genAI video (Veo/Kling-class world footage), ElevenLabs-class directed voice,
+composed music — integration points exist (§8 provenance, voice dept, audio-mix).
+
 ## [0.12.0] — 2026-07-12
 
 **The top-1% quality bar, code-enforced.** Operator mandate: nothing ships below the

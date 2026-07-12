@@ -18,6 +18,27 @@ vague note. This log records each such change with its reproduction and the
 
 ## Entries
 
+## 2026-07-12 — the quality rubric failed its first calibration test (78 vs 39)
+- **Incident:** rubric v1 scored the EP.01 story cut 78/100; the operator scored it
+  39/100. Root causes, in order: the maker scored its own work (self-referential
+  measurement); the rubric measured defect-absence, not design-presence; judging ran
+  on stills while the operator judged motion; the anchors were adjectives calibrated
+  against nothing, compressing a ~50-point true gap into ~10 rubric points. Deeper
+  still: the entire creation process was OPEN-LOOP — zero perceive-adjust cycles
+  during design; all perception was spent at the gate, after creation finished.
+- **Reproduction:** the calibration-ledger scenario in `tests/design-loop.test.mjs`
+  records the real event (v1, 78.1, 39) and asserts `rubricNeedsRevision` = true —
+  a rubric with mean |error| > 10 vs the operator is inadmissible at the ship gate.
+- **Generalization:** a quality rubric is a HYPOTHESIS about what the operator (and
+  later the audience) values, and gets the same lifecycle as every other claim in
+  this repo: versioned, calibrated against ground truth per video, revised when its
+  error exceeds tolerance. The judge is never the maker. Creation is closed-loop
+  (lib/design-loop.mjs): perceive → critique against exemplar anchors → patch →
+  re-render, shipping the best cycle, with gates deciding shippability.
+- **Guard against gaming:** the operator score is the target and the rubric only
+  the proxy — tuning the generator to the rubric while the rubric drifts from the
+  operator shows up as ledger error and invalidates the rubric, not the operator.
+
 ## 2026-07-12 — "no dull moments" was Goodharted by its own proxies (the bare render)
 - **Incident:** the factory produced a 47s cut with ZERO visual assets bound — every
   scene rendered on the background-glow fallback with the same caption layout — and
