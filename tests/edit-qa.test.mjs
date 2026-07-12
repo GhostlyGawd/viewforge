@@ -15,7 +15,11 @@ const brand = {
 
 function fixture(targetSeconds = 300) {
   const beats = buildBeatSheet({ targetSeconds })
-  const motionPlan = buildMotionPlan(beats, brand)
+  const built = buildMotionPlan(beats, brand)
+  // a clean modern cut carries visual material — the factory binds imagery since
+  // v0.7.0, and an entirely bare cut is now a blocking defect (the 2026-07-12
+  // bare-render incident), so the healthy fixture reflects the real pipeline
+  const motionPlan = { ...built, scenes: built.scenes.map((s) => ({ ...s, assets: [{ id: `img-${s.beatId}`, localFile: `${s.beatId}.jpg` }] })) }
   // give every beat some narration so coverage is healthy
   const script = { beats: beats.map((b) => ({ ...b, text: 'word '.repeat(Math.max(8, b.wordBudget)).trim() })) }
   const narrationSpec = buildNarrationSpec(script)
@@ -102,4 +106,33 @@ test('a plan cannot talk its way past the manifest scan (computed signal wins ov
   const res = runEditQa({ motionPlan, narrationSpec: { segments: [] }, plan: { usesResearchOnlyAssets: false }, manifest })
   assert.equal(res.passed, false)
   assert.match(res.blocking.join(';'), /research-only-never-published/)
+})
+
+// ---------------------------------------------------------------------------
+// Visual-material gate (2026-07-12 incident: the bare 47s render) — proxies for
+// "engaging" must be paired with a direct is-anything-on-screen check.
+// ---------------------------------------------------------------------------
+test('a cut where NO scene carries a visual asset is BLOCKED, not warned (the bare-render incident)', () => {
+  const motionPlan = {
+    visualMode: 'motion-graphics',
+    fps: 30,
+    durationFrames: 1410,
+    // exactly the incident shape: narrated, fast-cut params, zero assets anywhere
+    scenes: ['hook', 'body', 'payoff'].map((beatId, i) => ({ beatId, startSec: i * 15, endSec: (i + 1) * 15, params: { cutsPerScene: 6 }, assets: [] })),
+  }
+  const narrationSpec = { segments: motionPlan.scenes.map((s) => ({ beatId: s.beatId, words: 30, spokenSec: 14 })) }
+  const res = runEditQa({ motionPlan, narrationSpec, plan: { packaging: { claimPaidOff: true } } })
+  assert.equal(res.passed, false)
+  assert.match(res.blocking.join(';'), /no scene carries any visual asset/)
+
+  // binding imagery to even one scene lifts the block; the still-bare scenes warn
+  const oneBound = { ...motionPlan, scenes: motionPlan.scenes.map((s, i) => (i === 0 ? { ...s, assets: [{ id: 'a1', localFile: 'a1.jpg' }] } : s)) }
+  const ok = runEditQa({ motionPlan: oneBound, narrationSpec, plan: { packaging: { claimPaidOff: true } } })
+  assert.equal(ok.passed, true)
+  assert.equal(ok.warnings.filter((w) => /no visual asset bound/.test(w)).length, 2)
+
+  // a knowingly-degraded fallback scene warns with its missing list, not a bare-scene warning
+  const withFallback = { ...oneBound, scenes: oneBound.scenes.map((s, i) => (i === 2 ? { ...s, assetFallback: { missing: ['chart-1'], placeholder: 'brand-glow' } } : s)) }
+  const fb = runEditQa({ motionPlan: withFallback, narrationSpec, plan: { packaging: { claimPaidOff: true } } })
+  assert.ok(fb.warnings.some((w) => /ships on the placeholder \(missing: chart-1\)/.test(w)))
 })

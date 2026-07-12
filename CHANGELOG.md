@@ -3,6 +3,22 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.10.1] — 2026-07-12
+
+The bare-render incident, dogfooded. A real end-to-end render in a sandbox produced
+a technically-passing but visually dead video (zero assets bound → 47s of background
+fallback; fallback-tier voice) — and every gate agreed it was fine. 247 tests.
+
+### Fixed
+- **edit-QA visual-material gate**: a cut where NO scene carries a visual asset is
+  now **blocking** (a full-length background-fallback render is a dead render, not a
+  style); individual bare scenes warn; `assetFallback`-degraded scenes warn with
+  their missing list. Direct material check paired with the existing proxies
+  (narration coverage, cut counts) — see IMPROVEMENT-LOG: proxies alone get
+  Goodharted by degenerate artifacts.
+- The healthy edit-QA fixture now binds imagery per scene, reflecting the real
+  pipeline since v0.7.0.
+
 ## [0.10.0] — 2026-07-12
 
 **Master Document v2 completion.** Everything in the v2 doc that belongs in a

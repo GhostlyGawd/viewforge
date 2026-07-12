@@ -18,6 +18,27 @@ vague note. This log records each such change with its reproduction and the
 
 ## Entries
 
+## 2026-07-12 — "no dull moments" was Goodharted by its own proxies (the bare render)
+- **Incident:** the factory produced a 47s cut with ZERO visual assets bound — every
+  scene rendered on the background-glow fallback with the same caption layout — and
+  it sailed through edit-QA and Gate B. The operator's verdict: "static shitty
+  background glow with the same text over and over." All the machinery agreed it was
+  fine, because "engaging" was measured entirely by proxies (narration coverage,
+  cutsPerScene params) and the QC checklist covered correctness (caption-sync,
+  contrast, overflow) but never the direct question: is anything actually ON screen?
+  A second compounding miss: the voice used the documented "obviously synthetic"
+  fallback engine, re-making the exact complaint recorded in the v0.8.0 changelog.
+- **Reproduction:** "a cut where NO scene carries a visual asset is BLOCKED" in
+  `tests/edit-qa.test.mjs` — the incident's own shape (narrated, fast-cut params,
+  zero assets) must fail the ship gate.
+- **Generalization:** any quality bar built ONLY from proxy metrics will pass a
+  degenerate artifact that satisfies the proxies. Every proxy set needs at least one
+  direct material check. Here: an entirely bare cut is a blocking defect; individual
+  bare scenes warn; fallback-degraded scenes warn with their missing list.
+- **Guard against gaming:** the check reads bound assets (which must exist in the
+  rights-clean manifest to bind at all), not planner-authored params — inflating
+  cutsPerScene or narration text can no longer stand in for having visuals.
+
 ## 2026-07-12 — severity floors must not override code-defined gradation
 - **Incident:** the Gate-B aggregator's anti-shrug rule ("an explicit severity can
   never downgrade a blocking check") silently escalated `checkTokenContrast`'s own
