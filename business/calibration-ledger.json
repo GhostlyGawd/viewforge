@@ -63,6 +63,15 @@
       "operatorScore": null,
       "error": null,
       "notes": "Judge dims: ideation 8 ('argues with real evidence the way the references do' — first 8 on any dimension), composition 6 (dead vignette hotspot; slip ends mid-air; drip doesn't land on the stat), type 7 (added type well-chosen but off-the-shelf vs art-directed reference lettering), finish 6 (overlays betray digital seams: clean slip edge, uniform drip stroke, airbrushed scrim, heavy corner vignette on an otherwise authentic scan). Ranker trend: c7 65.5 -> c9 70.9. OPERATOR RESULT (clip): 71 — error -0.1, the first essentially-exact pair. Caveats recorded: judge scored STILLS, operator scored the CLIP; the operator additionally flagged PACING ('feels a bit off') which stills structurally cannot exhibit — so the agreement is partly coincidental (stills-craft aligned; clip adds a pacing debit and a substrate credit the judge never saw). v2.2-separated mean |error| = (10.5 + 0.1)/2 = 5.3 — ADMISSIBLE. Operator trajectory across the loop: c4 44 -> c7 55 -> c8 61 -> c9 71. Pacing diagnosis vs beat sheet: the ellipse (verdict) precedes the slam (evidence) at 0.6s vs 1.9s, and the final ~5s is a flat counter tail. Cycle 10 = re-choreography (discovery -> evidence -> judgment -> consequence) + material integration + ink wicks along the line and drips INTO the counter."
+    },
+    {
+      "videoId": "hook-lab-c10",
+      "artifact": "authored hook scene, cycle 10 (final budgeted) — re-choreography + material pass; judged by a fresh separated judge on post-fix clip-extracted stills",
+      "rubricVersion": "v2.2-separated-judge",
+      "rubricScore": 66.4,
+      "operatorScore": null,
+      "error": null,
+      "notes": "Judge dims: ideation 7 (evidence-argument real but 'staged on a single document scan' — thinner than multi-material references), composition 6 (the stat sits on a 'formless dark smudge' colliding with page text), type 7 (only original type is a UI-ish sans label vs bespoke genre lockups), finish 6 (torn edges too subtle — read razor-straight; scrim reads airbrushed). RANKER READING: c10 stills at/below c9 stills (66.4 vs 70.9; note inter-judge variance — c9's judge gave the same substrate ideation 8, c10's gave 7), while ALL of c10's intended changes are MOTION (story order, wick, drip-to-counter) which stills cannot exhibit. Operator clip score pending and decisive: best-cycle-ships. Named material moves remaining: stamped/printed treatment under the stat instead of a soft scrim; coarser torn edge; bespoke lockup for the counter label."
     }
   ]
 }
