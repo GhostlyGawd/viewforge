@@ -145,6 +145,15 @@
       "operatorScore": null,
       "error": null,
       "notes": "OPERATOR RE-ANCHORS THE METER: 'We may need to reorganize the score to move back by 10 points including all of the last ones because we are getting close to the gate and I still think we're far from it.' Adopted: all design-loop clip scores in the recent high cluster shift -10 as working ground truth; the 87 gate is UNCHANGED. Restated working series: c12 82->72, c13 82->72, c14 79->69, c15 83.9->73.9, c16 85.5->75.5 — current position ~11.5 points from the gate, matching the operator's felt distance. ASSUMPTION (documented, correctable): the rescale window covers the c12+ clip series where 'getting close' compression built; earlier scores (c4 44 ... c10 74) and the pre-loop 39 are left nominal pending operator correction. Doctrine note: this is the calibration system working — the meter re-zeroing beats a meter drifting into the gate; all rubric-vs-operator error math for affected pairs must use rescaled values going forward (c9's 70.9-vs-71 pair sits at the boundary; if 71 rescales to 61 the judge error becomes +9.9 — still inside +/-10)."
+    },
+    {
+      "videoId": "hook-lab-c17",
+      "artifact": "authored hook scene, cycle 17 — the density pass (hard cuts, list scroll, paper tear, 11-slip flood, punches)",
+      "rubricVersion": "operator-only (rescaled scale)",
+      "rubricScore": null,
+      "operatorScore": 76,
+      "error": null,
+      "notes": "+0.5 on the rescaled scale — second consecutive near-flat VISUAL cycle. Operator: 'Visualization still feels uncomfortable, pacing and timing feels off, there isn't nearly enough visualization and motion and engagement. Still too boring and uninteresting.' STRATEGIC READ (plateau rule, second firing): intervention-vs-delta over six cycles — type-system +0, audio-EXISTENCE +0, re-staging -3, SCRIPT +4.9, kinetic +1.6, density +0.5. The current visual language (type + archival props on a dark stage) is saturated; adding more instances of it no longer moves the operator. Two live hypotheses: (H2, buildable now) flat VO + loop bed cap 'engagement' and bleed into every visual judgment — Kokoro at one emotional temperature for 55s IS boring audio; the registry's own adoption trigger has been pointing at the voice-direction build for four cycles. (H1, larger) the engagement bar may require an ILLUSTRATED-WORLD substrate (drawn scenes/diagrams a la Kurzgesagt/Harris) — a major capability build beyond one cycle. Cycle 18 = audio PERFORMANCE: Chatterbox (MIT, emotion-exaggeration control — the registry's named open candidate) with Kokoro-prosody fallback if sandbox CPU can't carry it, + a cue-structured score (riser into the slam, pulse layer under the flood, silence beat before the stinger, sting hit) replacing the flat bed. If c18 lands well short of the gate with audio performance in place, H1 (illustrated world) is the remaining constraint and needs an operator scope decision."
     }
   ]
 }
