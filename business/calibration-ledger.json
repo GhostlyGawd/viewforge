@@ -108,6 +108,15 @@
       "operatorScore": 82,
       "error": null,
       "notes": "OPERATOR: 82, 'no improvement' — delta 0 vs c12. The audio hypothesis is FALSIFIED as scored (audio may still be necessary, but it was not the binding constraint). PLATEAU RULE FIRED (two cycles, delta < epsilon 2): stop patching, re-diagnose at a higher level. Root-cause reread of the four accumulated critiques: every fix so far made TEXT easier to read, but the scene is 100% text-on-text — a full-bleed dense-print page as 34s of wallpaper, typographic overlays on top, and the story's OBJECTS (fruit, money) never once visible. References stage ONE simple subject on a clean field; our eye never rests. Diagnosis: wrong staging + missing concrete imagery. Cycle 14 = re-staging, same VO/timing (controlled experiment): dark stage as home, the page as a PROP that enters when cited and recedes after the slam, and the meaning beat finally SHOWS the meaning — public-domain period fruit illustrations stamped DUTY-FREE feeding the counter. If the score still doesn't move with staging + imagery + audio all in place, the binding constraint is voice performance (the named next build)."
+    },
+    {
+      "videoId": "hook-lab-c14",
+      "artifact": "authored hook scene, cycle 14 — re-staging + concrete imagery (page as prop; USDA fruit exhibits stamped duty-free), same VO/timing as c13",
+      "rubricVersion": "operator-only",
+      "rubricScore": null,
+      "operatorScore": 79,
+      "error": null,
+      "notes": "REGRESSION: 82 -> 79. Operator critique (fullest yet): (1) 'timing and pacing very wrong and too sluggish' — the c11 'too fast' correction overshot: 0.96x voice + 2.2s gaps + 4.6s tail = sluggish; (2) 'wasn't synced well' — CONFIRMED MECHANICAL DEBT: all word timings are char-weighted ESTIMATES, never measurements; slam/stamps/reveals land on guesses; (3) 'a lot of silence and dead air waiting for the next piece' — beat-island structure with near-silent bed; (4) 'not visually interesting, doesn't keep my eye throughout' — nothing develops during gaps (retention doctrine: something must always be in motion); (5) 'isn't explaining the WHY or the HOW — falling flat even though it's a cool story' — the SCRIPT: never explains hyphen=one-item vs comma=two-items, never shows the refund mechanism (lawyers demanded refunds of paid duties). Cycle 15 = script rewrite (cold-open on the $40M, mechanism beat, lawyers beat, stinger) + EXACT sync by construction (sync-critical words synthesized as separate segments with known start times — no estimates, no ASR dependency) + tightened gaps at 1.0x + continuous-motion rule. The re-staging itself is retained (exhibits/prop staging not named as a problem)."
     }
   ]
 }
