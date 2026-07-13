@@ -3,6 +3,23 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.14.4] — 2026-07-13
+
+**Comprehension precedes craft.** Operator at cycle 10 (74/100): "hard to read…
+not clear enough visually what it means." The judges had been scoring
+visual-ideation as *craft of evidence* while the operator scores *first-viewing
+meaning* — a muted viewer could not say what the scene was about. 275 tests.
+
+### Added
+- **`JUDGE_PROTOCOL` v2.3** — `comprehensionFirst`: before any craft score, the
+  judge must state what a MUTED first-time viewer would understand the scene to
+  be saying; if it cannot, visual-ideation caps at 5
+  (`ideationCapWithoutMeaning`). First run validated the loop: after the cycle-11
+  clarity pass the judge recited the intended story nearly verbatim.
+- Ledger carries the c10/c11 series, including the ranker inversion on a
+  motion-dominated cycle (stills-only ranking is unreliable when a cycle's
+  changes are temporal — clip-class judging is the named next protocol need).
+
 ## [0.14.3] — 2026-07-13
 
 **The black-frame incident.** During design-loop cycle 10 a still rendered

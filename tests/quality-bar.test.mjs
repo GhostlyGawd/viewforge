@@ -166,7 +166,12 @@ test('v2.1 (the +23 incident): frame judging scores only still-judgeable dims, r
 
 test('v2.2 (the +10.4 incident): the judge is a separate context — maker-as-judge is not a judge', () => {
   assert.equal(JUDGE_PROTOCOL.separateContext, true) // no loop history, no maker predictions, unlabeled artifacts
-  assert.equal(JUDGE_PROTOCOL.version, 'v2.2')
+})
+
+test('v2.3 (the comprehension incident): meaning precedes craft — no stated viewer-understanding, ideation caps at 5', () => {
+  assert.equal(JUDGE_PROTOCOL.version, 'v2.3')
+  assert.equal(JUDGE_PROTOCOL.comprehensionFirst, true)
+  assert.equal(JUDGE_PROTOCOL.ideationCapWithoutMeaning, 5)
 })
 
 test('empty-frame gate (the c10 black-frame incident): overwhelming darkness blocks unless declared; property holds at the boundary', async () => {
