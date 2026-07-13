@@ -3,6 +3,26 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.14.3] — 2026-07-13
+
+**The black-frame incident.** During design-loop cycle 10 a still rendered
+near-black — a plain `<img>` lost its load race (Remotion's `<Img>` blocks
+capture; the plain tag doesn't) — and the render exited GREEN. Only an eyeball
+caught it. Renders lying green about empty frames is a gate problem, so the gate
+learned to see it. 274 tests.
+
+### Added
+- **`frameCoverage` / `checkFrameCoverage`** (`lib/scene-qc.mjs`) — pixel-coverage
+  stats over decoded stills; a new blocking QC check `empty-frame` fires when a
+  frame is overwhelmingly near-black (asset load failure / empty composition) or
+  near-white (blown render). Bands **calibrated on the real incident**: the broken
+  frame is 71% under 0.10 luma (a naive 0.06 band saw 24.6% and missed it —
+  "black" after warm overlays is charcoal), healthy full-bleed frames ~5%, a
+  legitimate dark composition 45% → band 0.10, threshold 0.6. Intentionally dark
+  scenes declare it (`params.dark`), mirroring declared holds.
+- Dogfooded against the actual artifacts: the broken frame BLOCKS, the fixed
+  frame and both healthy-scene classes pass.
+
 ## [0.14.2] — 2026-07-12
 
 **The replication experiment.** Operator scored the cycle-7 hook frames 55 (and

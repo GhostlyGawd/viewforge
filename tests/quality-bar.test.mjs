@@ -168,3 +168,31 @@ test('v2.2 (the +10.4 incident): the judge is a separate context — maker-as-ju
   assert.equal(JUDGE_PROTOCOL.separateContext, true) // no loop history, no maker predictions, unlabeled artifacts
   assert.equal(JUDGE_PROTOCOL.version, 'v2.2')
 })
+
+test('empty-frame gate (the c10 black-frame incident): overwhelming darkness blocks unless declared; property holds at the boundary', async () => {
+  const { frameCoverage, checkFrameCoverage, FRAME_COVERAGE } = await import('../lib/scene-qc.mjs')
+  const img = (w, h, pixelAt) => {
+    const data = new Uint8Array(w * h * 4)
+    for (let i = 0; i < w * h; i++) {
+      const [r, g, b] = pixelAt(i)
+      data[i * 4] = r; data[i * 4 + 1] = g; data[i * 4 + 2] = b; data[i * 4 + 3] = 255
+    }
+    return { width: w, height: h, data }
+  }
+  const DARK = [18, 15, 12] // ≈0.06 luma — inside the 0.10 band (the incident's charcoal, not pure black)
+  const PAPER = [232, 223, 201]
+  const broken = img(40, 40, () => DARK)
+  assert.equal(checkFrameCoverage(broken, { sceneId: 's' })[0].checkId, 'empty-frame')
+  assert.equal(checkFrameCoverage(broken, { sceneId: 's', declaredDark: true }).length, 0) // declared intent, like declared holds
+  const blown = img(40, 40, () => [252, 252, 252])
+  assert.match(checkFrameCoverage(blown, { sceneId: 's' })[0].note, /near-white/)
+  // property: finding exists iff dark fraction exceeds the calibrated threshold
+  forAll(gens.record({ pct: gens.int(0, 100) }), ({ pct }) => {
+    const n = 100 * 100
+    const cut = Math.floor((pct / 100) * n)
+    const mixed = img(100, 100, (i) => (i < cut ? DARK : PAPER))
+    const dark = frameCoverage(mixed).nearBlackFraction
+    const found = checkFrameCoverage(mixed, { sceneId: 's' }).some((f) => /near-black/.test(f.note))
+    return found === (dark > FRAME_COVERAGE.maxNearBlackFraction)
+  }, { runs: 40 })
+})

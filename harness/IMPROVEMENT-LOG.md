@@ -18,6 +18,29 @@ vague note. This log records each such change with its reproduction and the
 
 ## Entries
 
+## 2026-07-13 — a render exited green with a black frame (and the first band I picked would have missed it)
+- **Incident:** design-loop cycle 10, frame 200: the page scan rendered black — a
+  plain `<img>` doesn't block Remotion's frame capture on load, and the still lost
+  the race. The render exited 0. Second incident inside the fix: the first
+  empty-frame detector band (near-black = luma < 0.06) measured the broken frame
+  at only 24.6% near-black — its "black" is charcoal after warm overlay layers —
+  and would have PASSED it. Eyeballing the histogram, not the frame, found the
+  real separation.
+- **Reproduction:** `tests/quality-bar.test.mjs` empty-frame test: constructed
+  charcoal frame blocks, declared-dark is exempt, near-white blocks, and a
+  property pins finding-iff-fraction-exceeds-threshold at the calibrated boundary.
+  Bands documented with the measured incident numbers in `lib/scene-qc.mjs`.
+- **Generalization:** two failure classes. (1) *A render dependency that does not
+  block capture* — use Remotion `<Img>`/`<Audio>`/`OffthreadVideo`, never bare
+  tags; the template already complied, the scratchpad prototype didn't. (2) *A
+  detector calibrated by intuition instead of measurement* — thresholds over real
+  artifacts must be fit to measured distributions of broken AND healthy examples
+  (including the hard negative: legitimately dark scenes), or the guard is
+  decorative.
+- **Guard against gaming:** the check is computed from pixels (decodePng +
+  frameCoverage), not asserted; declared-dark is an explicit plan field, so a
+  scene can't be excused after the fact without a diff.
+
 ## 2026-07-12 — the judge replication experiment: separating the judge did NOT close the gap
 - **Incident:** operator scored hook-lab-c7 at 55 vs the comparative judge's 65.4
   (+10.4). Hypothesis: maker-as-judge inflation (the maker scored its own fresh
