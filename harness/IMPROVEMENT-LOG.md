@@ -18,6 +18,30 @@ vague note. This log records each such change with its reproduction and the
 
 ## Entries
 
+## 2026-07-13 — the craft-gap miss: a substrate-class change shipped on the maker's eye alone
+- **Incident:** design-loop cycle 19 replaced the archival substrate with hand-coded
+  flat-vector SVG scenes (Capitol/quill/harbor) on the assumption that
+  "Polymatter-class flat geometric" is authorable from primitives. Operator verdict:
+  regression below c18 — "shape figures… shitty stick figure animation. The last one
+  was better." Two process failures let it ship: (1) no comparative judge pass was
+  run on the c19 frames against the reference anchors before operator delivery — the
+  maker approved its own frames by eye, the exact failure mode the v2.1/v2.2
+  protocols exist to catch; (2) the substrate-class build began with zero research
+  into how the reference class is actually produced (professional illustrators;
+  the style's simplicity is deceptive).
+- **Reproduction:** `business/calibration-ledger.json` hook-lab-c19 entry records the
+  regression, the verdict verbatim, and the violated preconditions.
+- **Generalization:** substrate-class changes (any change to what the frames are
+  MADE OF, as opposed to iteration within an approved substrate) now require, before
+  operator delivery: (a) a production-method feasibility check — how does the
+  reference class actually produce this look, and does our pipeline own that
+  capability; (b) a separated comparative judgment of spot frames WITH the closest
+  reference anchor on screen. Iteration-within-substrate keeps the lighter loop.
+- **Guard against gaming:** the ledger entry format for substrate-class cycles must
+  name the anchor used and quote the comparative verdict; a cycle record without
+  them is not admissible as a delivery decision (same admissibility mechanism as
+  rubric versions at mean |error| > 10).
+
 ## 2026-07-13 — a render exited green with a black frame (and the first band I picked would have missed it)
 - **Incident:** design-loop cycle 10, frame 200: the page scan rendered black — a
   plain `<img>` doesn't block Remotion's frame capture on load, and the still lost
