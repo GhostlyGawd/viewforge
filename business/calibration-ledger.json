@@ -126,6 +126,25 @@
       "operatorScore": 83.9,
       "error": null,
       "notes": "NEW HIGH: 79 -> 83.9, 'you're getting close' — 3.1 from the 87 bar. The script/sync/continuous-motion rebuild moved +4.9. Remaining critique, unusually specific: (1) 'pacing still felt wrong' in places; (2) 'some of it still felt flat and dead, like the fruit plant part' — CONFIRMED against the beat map: the law act's 'congress' segment is 7.7s of slow page-zoom with a static lockup, the longest undeveloped stretch; (3) 'animation and visualization and text presentation still isn't super easy to digest or feel good or fully engaging' — kinetic craft: uniform entrances, no secondary motion (cards don't react to their stamps), no micro-emphasis. Cycle 16 = the dead-middle rebuild (congress split into 3 sync segments; animated list-scan highlight stepping down the page entries as the VO says 'the list of what gets taxed'; TARIFF ACT bar stamp; hyphen pulse on the word 'hyphenated') + kinetic polish pass (snappier springs, scale-in text, stamp reactions on cards, counter crossings pulse). Trajectory: 44 -> 55 -> 61 -> 71 -> 74 -> 82 -> 82 -> 79 -> 83.9."
+    },
+    {
+      "videoId": "hook-lab-c16",
+      "artifact": "authored hook scene, cycle 16 — dead-middle rebuild + kinetic polish (55.3s)",
+      "rubricVersion": "operator-only",
+      "rubricScore": null,
+      "operatorScore": 85.5,
+      "operatorScoreRescaled": 75.5,
+      "error": null,
+      "notes": "Nominal 85.5 (new high, +1.6). DIRECTION AFFIRMED: 'I like where you're going... bigger text, keeping things centered, visualizations and animations — it just needs to do MORE of it.' Gap named: 'not visually engaging enough, still doesn't feel like a pro YouTube video' — density: pro hooks present a fresh designed visual composition every ~2.5-4s; ours has ~7 setups in 55s with segments riding earlier setups."
+    },
+    {
+      "videoId": "SCALE-REVISION-1",
+      "artifact": "operator ground-truth rescale",
+      "rubricVersion": "operator-scale-v2",
+      "rubricScore": null,
+      "operatorScore": null,
+      "error": null,
+      "notes": "OPERATOR RE-ANCHORS THE METER: 'We may need to reorganize the score to move back by 10 points including all of the last ones because we are getting close to the gate and I still think we're far from it.' Adopted: all design-loop clip scores in the recent high cluster shift -10 as working ground truth; the 87 gate is UNCHANGED. Restated working series: c12 82->72, c13 82->72, c14 79->69, c15 83.9->73.9, c16 85.5->75.5 — current position ~11.5 points from the gate, matching the operator's felt distance. ASSUMPTION (documented, correctable): the rescale window covers the c12+ clip series where 'getting close' compression built; earlier scores (c4 44 ... c10 74) and the pre-loop 39 are left nominal pending operator correction. Doctrine note: this is the calibration system working — the meter re-zeroing beats a meter drifting into the gate; all rubric-vs-operator error math for affected pairs must use rescaled values going forward (c9's 70.9-vs-71 pair sits at the boundary; if 71 rescales to 61 the judge error becomes +9.9 — still inside +/-10)."
     }
   ]
 }
