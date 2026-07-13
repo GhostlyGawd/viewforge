@@ -86,18 +86,42 @@ Sources for section A probes:
 
 ## B. Deep-research sweep
 
-Multi-angle, source-verified findings: see `plans/08-research-report.md`
-(channel production methods; no-illustrator styles that sustain top-1% engagement;
-genAI illustrated-plate state of the art, costs and licensing; free asset sources;
-frame-level craft principles). This section and the costed paths below are
-finalized from that report.
+Multi-angle, source-verified findings in `plans/08-research-report.md`. The sweep
+**independently confirmed section A**: every reference channel either employs
+professional illustrators (Kurzgesagt: ~1,200 hrs/video, 200 hand-drawn panels,
+2-3 illustrators × 8-12 wks, ~70 staff — the flat-vector *format* is not the craft;
+CGP Grey: a team with a dedicated illustrator/animator) or builds from FOUND
+real-world material (Johnny Harris's maps are real Google Earth satellite imagery
+via GEOlayers, not drawings; Vox's "illustration" is a found lithograph). The one
+solo, no-training analog to our pipeline — PolyMatter — wins on RULES, not drawing:
+a fixed 2-3-accent low-saturation palette, few colours separated by black/white,
+one focus per scene. And the frame-level literature names our exact c19 defect:
+**uncontrolled values ("muddy") is the #1 amateur tell** — near-black on near-black
+is one value group.
 
-## C. Costed paths + recommendation
+## C. Costed paths + recommendation (FINAL)
 
-Finalized after B; recorded in `plans/08-research-report.md` and mirrored into the
-design-loop state. (Prior from A alone: period-plate collage + cartographic worlds,
-$0/mo, is the leading candidate; genAI plates are the gap-filler behind an adoption
-trigger; hand-drawn object illustration is retired permanently.)
+Full table in `plans/08-research-report.md`. Verdict:
+
+- **Path A — period found-material collage + procedural/cartographic worlds, $0/mo,
+  LOW risk — RECOMMENDED.** Duotone-grade public-domain engravings/lithographs into
+  the brand palette, cutout + shadow, layer dense (Harris), decorate negative space
+  procedurally (PolyMatter/Vox), real GeoJSON maps for geographic beats, animate in
+  Remotion. It is a direct extension of the operator's own best-scoring cycles
+  (c9-c18 archival), every element evidence-backed. New free source lanes unlocked:
+  Rawpixel CC0 (pre-restored antique plates), Biodiversity Heritage Library Flickr
+  (319k natural-history plates), Texturelabs (paper/grain).
+- **Path B — AI style-locked plates animated in code, ~$5-40/mo, MED risk** — behind
+  the existing `canAdoptPaidService` adoption trigger; Recraft can emit vector/SVG
+  importable to Remotion; licensing is `[needs-check]`. Gap-filler, not the spine.
+- **Path C — hybrid (A default, B for gaps)** — the maturation target.
+- **Path D — hand-coded vector object depiction (the c19 path) — RETIRED PERMANENTLY.**
+
+**Frame-level upgrades to implement on any path:** (1) a value-separation QC check
+that dogfoods the c19 "muddy values" miss into a code guard (min value delta between
+subject and ground, band-calibrated on c19-broken vs c9-c18-healthy frames, same
+method as the empty-frame gate); (2) palette-discipline lint (PolyMatter's rules);
+(3) CC0 paper/grain on every composited plate; (4) collage density targets.
 
 ## Doctrine already adopted from the c19 miss (committed with the ledger entry)
 - Substrate-class changes require (a) a production-method feasibility check and
