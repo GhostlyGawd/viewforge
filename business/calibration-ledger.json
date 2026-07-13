@@ -81,6 +81,24 @@
       "operatorScore": null,
       "error": null,
       "notes": "COMPREHENSION TEST PASSED: asked what a muted first-time viewer would understand, the judge recited the intended story nearly verbatim ('In 1872... a clerk printed the line as fruit, plants — and that single comma made every imported fruit duty-free, at a cost to the Treasury...'). That sentence was exactly what the operator said was missing at c10. Craft dims: ideation 7, composition 6, type 7, finish 5 = 65.5. Stills-blindness recurs: the judge reported the mechanism 'stays verbal' because the hyphen-pop/label-swap is temporal, and read the counter at $0 as 'unfinished' (early-count frame). REAL hits to carry into c12: late frames stack five overlays (declutter — retire the lockup once the meaning line lands); the soft radial scrims are 'airbrushed blobs with no material logic' used three times — replace with one material device (ink-wash/torn-paper); a persistent small 'meant: fruit-plants' ghost would make the contrast survive in stills and help viewers who blink through the pop."
+    },
+    {
+      "videoId": "hook-lab-c11",
+      "artifact": "OPERATOR CRITIQUE-ONLY (no score) on the c11 clip",
+      "rubricVersion": "operator-only",
+      "rubricScore": null,
+      "operatorScore": null,
+      "error": null,
+      "notes": "Operator declined to score; three critiques: (1) 'speed and pacing felt wrong and too fast to digest'; (2) 'the gray shapes looked really bad and made it harder to read' — third independent condemnation of the radial scrims; (3) 'text sizes and orientations still feels not comfortable or interesting' — no type system. Drove cycle 12: 14s pacing with real holds, all radial scrims deleted, one organizing device (editorial voice in a shadowed left column, lighting not shapes), type anchored to a single left margin with deliberate scale hierarchy."
+    },
+    {
+      "videoId": "hook-lab-c12",
+      "artifact": "authored hook scene, cycle 12 — pacing + type system (voice column, 420f/14s); judged under v2.3 comprehension-first",
+      "rubricVersion": "v2.3-separated-judge",
+      "rubricScore": 61.8,
+      "operatorScore": null,
+      "error": null,
+      "notes": "Comprehension PASSED again (verbatim story, including reading the mid-count counter correctly). Dims: ideation 7, composition 5, type 6, finish 6 = 61.8. The composition-5 specifics were real bugs, all fixed in the delivered clip after judging: label drowning in page print (now on a solid accent bar — the references' owned-zone device), no air after the landed comma (words now split apart post-slam), [sic.] fragment colliding with 'duty-free.' (now fades with the ring), inert right half during context (page now ghosts through). Judge's standing directive adopted as the design language going forward: every overlay owns a cleared zone (bars/tabs/masked paper). Ranker caution stands: stills read c12 below c11 while all of c12's changes are pacing/temporal — operator clip verdict decides."
     }
   ]
 }
