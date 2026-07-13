@@ -117,6 +117,15 @@
       "operatorScore": 79,
       "error": null,
       "notes": "REGRESSION: 82 -> 79. Operator critique (fullest yet): (1) 'timing and pacing very wrong and too sluggish' — the c11 'too fast' correction overshot: 0.96x voice + 2.2s gaps + 4.6s tail = sluggish; (2) 'wasn't synced well' — CONFIRMED MECHANICAL DEBT: all word timings are char-weighted ESTIMATES, never measurements; slam/stamps/reveals land on guesses; (3) 'a lot of silence and dead air waiting for the next piece' — beat-island structure with near-silent bed; (4) 'not visually interesting, doesn't keep my eye throughout' — nothing develops during gaps (retention doctrine: something must always be in motion); (5) 'isn't explaining the WHY or the HOW — falling flat even though it's a cool story' — the SCRIPT: never explains hyphen=one-item vs comma=two-items, never shows the refund mechanism (lawyers demanded refunds of paid duties). Cycle 15 = script rewrite (cold-open on the $40M, mechanism beat, lawyers beat, stinger) + EXACT sync by construction (sync-critical words synthesized as separate segments with known start times — no estimates, no ASR dependency) + tightened gaps at 1.0x + continuous-motion rule. The re-staging itself is retained (exhibits/prop staging not named as a problem)."
+    },
+    {
+      "videoId": "hook-lab-c15",
+      "artifact": "authored hook scene, cycle 15 — the story pass (why/how script, exact segment sync, 50.5s)",
+      "rubricVersion": "operator-only",
+      "rubricScore": null,
+      "operatorScore": 83.9,
+      "error": null,
+      "notes": "NEW HIGH: 79 -> 83.9, 'you're getting close' — 3.1 from the 87 bar. The script/sync/continuous-motion rebuild moved +4.9. Remaining critique, unusually specific: (1) 'pacing still felt wrong' in places; (2) 'some of it still felt flat and dead, like the fruit plant part' — CONFIRMED against the beat map: the law act's 'congress' segment is 7.7s of slow page-zoom with a static lockup, the longest undeveloped stretch; (3) 'animation and visualization and text presentation still isn't super easy to digest or feel good or fully engaging' — kinetic craft: uniform entrances, no secondary motion (cards don't react to their stamps), no micro-emphasis. Cycle 16 = the dead-middle rebuild (congress split into 3 sync segments; animated list-scan highlight stepping down the page entries as the VO says 'the list of what gets taxed'; TARIFF ACT bar stamp; hyphen pulse on the word 'hyphenated') + kinetic polish pass (snappier springs, scale-in text, stamp reactions on cards, counter crossings pulse). Trajectory: 44 -> 55 -> 61 -> 71 -> 74 -> 82 -> 82 -> 79 -> 83.9."
     }
   ]
 }
