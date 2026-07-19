@@ -3,6 +3,174 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.14.5] — 2026-07-13
+
+**Found shapes over drawn shapes.** Cycle 19 replaced the archival substrate with
+hand-coded flat-vector world scenes; the operator called it a regression —
+"shape figures… shitty stick figure animation. The last one was better." A
+multi-source research sweep + a comparative read of our own anchors settled the
+direction: every reference channel either employs illustrators (Kurzgesagt: ~1,200
+hrs/video, 200 hand-drawn panels, ~70 staff) or builds from FOUND real material
+(Harris's maps are satellite imagery; Vox's "illustration" is a period lithograph).
+276 tests.
+
+### Added
+- **`value-structure` QC check** (`lib/scene-qc.mjs` `valueStructure` /
+  `checkValueStructure`) — a blocking gate on tonal flatness ("muddy values", the
+  named amateur tell), measuring block-luma spread. Band fit to the real c19 frames
+  (muddy 0.016 vs non-flat ≥ 0.070; floor 0.04). Distinct from empty-frame: a
+  mid-bright flat frame still fails. Running the guard on the real c20 delivery
+  surfaced a false-positive on deliberate centered-text-on-black beats (cold-open,
+  stinger), so a `declaredDark` exemption (as empty-frame has) was added: world
+  scenes are judged for flatness, declared-minimal title cards are not.
+- **`plans/08-visual-production-research.md` + `plans/08-research-report.md`** — the
+  costed production-path comparison (found-material collage $0/mo recommended;
+  AI-plate path behind the adoption trigger; hand-drawn object depiction retired).
+
+### Changed
+- **Doctrine (`harness/IMPROVEMENT-LOG.md`):** substrate-class changes now require a
+  production-method feasibility check AND a separated comparative anchor judgment on
+  spot frames BEFORE operator delivery — the check the c19 delivery skipped.
+
+## [0.14.4] — 2026-07-13
+
+**Comprehension precedes craft.** Operator at cycle 10 (74/100): "hard to read…
+not clear enough visually what it means." The judges had been scoring
+visual-ideation as *craft of evidence* while the operator scores *first-viewing
+meaning* — a muted viewer could not say what the scene was about. 275 tests.
+
+### Added
+- **`JUDGE_PROTOCOL` v2.3** — `comprehensionFirst`: before any craft score, the
+  judge must state what a MUTED first-time viewer would understand the scene to
+  be saying; if it cannot, visual-ideation caps at 5
+  (`ideationCapWithoutMeaning`). First run validated the loop: after the cycle-11
+  clarity pass the judge recited the intended story nearly verbatim.
+- Ledger carries the c10/c11 series, including the ranker inversion on a
+  motion-dominated cycle (stills-only ranking is unreliable when a cycle's
+  changes are temporal — clip-class judging is the named next protocol need).
+
+## [0.14.3] — 2026-07-13
+
+**The black-frame incident.** During design-loop cycle 10 a still rendered
+near-black — a plain `<img>` lost its load race (Remotion's `<Img>` blocks
+capture; the plain tag doesn't) — and the render exited GREEN. Only an eyeball
+caught it. Renders lying green about empty frames is a gate problem, so the gate
+learned to see it. 274 tests.
+
+### Added
+- **`frameCoverage` / `checkFrameCoverage`** (`lib/scene-qc.mjs`) — pixel-coverage
+  stats over decoded stills; a new blocking QC check `empty-frame` fires when a
+  frame is overwhelmingly near-black (asset load failure / empty composition) or
+  near-white (blown render). Bands **calibrated on the real incident**: the broken
+  frame is 71% under 0.10 luma (a naive 0.06 band saw 24.6% and missed it —
+  "black" after warm overlays is charcoal), healthy full-bleed frames ~5%, a
+  legitimate dark composition 45% → band 0.10, threshold 0.6. Intentionally dark
+  scenes declare it (`params.dark`), mirroring declared holds.
+- Dogfooded against the actual artifacts: the broken frame BLOCKS, the fixed
+  frame and both healthy-scene classes pass.
+
+## [0.14.2] — 2026-07-12
+
+**The replication experiment.** Operator scored the cycle-7 hook frames 55 (and
+revised c4 to 44, agreeing with the comparative judge's 44.5). The judge's 65.4 on
+c7 (+10.4) looked like maker-as-judge inflation — so we tested it: a **separated
+judge** (fresh context, unlabeled frames, no loop history) re-scored the same
+frames and landed at 65.5, within 0.1 of the maker. The residual ~+10 at this tier
+is systematic model-judge bias, not maker identity. 273 tests.
+
+### Added
+- **`JUDGE_PROTOCOL` v2.2** — `separateContext: true`: judges run with no loop
+  history, no maker predictions, unlabeled artifacts. Separation removes a real
+  confound; the documented replication result records that it does NOT remove
+  shared-model bias — the judge is a **ranker** (which cycle is better), the
+  operator is the meter, and the ledger will supply a derived correction once
+  enough pairs exist.
+- Calibration ledger: v2.2-separated-judge entry for hook-lab-c7 (65.5 vs 55),
+  including the spread finding (judges scored c4→c7 as +21; the operator +11).
+
+## [0.14.1] — 2026-07-12
+
+**The +23 incident: judging goes comparative.** Second calibration entry recorded:
+the v2 blind judge scored the design-loop cycle-4 hook frame 76; the operator scored
+it **53**. Error shrank +39 → +23 across rubric revisions — still far outside the
+±10 admissibility gate. Root cause: absolute scoring with described (not visible)
+anchors runs lenient, and the judge scored cut-level dimensions (world-coherence)
+from a single still it cannot assess. 272 tests.
+
+### Added
+- **`JUDGE_PROTOCOL` v2.1** (`lib/quality-bar.mjs`) — judging is now comparative
+  ONLY: our frame side-by-side with a REAL frame from `assets/reference-pack/` for
+  the same grammar, with a per-dimension "what the reference does that ours doesn't"
+  observation. No reference on screen ⇒ the score is **inadmissible**. Frame-level
+  judging is restricted to `stillJudgeable` dims (visual-ideation, composition,
+  type-information, finish); motion/sound/voice/world-coherence must be scored from
+  clips or the cut.
+- **`scoreRubricV2Frame`** — the frame-level score over stillJudgeable dims with
+  renormalized weights, so a still can never silently claim credit for dimensions
+  it cannot show.
+- **`business/calibration-ledger.json`** — the ledger leaves test fixtures and
+  becomes a real tracked artifact; both real entries recorded (v1: 78.1 vs 39;
+  v2-blind-judge: 76 vs 53).
+
+## [0.14.0] — 2026-07-12
+
+**Run like a business.** Operator mandate: free/open first; paid is fine when it's
+reasonably priced, won't sink a solo dev, and raises revenue odds — but everything
+documented, traceable, and organized with a P&L. Money decisions now get
+strategy-library discipline. 271 tests.
+
+### Added
+- **`business/services.json`** — the service registry: every dependency (free,
+  open, paid, planned) with license, pricing, a decision record (rationale +
+  alternatives + date), and — for anything paid — an **adoption trigger**: the
+  measurable condition under which we start paying (e.g. ElevenLabs only after the
+  free open-voice upgrade + direction layer still leaves performance-voice <6/10 in
+  operator scores). Currently 9 services, projected spend **$0/mo**.
+- **`lib/business.mjs`** — validateServices (no unexplained dependencies; planned
+  paid requires trigger), projectedMonthlySpend, costPerVideo, monthlyPnL (revenue
+  assumptions explicit, never defaulted — hypotheses until real analytics),
+  breakEvenViewsPerVideo, and **canAdoptPaidService**: adoption requires trigger
+  EVIDENCE (ledger/analytics citations) AND cap room.
+- **The solo-dev cap in CI** — `monthlySpendCapUsd: $100`; `tools/check-services.mjs`
+  fails the build when projected spend exceeds it, exactly like an unsourced
+  strategy. Raising the cap is a deliberate commit.
+- **`business/PNL.md`** — the operating statement: current actuals ($0/$0,
+  pre-launch), the operating rules, a worked projection with labeled hypotheses
+  (8 videos/mo × 10k views × $4 RPM ≈ $320/mo; ElevenLabs at trigger ≈
+  break-even 232 views/video), and the paid pipeline with triggers.
+
+## [0.13.0] — 2026-07-12
+
+**Closed-loop creation.** Operator scored the shipped cut 39/100 against a rubric
+self-score of 78 and named the root cause: "the way you're working is fundamentally
+wrong." Confirmed — the system was open-loop: scenes designed blind, one shot, all
+perception spent at the gate after creation. Built to `plans/09-design-loop.md`.
+266 tests.
+
+### Added
+- **`lib/design-loop.mjs`** — the perceive→adjust→perceive skeleton: deep-on-hero
+  cycle budgets (idea-carrying grammars ~10 cycles, connective ~4), immutable cycle
+  records (critique → patch → judge score → render key), stop rules
+  (target/plateau/budget), and the invariant that the BEST cycle ships, never
+  blindly the last. Critiques must cite rubric dimensions + concrete observations;
+  the judge never patches, the maker never scores.
+- **RUBRIC_V2** — viewer-experience dimensions led by **visual-ideation** ("does the
+  scene SHOW the idea or decorate the narration?"), exemplar anchors (anchor9 = a
+  reference-pack frame, anchor3 = stock explainer), 0–10 discriminative scale.
+- **The calibration ledger** — every judged video records (rubricVersion,
+  rubricScore, operatorScore); mean-|error| > 10 vs the operator ⇒
+  `rubricNeedsRevision` and the version is inadmissible at the ship gate. First
+  entry recorded: EP.01, v1, 78.1 vs 39 — revise.
+- **`assets/reference-pack/`** — exemplar frames per scene grammar (research-only,
+  unpublishable by the existing gate); the maker iterates toward them, the judge
+  anchors on them.
+- Ship threshold raised to the operator's stated minimum: `minCraftScore` **87**.
+  Current output correctly does not ship.
+
+### Deferred pending operator API keys (flagged in the 39)
+genAI video (Veo/Kling-class world footage), ElevenLabs-class directed voice,
+composed music — integration points exist (§8 provenance, voice dept, audio-mix).
+
 ## [0.12.0] — 2026-07-12
 
 **The top-1% quality bar, code-enforced.** Operator mandate: nothing ships below the

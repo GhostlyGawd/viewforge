@@ -1,0 +1,109 @@
+{
+  "monthlySpendCapUsd": 100,
+  "capNote": "The solo-dev guard, operator-owned. Projected monthly spend of in-use services may never exceed this — enforced by tools/check-services.mjs in CI, the same way unsourced strategies fail CI. Raise it deliberately, in a commit, when revenue justifies it.",
+  "assumptions": {
+    "videosPerMonth": 8,
+    "note": "Planning cadence for unit economics. A hypothesis until real production data exists."
+  },
+  "services": [
+    {
+      "id": "remotion",
+      "name": "Remotion",
+      "category": "rendering",
+      "tier": "free",
+      "status": "in-use",
+      "license": "Remotion license — free for individuals and ≤3-person teams",
+      "pricing": { "model": "free at current scale", "currentMonthlyUsd": 0, "perVideoUsd": 0 },
+      "futureLiability": "Automated rendering at company scale is Remotion's 'Automators' tier: $0.01/render with a $100/mo minimum (Master Doc §3). Trigger: incorporating, >3 people, or render farm.",
+      "decision": { "rationale": "Programmatic React video — every visual element is an A/B-able parameter, which the optimization loop requires. ~20x ecosystem of alternatives.", "alternatives": ["Motion Canvas (MIT)", "Revideo (MIT)", "HyperFrames (Apache-2.0)"], "date": "2026-06-28", "approvedBy": "operator" },
+      "docs": "https://www.remotion.dev/docs/license"
+    },
+    {
+      "id": "kokoro-tts",
+      "name": "Kokoro TTS (open weights, local)",
+      "category": "voice",
+      "tier": "open-source",
+      "status": "in-use",
+      "license": "Apache-2.0",
+      "pricing": { "model": "free local inference", "currentMonthlyUsd": 0, "perVideoUsd": 0 },
+      "decision": { "rationale": "Most natural free local voice; replaced Piper after the v0.8.0 'sounds like TTS' feedback.", "alternatives": ["Piper (fallback, kept)"], "date": "2026-06-28", "approvedBy": "operator" },
+      "docs": "https://github.com/thewh1teagle/kokoro-onnx"
+    },
+    {
+      "id": "open-voice-upgrade",
+      "name": "Directed open-weights voice (Orpheus/Chatterbox-class)",
+      "category": "voice",
+      "tier": "open-source",
+      "status": "evaluating",
+      "license": "Apache-2.0 (Orpheus) / MIT (Chatterbox) — commercially safe; note XTTS (CPML) and F5-TTS checkpoints (CC-BY-NC) FAIL our license gate for a monetized channel",
+      "pricing": { "model": "free local inference; GPU-preferred (see gpu-rental)", "currentMonthlyUsd": 0, "perVideoUsd": 0 },
+      "adoptionTrigger": "Build the voice-direction layer (per-beat emphasis/pacing/energy — authored, free) + evaluate against Kokoro in operator scores on the performance-voice dimension.",
+      "decision": { "rationale": "Free-first doctrine: the next voice tier up requires no payment, only integration + direction.", "alternatives": ["elevenlabs (paid, gated behind this evaluation)"], "date": "2026-07-12", "approvedBy": "operator" }
+    },
+    {
+      "id": "elevenlabs",
+      "name": "ElevenLabs (directed human-grade TTS)",
+      "category": "voice",
+      "tier": "paid-planned",
+      "status": "planned",
+      "license": "Commercial API terms; synthetic-voice disclosure already enforced at Gate publish",
+      "pricing": { "model": "subscription", "plannedMonthlyUsd": 5, "perVideoUsd": 0.3, "note": "Starter tier ~$5/mo covers ~8 videos/mo of narration; est ≤$0.30/video marginal" },
+      "adoptionTrigger": "AFTER the open-voice upgrade + direction layer: performance-voice dimension still scores <6/10 in operator calibration scores across ≥2 videos, i.e. voice remains a measured limiting dimension (calibration ledger evidence required).",
+      "decision": { "rationale": "Buys the last ~20-30% of narration performance for cents/video. A performance is the one layer that cannot be authored, only directed. Adoption is evidence-gated, not taste-gated.", "alternatives": ["open-voice-upgrade (must be exhausted first)"], "date": "2026-07-12", "approvedBy": "operator" }
+    },
+    {
+      "id": "procedural-score",
+      "name": "Cue-structured procedural music (ours)",
+      "category": "music",
+      "tier": "open-source",
+      "status": "evaluating",
+      "license": "Generated ⇒ CC0 (tools/synth-audio.mjs lineage)",
+      "pricing": { "model": "free — authored code", "currentMonthlyUsd": 0, "perVideoUsd": 0 },
+      "adoptionTrigger": "Extend synth-audio from drone+SFX to cue-based composition (motif/build/hit/resolve) aligned to the beat timeline — a structural advantage no licensed library offers.",
+      "decision": { "rationale": "Music is the lowest-weighted rubric dimension; structural alignment to reveals matters more than production gloss at this stage.", "alternatives": ["MusicGen/Stable Audio Open (open weights, GPU)", "licensed libraries (paid, parked)"], "date": "2026-07-12", "approvedBy": "operator" }
+    },
+    {
+      "id": "genai-video",
+      "name": "genAI video clips (Veo/Kling-class API)",
+      "category": "footage",
+      "tier": "paid-planned",
+      "status": "planned",
+      "license": "Per-provider commercial terms; provenance {model,prompt,seed} + disclosure already enforced (v0.9.0)",
+      "pricing": { "model": "per-clip", "perVideoUsd": 4, "note": "~$0.10-0.50/clip × 10-20 clips IF a video uses generated world-footage throughout" },
+      "adoptionTrigger": "Only if the channel direction adds a cinematic live-action layer (Fern/Harris-style). The chosen direction — authored animation (Kurzgesagt/3B1B-class) — does NOT require it; open-weights video (Wan/LTX on gpu-rental) evaluates first if the trigger ever fires.",
+      "decision": { "rationale": "Parked: wrong substrate for the chosen direction. Recorded so the option and its price stay visible.", "alternatives": ["authored animation (chosen)", "Wan/LTX open weights on rented GPU"], "date": "2026-07-12", "approvedBy": "operator" }
+    },
+    {
+      "id": "gpu-rental",
+      "name": "GPU rental (compute for open-weights models)",
+      "category": "compute",
+      "tier": "paid-planned",
+      "status": "planned",
+      "pricing": { "model": "hourly", "perVideoUsd": 1, "note": "~$0.30-0.60/hr, est ≤2 GPU-hours/video if open voice/music/video models are adopted" },
+      "adoptionTrigger": "Adopting any open-weights model whose CPU inference is too slow for the production cadence. This is paying for COMPUTE, not capability — the models stay ours.",
+      "decision": { "rationale": "The bridge that keeps the free-first doctrine viable at production speed.", "alternatives": ["CPU inference (current, slow)", "operator's own GPU if available"], "date": "2026-07-12", "approvedBy": "operator" }
+    },
+    {
+      "id": "archival-imagery",
+      "name": "Openverse + Library of Congress",
+      "category": "assets",
+      "tier": "free",
+      "status": "in-use",
+      "license": "PD/CC0/CC-BY/CC-BY-SA via the tested license gate (NC/ND rejected — monetized channel)",
+      "pricing": { "model": "free", "currentMonthlyUsd": 0, "perVideoUsd": 0 },
+      "decision": { "rationale": "Rights-clean archival imagery with auditable provenance.", "alternatives": ["stock subscriptions (paid, unnecessary)"], "date": "2026-06-28", "approvedBy": "operator" },
+      "docs": "https://api.openverse.org"
+    },
+    {
+      "id": "youtube",
+      "name": "YouTube (distribution + revenue platform)",
+      "category": "distribution",
+      "tier": "free",
+      "status": "in-use",
+      "license": "Platform ToS; synthetic-media disclosure enforced at Gate publish",
+      "pricing": { "model": "free; platform takes 45% of ad revenue (RPM figures are net already)", "currentMonthlyUsd": 0, "perVideoUsd": 0 },
+      "revenueRole": "Primary. RPM is niche-dependent — education long-form commonly $3-12 net; treated as a HYPOTHESIS range until our own analytics exist.",
+      "decision": { "rationale": "The channel's home; Data/Analytics APIs feed the learning loop.", "alternatives": [], "date": "2026-06-28", "approvedBy": "operator" }
+    }
+  ]
+}

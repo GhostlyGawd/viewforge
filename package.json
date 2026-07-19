@@ -1,6 +1,6 @@
 {
   "name": "viewforge",
-  "version": "0.12.0",
+  "version": "0.14.5",
   "private": true,
   "type": "module",
   "description": "ViewForge — a self-improving YouTube channel factory (Claude Code plugin)",
@@ -12,6 +12,6 @@
   "license": "MIT",
   "scripts": {
     "test": "node --test",
-    "check": "node tools/check-strategies.mjs && node --test && node -e \"JSON.parse(require('fs').readFileSync('.claude-plugin/plugin.json','utf8')); console.log('plugin.json OK')\""
+    "check": "node tools/check-strategies.mjs && node tools/check-services.mjs && node --test && node -e \"JSON.parse(require('fs').readFileSync('.claude-plugin/plugin.json','utf8')); console.log('plugin.json OK')\""
   }
 }

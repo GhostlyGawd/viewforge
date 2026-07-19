@@ -1,0 +1,62 @@
+{
+  "note": "Every entry is origin research-only: UNPUBLISHABLE by the asset-source gate. Frames are NOT committed (see .gitignore) — refetch with tools/fetch-reference-pack.mjs. Under JUDGE_PROTOCOL v2.1 a craft score without one of these on screen is inadmissible.",
+  "fetchedAt": "2026-07-12",
+  "limitations": "These are maxres/sd thumbnails, not mid-video frames: YouTube blocks stream downloads from datacenter IPs (PO-token wall), so in-sandbox capture of arbitrary timestamps is not possible. For the all-animation channels the thumbnail is in-house-style designed art, and kurzgesagt-evolution is a literal in-video frame. Thumbnails are packaging-polished, which biases the anchor HIGH — acceptable: a harsh anchor counters judge leniency (calibration ledger shows +23 lenient). Replace with operator-captured mid-video frames when available: run tools/fetch-reference-pack.mjs --frames locally (no bot wall on residential IPs).",
+  "frames": [
+    {
+      "file": "frames/vox-ok.jpg",
+      "origin": "research-only",
+      "grammar": ["kinetic-open", "reveal"],
+      "channel": "Vox",
+      "video": "Why we say “OK”",
+      "sourceUrl": "https://www.youtube.com/watch?v=1UnIDL-eHOs",
+      "fetchUrl": "https://i.ytimg.com/vi/1UnIDL-eHOs/maxresdefault.jpg",
+      "sha256": "7d9dfcd5f97360c8be25b6188dd284267d3d0c0391d27c46713ee052b894c8fc",
+      "whyAnchor": "The document/archival grammar done at 9: REAL archival material (19th-c lithograph figures) arranged with wit — the two men face each other so the hand-lettered OK becomes their conversation. One saturated field (orange), one accent (rough red swash), zero decorative noise. Texture is genuine print grain, not a CSS filter."
+    },
+    {
+      "file": "frames/harris-hawaii.jpg",
+      "origin": "research-only",
+      "grammar": ["kinetic-open", "timeline"],
+      "channel": "Johnny Harris",
+      "video": "How the US Stole Hawaii",
+      "sourceUrl": "https://www.youtube.com/watch?v=XK2MBnw6RlY",
+      "fetchUrl": "https://i.ytimg.com/vi/XK2MBnw6RlY/maxresdefault.jpg",
+      "sha256": "d0e6d5ed13b7846a90134f73f50b5fac1024bc9e819736a10bb1e10c42ff2311",
+      "whyAnchor": "Document-collage hook: layered REAL artifacts (survey maps, declassified pages, stamps, redaction bars, flag) each with its own history, unified by typewriter type on red bars. Density with hierarchy — a dozen sources, one reading order."
+    },
+    {
+      "file": "frames/kurzgesagt-blackhole.jpg",
+      "origin": "research-only",
+      "grammar": ["mechanism", "reveal"],
+      "channel": "Kurzgesagt – In a Nutshell",
+      "video": "What If You Fall into a Black Hole?",
+      "sourceUrl": "https://www.youtube.com/watch?v=QqsLTNkzvaY",
+      "fetchUrl": "https://i.ytimg.com/vi/QqsLTNkzvaY/maxresdefault.jpg",
+      "sha256": "82f76ef15ab12e29f7de86fee5184711dd42efc9a768819f1906b8fec76a408e",
+      "whyAnchor": "A designed WORLD: accretion disk built from a dozen layered ring strokes (orange→magenta→white heat ramp), star field with three density tiers, custom character at story scale, and the annotation (red circle + arrow) treated as part of the composition, not stuck on top."
+    },
+    {
+      "file": "frames/kurzgesagt-evolution.jpg",
+      "origin": "research-only",
+      "grammar": ["diagram-build", "timeline"],
+      "channel": "Kurzgesagt – In a Nutshell",
+      "video": "How Evolution works",
+      "sourceUrl": "https://www.youtube.com/watch?v=hOfRN0KihOU",
+      "fetchUrl": "https://i.ytimg.com/vi/hOfRN0KihOU/sddefault.jpg",
+      "sha256": "d82d49a3a75d01d9999c833ac9fdc5cd2bad01b9fb0ac9480f0255cb12b3137a",
+      "whyAnchor": "A literal in-video frame: the tree of life as a real diagram — ~50 species silhouettes, each readable at thumbnail size, connected by a routed white tree on one flat blue field. Information IS the art; nothing decorative anywhere."
+    },
+    {
+      "file": "frames/polymatter-sanctions.jpg",
+      "origin": "research-only",
+      "grammar": ["chart", "counter", "money-payoff"],
+      "channel": "PolyMatter",
+      "video": "Why Sanctions Don't Work Against North Korea",
+      "sourceUrl": "https://www.youtube.com/watch?v=AuoqBGrQvyI",
+      "fetchUrl": "https://i.ytimg.com/vi/AuoqBGrQvyI/maxresdefault.jpg",
+      "sha256": "7a7d8aabd7a6c7fb6c67f0eee44486bab758838f9c5125127bee09c5a3f18e75",
+      "whyAnchor": "The data-world grammar: map as environment (not clipart) — glowing subject shape, fine instrument-panel texture (coordinates, tick numbers, dashed boxes) that rewards a second look, and a strict two-level type hierarchy with a single accent color carrying meaning (pink = the subject)."
+    }
+  ]
+}

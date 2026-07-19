@@ -2,7 +2,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { deflateSync } from 'node:zlib'
-import { QUALITY_BAR, visualEvents, validateCadence, decodePng, frameDifference, detectStaticScenes, CRAFT_RUBRIC, scoreCraft, evaluateQualityBar } from '../lib/quality-bar.mjs'
+import { QUALITY_BAR, visualEvents, validateCadence, decodePng, frameDifference, detectStaticScenes, CRAFT_RUBRIC, scoreCraft, evaluateQualityBar, JUDGE_PROTOCOL, scoreRubricV2Frame } from '../lib/quality-bar.mjs'
 import { runGatePublish } from '../lib/gates.mjs'
 import { forAll, gens } from './helpers/prop.mjs'
 
@@ -153,4 +153,83 @@ test('the ship gate refuses an unevaluated or failing bar; a passing bar ships (
   assert.equal(failing.pass, false)
   assert.match(failing.blocking.join(';'), /quality: cadence/)
   assert.equal(runGatePublish({ ...base, quality: { pass: true, blocking: [], warnings: [] } }).pass, true)
+})
+
+test('v2.1 (the +23 incident): frame judging scores only still-judgeable dims, renormalized; protocol demands a real reference', () => {
+  assert.equal(JUDGE_PROTOCOL.comparative, true)
+  assert.equal(JUDGE_PROTOCOL.inadmissibleWithoutReference, true)
+  assert.ok(!JUDGE_PROTOCOL.stillJudgeable.includes('world-coherence')) // a single frame cannot assess a cut-level property
+  const perfect = scoreRubricV2Frame({ 'visual-ideation': 10, composition: 10, 'type-information': 10, finish: 10 })
+  assert.equal(perfect.score, 100) // renormalized
+  assert.equal(scoreRubricV2Frame({ 'visual-ideation': 10 }).score, Math.round((0.25 / 0.55) * 1000) / 10)
+})
+
+test('v2.2 (the +10.4 incident): the judge is a separate context — maker-as-judge is not a judge', () => {
+  assert.equal(JUDGE_PROTOCOL.separateContext, true) // no loop history, no maker predictions, unlabeled artifacts
+})
+
+test('v2.3 (the comprehension incident): meaning precedes craft — no stated viewer-understanding, ideation caps at 5', () => {
+  assert.equal(JUDGE_PROTOCOL.version, 'v2.3')
+  assert.equal(JUDGE_PROTOCOL.comprehensionFirst, true)
+  assert.equal(JUDGE_PROTOCOL.ideationCapWithoutMeaning, 5)
+})
+
+test('empty-frame gate (the c10 black-frame incident): overwhelming darkness blocks unless declared; property holds at the boundary', async () => {
+  const { frameCoverage, checkFrameCoverage, FRAME_COVERAGE } = await import('../lib/scene-qc.mjs')
+  const img = (w, h, pixelAt) => {
+    const data = new Uint8Array(w * h * 4)
+    for (let i = 0; i < w * h; i++) {
+      const [r, g, b] = pixelAt(i)
+      data[i * 4] = r; data[i * 4 + 1] = g; data[i * 4 + 2] = b; data[i * 4 + 3] = 255
+    }
+    return { width: w, height: h, data }
+  }
+  const DARK = [18, 15, 12] // ≈0.06 luma — inside the 0.10 band (the incident's charcoal, not pure black)
+  const PAPER = [232, 223, 201]
+  const broken = img(40, 40, () => DARK)
+  assert.equal(checkFrameCoverage(broken, { sceneId: 's' })[0].checkId, 'empty-frame')
+  assert.equal(checkFrameCoverage(broken, { sceneId: 's', declaredDark: true }).length, 0) // declared intent, like declared holds
+  const blown = img(40, 40, () => [252, 252, 252])
+  assert.match(checkFrameCoverage(blown, { sceneId: 's' })[0].note, /near-white/)
+  // property: finding exists iff dark fraction exceeds the calibrated threshold
+  forAll(gens.record({ pct: gens.int(0, 100) }), ({ pct }) => {
+    const n = 100 * 100
+    const cut = Math.floor((pct / 100) * n)
+    const mixed = img(100, 100, (i) => (i < cut ? DARK : PAPER))
+    const dark = frameCoverage(mixed).nearBlackFraction
+    const found = checkFrameCoverage(mixed, { sceneId: 's' }).some((f) => /near-black/.test(f.note))
+    return found === (dark > FRAME_COVERAGE.maxNearBlackFraction)
+  }, { runs: 40 })
+})
+
+test('value-structure gate (the c19 muddy-values incident): tonally flat frames block, even when mid-bright; the check tracks measured block-luma spread', async () => {
+  const { valueStructure, checkValueStructure, VALUE_STRUCTURE } = await import('../lib/scene-qc.mjs')
+  const img = (w, h, pixelAt) => {
+    const data = new Uint8Array(w * h * 4)
+    for (let i = 0; i < w * h; i++) {
+      const [r, g, b] = pixelAt(i, i % w, (i / w) | 0)
+      data[i * 4] = r; data[i * 4 + 1] = g; data[i * 4 + 2] = b; data[i * 4 + 3] = 255
+    }
+    return { width: w, height: h, data }
+  }
+  // muddy: one dark value everywhere → block spread 0 → blocks (the c19 Capitol)
+  const muddy = img(160, 90, () => [20, 17, 14])
+  assert.ok(valueStructure(muddy).blockLumaStd < VALUE_STRUCTURE.minBlockLumaStd)
+  assert.equal(checkValueStructure(muddy, { sceneId: 's' })[0].checkId, 'value-structure')
+  // FLAT BUT MID-BRIGHT also fails — value-structure is not darkness (distinct from empty-frame)
+  const flatGray = img(160, 90, () => [128, 128, 128])
+  assert.equal(checkValueStructure(flatGray, { sceneId: 's' })[0].checkId, 'value-structure')
+  // declared-minimal beats are exempt (the c20 cold-open/stinger: sparse text on black)
+  assert.equal(checkValueStructure(muddy, { sceneId: 's', declaredDark: true }).length, 0)
+  // structured: dark ground + a bright subject band → high spread → passes though mean is dark
+  const structured = img(160, 90, (i, x, y) => (y > 60 && x > 40 && x < 120 ? [235, 226, 205] : [16, 12, 9]))
+  assert.ok(valueStructure(structured).blockLumaStd >= VALUE_STRUCTURE.minBlockLumaStd)
+  assert.equal(checkValueStructure(structured, { sceneId: 's' }).length, 0)
+  // property: the finding fires iff the measured block spread is under the floor
+  forAll(gens.record({ amp: gens.int(0, 255) }), ({ amp }) => {
+    const two = img(160, 90, (i, x) => (x < 80 ? [amp, amp, amp] : [0, 0, 0]))
+    const std = valueStructure(two).blockLumaStd
+    const found = checkValueStructure(two, { sceneId: 's' }).length > 0
+    return found === (std < VALUE_STRUCTURE.minBlockLumaStd)
+  }, { runs: 40 })
 })

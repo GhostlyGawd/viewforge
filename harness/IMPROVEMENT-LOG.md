@@ -18,6 +18,146 @@ vague note. This log records each such change with its reproduction and the
 
 ## Entries
 
+## 2026-07-13 — the muddy-values guard: the c19 flatness, measured into a code check
+- **Incident:** the first cycle-19 world pass rendered "muddy" — the Capitol
+  silhouette sat in the same value band as its sky (subject/ground fused), which
+  School of Motion names as the single loudest amateur tell. The empty-frame gate
+  did NOT catch it: a muddy frame can be mid-bright, so its near-black fraction is
+  low. The defect was caught only by eye.
+- **Reproduction:** `tests/quality-bar.test.mjs` value-structure test — a flat dark
+  frame AND a flat mid-gray frame both block; a dark-ground/bright-subject frame
+  passes; a property pins finding-iff-spread-under-floor at the boundary. Threshold
+  fit to MEASURED frames, not intuition (the empty-frame incident's lesson): the
+  muddy Capitol scored block-luma std 0.016; every non-flat frame — including a
+  cycle rejected for OTHER reasons and the found-material replacements — scored
+  ≥ 0.070; floor 0.04 separates them with margin (`lib/scene-qc.mjs`
+  `VALUE_STRUCTURE`).
+- **Generalization:** *tonal flatness is a distinct failure class from emptiness* —
+  `checkValueStructure` measures block-luma spread (subject/ground separation) and
+  has no declared-dark exemption, because a flat frame is amateur whether dark or
+  bright. It catches FLATNESS only; "drawn shapes read as amateur" is semantic and
+  stays with the comparative-anchor judge protocol (see the craft-gap entry below).
+- **Guard against gaming:** computed from pixels (decodePng + valueStructure), band
+  documented with the measured incident numbers; a scene cannot be excused after
+  the fact.
+
+## 2026-07-13 — the craft-gap miss: a substrate-class change shipped on the maker's eye alone
+- **Incident:** design-loop cycle 19 replaced the archival substrate with hand-coded
+  flat-vector SVG scenes (Capitol/quill/harbor) on the assumption that
+  "Polymatter-class flat geometric" is authorable from primitives. Operator verdict:
+  regression below c18 — "shape figures… shitty stick figure animation. The last one
+  was better." Two process failures let it ship: (1) no comparative judge pass was
+  run on the c19 frames against the reference anchors before operator delivery — the
+  maker approved its own frames by eye, the exact failure mode the v2.1/v2.2
+  protocols exist to catch; (2) the substrate-class build began with zero research
+  into how the reference class is actually produced (professional illustrators;
+  the style's simplicity is deceptive).
+- **Reproduction:** `business/calibration-ledger.json` hook-lab-c19 entry records the
+  regression, the verdict verbatim, and the violated preconditions.
+- **Generalization:** substrate-class changes (any change to what the frames are
+  MADE OF, as opposed to iteration within an approved substrate) now require, before
+  operator delivery: (a) a production-method feasibility check — how does the
+  reference class actually produce this look, and does our pipeline own that
+  capability; (b) a separated comparative judgment of spot frames WITH the closest
+  reference anchor on screen. Iteration-within-substrate keeps the lighter loop.
+- **Guard against gaming:** the ledger entry format for substrate-class cycles must
+  name the anchor used and quote the comparative verdict; a cycle record without
+  them is not admissible as a delivery decision (same admissibility mechanism as
+  rubric versions at mean |error| > 10).
+
+## 2026-07-13 — a render exited green with a black frame (and the first band I picked would have missed it)
+- **Incident:** design-loop cycle 10, frame 200: the page scan rendered black — a
+  plain `<img>` doesn't block Remotion's frame capture on load, and the still lost
+  the race. The render exited 0. Second incident inside the fix: the first
+  empty-frame detector band (near-black = luma < 0.06) measured the broken frame
+  at only 24.6% near-black — its "black" is charcoal after warm overlay layers —
+  and would have PASSED it. Eyeballing the histogram, not the frame, found the
+  real separation.
+- **Reproduction:** `tests/quality-bar.test.mjs` empty-frame test: constructed
+  charcoal frame blocks, declared-dark is exempt, near-white blocks, and a
+  property pins finding-iff-fraction-exceeds-threshold at the calibrated boundary.
+  Bands documented with the measured incident numbers in `lib/scene-qc.mjs`.
+- **Generalization:** two failure classes. (1) *A render dependency that does not
+  block capture* — use Remotion `<Img>`/`<Audio>`/`OffthreadVideo`, never bare
+  tags; the template already complied, the scratchpad prototype didn't. (2) *A
+  detector calibrated by intuition instead of measurement* — thresholds over real
+  artifacts must be fit to measured distributions of broken AND healthy examples
+  (including the hard negative: legitimately dark scenes), or the guard is
+  decorative.
+- **Guard against gaming:** the check is computed from pixels (decodePng +
+  frameCoverage), not asserted; declared-dark is an explicit plan field, so a
+  scene can't be excused after the fact without a diff.
+
+## 2026-07-12 — the judge replication experiment: separating the judge did NOT close the gap
+- **Incident:** operator scored hook-lab-c7 at 55 vs the comparative judge's 65.4
+  (+10.4). Hypothesis: maker-as-judge inflation (the maker scored its own fresh
+  work). Test: a SEPARATED judge — fresh context, unlabeled frames, no loop
+  history, no predictions — re-scored the same frames against the same references.
+  Result: 65.5, within 0.1 of the maker's estimate. The maker-bias hypothesis is
+  weakened as the full explanation; the ~+10 residual at this tier is *systematic
+  model-judge bias shared across contexts*. Second signal: judges scored the
+  c4→c7 improvement +21 where the operator scored +11 — judges over-credit
+  improvement magnitude.
+- **Reproduction:** both judgments are in `business/calibration-ledger.json`
+  (v2.1-comparative and v2.2-separated-judge rows for hook-lab-c7); the v2.2 test
+  in `tests/quality-bar.test.mjs` pins the protocol.
+- **Generalization:** separation stays (it removes a real confound and costs
+  little), but the lesson is that *procedural* fixes cannot remove *shared model*
+  bias — only measurement against operator ground truth can, which is what the
+  ledger is for. When enough pairs exist, the judge's number gets a ledger-derived
+  correction; until then the judge is treated as a RANKER (which cycle is better)
+  rather than a meter (how good is it), and ship decisions key off operator scores.
+- **Guard against gaming:** the correction derives from ledger pairs the operator
+  provides, so the judge cannot self-certify; over-crediting improvement shows up
+  as spread error in the very next pair.
+
+## 2026-07-12 — the rebuilt judge STILL ran +23 hot (76 vs 53): absolute scoring is the defect
+- **Incident:** the v2 blind judge (shuffled frames, maker/judge separation, exemplar
+  anchors) scored the design-loop cycle-4 hook frame 76; the operator scored it 53.
+  Error improved +39 → +23 across rubric revisions but still fails the ledger's ±10
+  admissibility gate. Two mechanisms: (1) leniency bias — with anchors that are
+  *descriptions* rather than visible artifacts, no dimension was scored below 6;
+  scores compress toward 6–8 regardless of quality. (2) scope violation — the judge
+  scored world-coherence (a cut-level property) 8 from a single still that cannot
+  exhibit it.
+- **Reproduction:** `business/calibration-ledger.json` records both real entries;
+  the v2.1 test in `tests/quality-bar.test.mjs` asserts the protocol is comparative,
+  inadmissible without a reference, and that `scoreRubricV2Frame` refuses to award
+  cut-level dimensions from a still (weights renormalized over stillJudgeable only).
+- **Generalization:** the failure class is *absolute judgment against remembered
+  anchors*. A model judge is a comparator, not a meter: it discriminates "A vs B on
+  screen together" far better than it estimates "A on a 0–10 scale from memory."
+  So JUDGE_PROTOCOL v2.1: every craft score is produced side-by-side with a REAL
+  reference frame of the same grammar, with a per-dimension observation of what the
+  reference does that ours doesn't; and each artifact class (still/clip/cut) may
+  only be scored on dimensions it can physically exhibit.
+- **Guard against gaming:** a score without a reference on screen is inadmissible
+  by protocol, so the judge cannot drift lenient in private; the calibration ledger
+  keeps operator ground truth as the target, so anchoring to weak references (to
+  make ours look good) shows up as ledger error and invalidates the rubric version,
+  not the operator.
+
+## 2026-07-12 — the quality rubric failed its first calibration test (78 vs 39)
+- **Incident:** rubric v1 scored the EP.01 story cut 78/100; the operator scored it
+  39/100. Root causes, in order: the maker scored its own work (self-referential
+  measurement); the rubric measured defect-absence, not design-presence; judging ran
+  on stills while the operator judged motion; the anchors were adjectives calibrated
+  against nothing, compressing a ~50-point true gap into ~10 rubric points. Deeper
+  still: the entire creation process was OPEN-LOOP — zero perceive-adjust cycles
+  during design; all perception was spent at the gate, after creation finished.
+- **Reproduction:** the calibration-ledger scenario in `tests/design-loop.test.mjs`
+  records the real event (v1, 78.1, 39) and asserts `rubricNeedsRevision` = true —
+  a rubric with mean |error| > 10 vs the operator is inadmissible at the ship gate.
+- **Generalization:** a quality rubric is a HYPOTHESIS about what the operator (and
+  later the audience) values, and gets the same lifecycle as every other claim in
+  this repo: versioned, calibrated against ground truth per video, revised when its
+  error exceeds tolerance. The judge is never the maker. Creation is closed-loop
+  (lib/design-loop.mjs): perceive → critique against exemplar anchors → patch →
+  re-render, shipping the best cycle, with gates deciding shippability.
+- **Guard against gaming:** the operator score is the target and the rubric only
+  the proxy — tuning the generator to the rubric while the rubric drifts from the
+  operator shows up as ledger error and invalidates the rubric, not the operator.
+
 ## 2026-07-12 — "no dull moments" was Goodharted by its own proxies (the bare render)
 - **Incident:** the factory produced a 47s cut with ZERO visual assets bound — every
   scene rendered on the background-glow fallback with the same caption layout — and
