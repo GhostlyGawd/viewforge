@@ -19,7 +19,10 @@ hrs/video, 200 hand-drawn panels, ~70 staff) or builds from FOUND real material
   `checkValueStructure`) — a blocking gate on tonal flatness ("muddy values", the
   named amateur tell), measuring block-luma spread. Band fit to the real c19 frames
   (muddy 0.016 vs non-flat ≥ 0.070; floor 0.04). Distinct from empty-frame: a
-  mid-bright flat frame still fails; no declared-dark exemption.
+  mid-bright flat frame still fails. Running the guard on the real c20 delivery
+  surfaced a false-positive on deliberate centered-text-on-black beats (cold-open,
+  stinger), so a `declaredDark` exemption (as empty-frame has) was added: world
+  scenes are judged for flatness, declared-minimal title cards are not.
 - **`plans/08-visual-production-research.md` + `plans/08-research-report.md`** — the
   costed production-path comparison (found-material collage $0/mo recommended;
   AI-plate path behind the adoption trigger; hand-drawn object depiction retired).

@@ -219,6 +219,8 @@ test('value-structure gate (the c19 muddy-values incident): tonally flat frames 
   // FLAT BUT MID-BRIGHT also fails — value-structure is not darkness (distinct from empty-frame)
   const flatGray = img(160, 90, () => [128, 128, 128])
   assert.equal(checkValueStructure(flatGray, { sceneId: 's' })[0].checkId, 'value-structure')
+  // declared-minimal beats are exempt (the c20 cold-open/stinger: sparse text on black)
+  assert.equal(checkValueStructure(muddy, { sceneId: 's', declaredDark: true }).length, 0)
   // structured: dark ground + a bright subject band → high spread → passes though mean is dark
   const structured = img(160, 90, (i, x, y) => (y > 60 && x > 40 && x < 120 ? [235, 226, 205] : [16, 12, 9]))
   assert.ok(valueStructure(structured).blockLumaStd >= VALUE_STRUCTURE.minBlockLumaStd)
