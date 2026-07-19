@@ -201,3 +201,33 @@ test('empty-frame gate (the c10 black-frame incident): overwhelming darkness blo
     return found === (dark > FRAME_COVERAGE.maxNearBlackFraction)
   }, { runs: 40 })
 })
+
+test('value-structure gate (the c19 muddy-values incident): tonally flat frames block, even when mid-bright; the check tracks measured block-luma spread', async () => {
+  const { valueStructure, checkValueStructure, VALUE_STRUCTURE } = await import('../lib/scene-qc.mjs')
+  const img = (w, h, pixelAt) => {
+    const data = new Uint8Array(w * h * 4)
+    for (let i = 0; i < w * h; i++) {
+      const [r, g, b] = pixelAt(i, i % w, (i / w) | 0)
+      data[i * 4] = r; data[i * 4 + 1] = g; data[i * 4 + 2] = b; data[i * 4 + 3] = 255
+    }
+    return { width: w, height: h, data }
+  }
+  // muddy: one dark value everywhere → block spread 0 → blocks (the c19 Capitol)
+  const muddy = img(160, 90, () => [20, 17, 14])
+  assert.ok(valueStructure(muddy).blockLumaStd < VALUE_STRUCTURE.minBlockLumaStd)
+  assert.equal(checkValueStructure(muddy, { sceneId: 's' })[0].checkId, 'value-structure')
+  // FLAT BUT MID-BRIGHT also fails — value-structure is not darkness (distinct from empty-frame)
+  const flatGray = img(160, 90, () => [128, 128, 128])
+  assert.equal(checkValueStructure(flatGray, { sceneId: 's' })[0].checkId, 'value-structure')
+  // structured: dark ground + a bright subject band → high spread → passes though mean is dark
+  const structured = img(160, 90, (i, x, y) => (y > 60 && x > 40 && x < 120 ? [235, 226, 205] : [16, 12, 9]))
+  assert.ok(valueStructure(structured).blockLumaStd >= VALUE_STRUCTURE.minBlockLumaStd)
+  assert.equal(checkValueStructure(structured, { sceneId: 's' }).length, 0)
+  // property: the finding fires iff the measured block spread is under the floor
+  forAll(gens.record({ amp: gens.int(0, 255) }), ({ amp }) => {
+    const two = img(160, 90, (i, x) => (x < 80 ? [amp, amp, amp] : [0, 0, 0]))
+    const std = valueStructure(two).blockLumaStd
+    const found = checkValueStructure(two, { sceneId: 's' }).length > 0
+    return found === (std < VALUE_STRUCTURE.minBlockLumaStd)
+  }, { runs: 40 })
+})

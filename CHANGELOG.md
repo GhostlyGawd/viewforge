@@ -3,6 +3,32 @@
 All notable changes to ViewForge are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versioning is [SemVer](https://semver.org/).
 
+## [0.14.5] — 2026-07-13
+
+**Found shapes over drawn shapes.** Cycle 19 replaced the archival substrate with
+hand-coded flat-vector world scenes; the operator called it a regression —
+"shape figures… shitty stick figure animation. The last one was better." A
+multi-source research sweep + a comparative read of our own anchors settled the
+direction: every reference channel either employs illustrators (Kurzgesagt: ~1,200
+hrs/video, 200 hand-drawn panels, ~70 staff) or builds from FOUND real material
+(Harris's maps are satellite imagery; Vox's "illustration" is a period lithograph).
+276 tests.
+
+### Added
+- **`value-structure` QC check** (`lib/scene-qc.mjs` `valueStructure` /
+  `checkValueStructure`) — a blocking gate on tonal flatness ("muddy values", the
+  named amateur tell), measuring block-luma spread. Band fit to the real c19 frames
+  (muddy 0.016 vs non-flat ≥ 0.070; floor 0.04). Distinct from empty-frame: a
+  mid-bright flat frame still fails; no declared-dark exemption.
+- **`plans/08-visual-production-research.md` + `plans/08-research-report.md`** — the
+  costed production-path comparison (found-material collage $0/mo recommended;
+  AI-plate path behind the adoption trigger; hand-drawn object depiction retired).
+
+### Changed
+- **Doctrine (`harness/IMPROVEMENT-LOG.md`):** substrate-class changes now require a
+  production-method feasibility check AND a separated comparative anchor judgment on
+  spot frames BEFORE operator delivery — the check the c19 delivery skipped.
+
 ## [0.14.4] — 2026-07-13
 
 **Comprehension precedes craft.** Operator at cycle 10 (74/100): "hard to read…

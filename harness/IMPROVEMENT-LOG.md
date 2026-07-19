@@ -18,6 +18,29 @@ vague note. This log records each such change with its reproduction and the
 
 ## Entries
 
+## 2026-07-13 — the muddy-values guard: the c19 flatness, measured into a code check
+- **Incident:** the first cycle-19 world pass rendered "muddy" — the Capitol
+  silhouette sat in the same value band as its sky (subject/ground fused), which
+  School of Motion names as the single loudest amateur tell. The empty-frame gate
+  did NOT catch it: a muddy frame can be mid-bright, so its near-black fraction is
+  low. The defect was caught only by eye.
+- **Reproduction:** `tests/quality-bar.test.mjs` value-structure test — a flat dark
+  frame AND a flat mid-gray frame both block; a dark-ground/bright-subject frame
+  passes; a property pins finding-iff-spread-under-floor at the boundary. Threshold
+  fit to MEASURED frames, not intuition (the empty-frame incident's lesson): the
+  muddy Capitol scored block-luma std 0.016; every non-flat frame — including a
+  cycle rejected for OTHER reasons and the found-material replacements — scored
+  ≥ 0.070; floor 0.04 separates them with margin (`lib/scene-qc.mjs`
+  `VALUE_STRUCTURE`).
+- **Generalization:** *tonal flatness is a distinct failure class from emptiness* —
+  `checkValueStructure` measures block-luma spread (subject/ground separation) and
+  has no declared-dark exemption, because a flat frame is amateur whether dark or
+  bright. It catches FLATNESS only; "drawn shapes read as amateur" is semantic and
+  stays with the comparative-anchor judge protocol (see the craft-gap entry below).
+- **Guard against gaming:** computed from pixels (decodePng + valueStructure), band
+  documented with the measured incident numbers; a scene cannot be excused after
+  the fact.
+
 ## 2026-07-13 — the craft-gap miss: a substrate-class change shipped on the maker's eye alone
 - **Incident:** design-loop cycle 19 replaced the archival substrate with hand-coded
   flat-vector SVG scenes (Capitol/quill/harbor) on the assumption that
